@@ -33,9 +33,9 @@ class myImDisplay (QtGui.QWidget) :
 
         a = np.zeros ((uarr.shape[0], uarr.shape[1],4), dtype=np.uint8)
         a[:,:,3]=255
-        a[:,:,2]=uarr[:,:]
-        a[:,:,1]=uarr[:,:]
-        a[:,:,0]=uarr[:,:]
+        a[:,:,2]=255-uarr[:,:]
+        a[:,:,1]=255-uarr[:,:]
+        a[:,:,0]=255-uarr[:,:]
 
         self.qimage = QtGui.QImage (a.data, a.shape[1], a.shape[0],QtGui.QImage.Format_ARGB32)
         self.qimage.ndarray = a

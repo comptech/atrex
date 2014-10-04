@@ -21,7 +21,6 @@ class myImage :
         #plt.imshow(im)
         self.imArray = np.asarray(im.getdata())
         self.imArray = np.reshape (self.imArray,(x,y))
-        
         print self.imArray.min(), self.imArray.max()
         
 
