@@ -79,7 +79,8 @@ class myMainWindow (QtGui.QMainWindow) :
         else :
             qf.close()
         self.myim.readTiff (filename)
-        self.ui.imageWidget.writeQImage (self.myim.imArray)
+        #self.ui.imageWidget.writeQImage (self.myim.imArray)
+        self.ui.imageWidget.writeQImage_lut (self.myim.imArray)
         return (True)
         
 app = QtGui.QApplication (sys.argv)

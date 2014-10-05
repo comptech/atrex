@@ -42,6 +42,47 @@ class myImDisplay (QtGui.QWidget) :
         self.loadImage = 1
         self.repaint()
 
+
+    def writeQImage_lut (self, fulldata) :
+        self.xsize = self.width()
+        self.ysize = self.height()
+        self.fulldata = fulldata
+        tempdata = self.fulldata
+
+        h,w = self.fulldata.shape
+        self.max = np.max (tempdata)/10.
+        self.min = np.min (tempdata)
+        range255 = self.max - self.min
+        self.scale = 255. / range255
+        xscale = int(w/self.xsize)
+        yscale = int (h/self.ysize)
+
+        self.pscale = xscale
+        if (yscale > self.pscale) :
+            self.pscale = yscale
+
+        print 'scale is :', self.pscale
+        uarr = (self.scale * (self.fulldata - self.min)).astype(np.uint8)
+        uarr = uarr[::self.pscale, ::self.pscale]
+
+        a = np.zeros ((uarr.shape[0], uarr.shape[1]), dtype=np.uint8)
+        a[:,:]=255-uarr[:,:]
+        
+        self.qimage = QtGui.QImage (a.data, a.shape[1], a.shape[0],
+                                    QtGui.QImage.Format_Indexed8)
+        #a[:,:,1]=255-uarr[:,:]
+        #a[:,:,0]=255-uarr[:,:]
+
+        # generate the lut
+        
+        for index in range(256) :
+            self.qimage.setColor (index, QtGui.qRgb (index, index, index))
+            #print index
+
+        self.qimage.ndarray = a
+        self.loadImage = 1
+        self.repaint()
+
     def paintEvent (self, event) :
         w = self.width()
         h = self.height()
