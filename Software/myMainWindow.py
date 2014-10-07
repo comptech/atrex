@@ -7,6 +7,7 @@ import time
 
 class myMainWindow (QtGui.QMainWindow) :
 
+    
     def __init__(self) :
         QtGui.QMainWindow.__init__(self)
         self.ui = uic.loadUi ("uiMainWin.ui", self)
@@ -14,6 +15,13 @@ class myMainWindow (QtGui.QMainWindow) :
         self.ui.browseImageDirButton.clicked.connect (self.defImageDir)
         self.ui.rangeSlider.valueChanged.connect (self.newImageValue)
         self.ui.updateImageDispButton.clicked.connect (self.updateImage)
+        self.ui.maxDNSlider.valueChanged.connect (self.maxSliderUpdate)
+        self.ui.minDNSlider.valueChanged.connect (self.minSliderUpdate)
+        self.ui.maxDNSlider.setRange (0, 65535)
+        self.ui.minDNSlider.setRange (0, 65535)
+        self.ui.maxDNSlider.setSingleStep (100)
+        self.ui.minDNSlider.setSingleStep (100)
+        self.ui.maxDNSlider.setValue (1000)
         self.ui.rangeSlider.setSingleStep(1) 
         self.workDirectory = ''
         self.imageDirectory = ''
@@ -38,6 +46,7 @@ class myMainWindow (QtGui.QMainWindow) :
         self.ui.rangeSlider.setRange (mnmx[0],mnmx[1])
         self.ui.rangeSlider.setValue (mnmx[2])
         
+        
         #self.ui.rangeSlider.set
 
     """ updateImage method called when Update button is clicked.
@@ -57,11 +66,24 @@ class myMainWindow (QtGui.QMainWindow) :
             self.ui.imfileLE.setText (newimage)
             self.imageFile = newimage
             
-    """ newImageValue is called by the slider callback and updates the selectedImageLE
+    """ newImageValue is called by the range slider callback and updates the selectedImageLE
         image number
     """
     def newImageValue (self, newval) :
        self.ui.selectedImageLE.setText (QtCore.QString.number(newval))
+
+    """ maxSliderUpdate is called by the DN max slider and updates the text line
+        edit box. The value in the edit box is used when 
+    """
+    def maxSliderUpdate (self, newval) :
+        self.ui.imageMaxLE.setText (QtCore.QString.number(newval))
+
+    """ minSliderUpdate is called by the DN max slider and updates the text line
+        edit box. The value in the edit box is used when 
+    """
+    def minSliderUpdate (self, newval) :
+        self.ui.imageMinLE.setText (QtCore.QString.number(newval))
+
 
     def defImageDir (self) :
         self.imageDirectory = QtGui.QFileDialog.getExistingDirectory (self, 'Define Image Directory',

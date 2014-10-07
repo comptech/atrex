@@ -19,17 +19,21 @@ class myImDisplay (QtGui.QWidget) :
         print "(min max ) are :", min, max
 
 
+    # this is for the creating of the 32BPP QImage, currently using the lut version
     def writeQImage (self, fulldata) :
         self.xsize = self.width()
         self.ysize = self.height()
         self.fulldata = fulldata
         tempdata = self.fulldata
 
-        h,w = self.fulldata.shape
+        # DN scaling
         self.max = np.max (tempdata)/10.
         self.min = np.min (tempdata)
         range = self.max - self.min
         self.scale = 255. / range
+
+        # size scaling
+        h,w = self.fulldata.shape
         xscale = int(w/self.xsize)
         yscale = int (h/self.ysize)
 
@@ -53,7 +57,10 @@ class myImDisplay (QtGui.QWidget) :
         self.repaint()
 
     
-
+    """ writeQImage_lut will scale the input raw data from 0 to 255 based upon
+        dispMin and dispMax values. Currently using a grey scale lut but will
+        build in several other options for color mapping DN.
+    """
     def writeQImage_lut (self, fulldata) :
         # for input square image,  simply resize image to smallest dimension
         im_w = self.width()

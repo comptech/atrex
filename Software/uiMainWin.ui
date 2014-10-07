@@ -243,7 +243,7 @@
        <property name="title">
         <string>Display Parameters</string>
        </property>
-       <widget class="QScrollBar" name="horizontalScrollBar">
+       <widget class="QScrollBar" name="minDNSlider">
         <property name="geometry">
          <rect>
           <x>150</x>
@@ -324,7 +324,7 @@
          <string>Max</string>
         </property>
        </widget>
-       <widget class="QScrollBar" name="horizontalScrollBar_2">
+       <widget class="QScrollBar" name="maxDNSlider">
         <property name="geometry">
          <rect>
           <x>150</x>
