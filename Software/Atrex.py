@@ -5,7 +5,7 @@ from atrex_utils import *
 import sys
 import time
 
-class myMainWindow (QtGui.QMainWindow) :
+class Atrex (QtGui.QMainWindow) :
 
     
     def __init__(self) :
@@ -110,7 +110,7 @@ class myMainWindow (QtGui.QMainWindow) :
         return (True)
         
 app = QtGui.QApplication (sys.argv)
-mainWindow = myMainWindow()
-mainWindow.show()
+atrex = Atrex ()
+atrex.show()
 
 sys.exit (app.exec_())
