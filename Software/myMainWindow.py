@@ -72,6 +72,10 @@ class myMainWindow (QtGui.QMainWindow) :
         
 
     def displayImage (self, filename) :
+        mn = self.ui.imageMinLE.text().toInt()
+        mx = self.ui.imageMaxLE.text().toInt()
+        print 'display, min is ', mn[0]
+        self.imageWidget.setMinMax (mn[0], mx[0])
         qf = QtCore.QFile(filename)
         if (qf.exists()==False) :
             qf.close()
