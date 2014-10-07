@@ -29,7 +29,6 @@ class Atrex (QtGui.QMainWindow) :
 
     def openImage (self) :
         wdir = self.ui.imDirLE.text ()
-        print len(wdir)
         self.imageFile = QtGui.QFileDialog.getOpenFileName (self, 'Open Tiff Image', wdir)
         # image file prefix will be used to build new images to display
         prefind = self.imageFile.lastIndexOf(".tif")

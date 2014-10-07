@@ -74,7 +74,6 @@ class myImDisplay (QtGui.QWidget) :
 
         h,w = self.fulldata.shape
         zmfac = float(newdim)/float(w)
-        print 'zoom fac : ', zmfac 
         self.max = np.max (tempdata)/10.
         self.min = np.min (tempdata)
         range255 = self.dispMax - self.dispMin
@@ -102,8 +101,7 @@ class myImDisplay (QtGui.QWidget) :
         
         for index in range(256) :
             self.qimage.setColor (index, QtGui.qRgb (index, index, index))
-            #print index
-
+            
         self.qimage.ndarray = a
         self.loadImage = 1
         self.repaint()
@@ -114,7 +112,7 @@ class myImDisplay (QtGui.QWidget) :
         dim = w
         if (dim >h):
             dim = h
-        print 'window dim is ', dim
+        
         painter = QtGui.QPainter (self)
         if (self.loadImage ==1) :
                 painter.drawImage (0, 0, self.qimage, 0., 0., dim, dim)
