@@ -147,8 +147,12 @@ class myZmDisplay (QtGui.QWidget) :
             dim = h
         
         painter = QtGui.QPainter (self)
+        
+        
         if (self.loadImage ==1) :
                 #painter.drawImage (0, 0, self.qimage, 0., 0., self.newx, self.newy)
                 painter.drawImage (0,0, self.qimage, 0.,0.)
-                
+        #outline the widget
+        qrFrame = QtCore.QRect (0,0,w-1,h-1)
+        painter.drawRect (qrFrame)
                                 
