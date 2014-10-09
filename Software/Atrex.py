@@ -6,7 +6,7 @@ import sys
 import time
 
 class Atrex (QtGui.QMainWindow) :
-
+    displayedImage = False
     
     def __init__(self) :
         QtGui.QMainWindow.__init__(self)
@@ -17,6 +17,8 @@ class Atrex (QtGui.QMainWindow) :
         self.ui.updateImageDispButton.clicked.connect (self.updateImage)
         self.ui.maxDNSlider.valueChanged.connect (self.maxSliderUpdate)
         self.ui.minDNSlider.valueChanged.connect (self.minSliderUpdate)
+        self.ui.zoomFacBox.valueChanged.connect (self.zoomFacUpdate)
+        self.ui.imageWidget.centPt.connect (self.newCent)
         self.ui.maxDNSlider.setRange (0, 65535)
         self.ui.minDNSlider.setRange (0, 65535)
         self.ui.maxDNSlider.setSingleStep (100)
@@ -26,7 +28,8 @@ class Atrex (QtGui.QMainWindow) :
         self.workDirectory = ''
         self.imageDirectory = ''
         self.myim = myImage () 
-
+        self.zmCentLoc = [500,500]
+        
     def openImage (self) :
         wdir = self.ui.imDirLE.text ()
         self.imageFile = QtGui.QFileDialog.getOpenFileName (self, 'Open Tiff Image', wdir)
@@ -47,6 +50,17 @@ class Atrex (QtGui.QMainWindow) :
         
         
         #self.ui.rangeSlider.set
+
+    def zoomFacUpdate (self, value) :
+        self.ui.zoomWidget.setZmFac (value)
+        if (self.displayedImage) :
+            self.ui.zoomWidget.writeQImage_lut (self.myim.imArray, self.zmCentLoc)
+        
+    def newCent (self, newloc) :
+        self.zmCentLoc[0] = newloc.x()
+        self.zmCentLoc[1] = newloc.y()
+        self.ui.zoomWidget.writeQImage_lut (self.myim.imArray, self.zmCentLoc)
+        
 
     """ updateImage method called when Update button is clicked.
         This will read the selectedImageLE text, convert to an int, then
@@ -93,10 +107,14 @@ class Atrex (QtGui.QMainWindow) :
         
 
     def displayImage (self, filename) :
+        self.displayedImage = True
         mn = self.ui.imageMinLE.text().toInt()
         mx = self.ui.imageMaxLE.text().toInt()
-        print 'display, min is ', mn[0]
+        
         self.imageWidget.setMinMax (mn[0], mx[0])
+        self.zoomWidget.setMinMax (mn[0], mx[0])
+        
+        
         qf = QtCore.QFile(filename)
         if (qf.exists()==False) :
             qf.close()
@@ -104,8 +122,18 @@ class Atrex (QtGui.QMainWindow) :
         else :
             qf.close()
         self.myim.readTiff (filename)
+        status = self.myim.readText (filename)
+        if status :
+            str = QtCore.QString("0: %1  R : %2").arg(self.myim.omega0).arg(self.myim.omegaR)
+            self.ui.omega0Lab.setText (str)
+            #self.ui.omegaRLab.setText (self.myim.omegaR)
+            self.ui.chiLab.setText (self.myim.chi)
+            self.ui.expLab.setText (self.myim.exposureT)
+            self.ui.detectorLab.setText (self.myim.detector)
         #self.ui.imageWidget.writeQImage (self.myim.imArray)
         self.ui.imageWidget.writeQImage_lut (self.myim.imArray)
+        self.ui.zoomWidget.writeQImage_lut (self.myim.imArray, self.zmCentLoc) 
+        self.ui.displayFileLabel.setText (filename)
         return (True)
         
 app = QtGui.QApplication (sys.argv)

@@ -9,6 +9,9 @@ class myImDisplay (QtGui.QWidget) :
     loadImage = 0
     dispMax = 65535
     dispMin = 0
+    zmFac = 3
+
+    centPt = QtCore.pyqtSignal(QtCore.QPoint)
     
     def __init__(self, parent) :
         QtGui.QWidget.__init__(self, parent)
@@ -74,6 +77,7 @@ class myImDisplay (QtGui.QWidget) :
 
         h,w = self.fulldata.shape
         zmfac = float(newdim)/float(w)
+        self.zmFac = zmfac
         self.max = np.max (tempdata)/10.
         self.min = np.min (tempdata)
         range255 = self.dispMax - self.dispMin
@@ -105,6 +109,15 @@ class myImDisplay (QtGui.QWidget) :
         self.qimage.ndarray = a
         self.loadImage = 1
         self.repaint()
+
+    def mousePressEvent (self, event) :
+        xloc = int(event.x() / self.zmFac)
+        yloc = int(event.y() / self.zmFac)
+        print '(X Y) : ', xloc, yloc
+        newloc = QtCore.QPoint(xloc,yloc)
+        self.centPt.emit (newloc)
+        
+        
 
     def paintEvent (self, event) :
         w = self.width()
