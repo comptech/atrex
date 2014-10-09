@@ -6,6 +6,7 @@ ATREX (Advanced Tools for Research in Extreme Xtallography)
 
 # Team
 
-- Dr. Przemek Dera (HIGP, University of Hawaii)
-- Dr. Bin Chen (HIGP, University of Hawaii)
-...
+- Przemek Dera (HIGP, University of Hawaii)
+- Bin Chen (HIGP, University of Hawaii)
+- Harold Garbeil (HIGP, University of Hawaii)
+- Eric Pilger (HIGP, University of Hawaii)
