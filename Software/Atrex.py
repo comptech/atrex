@@ -7,13 +7,19 @@ import time
 
 class Atrex (QtGui.QMainWindow) :
     displayedImage = False
+    minRange = 0
+    maxRange = 99
     
     def __init__(self) :
         QtGui.QMainWindow.__init__(self)
         self.ui = uic.loadUi ("uiMainWin.ui", self)
         self.ui.openImageButton.clicked.connect (self.openImage)
         self.ui.browseImageDirButton.clicked.connect (self.defImageDir)
-        self.ui.rangeSlider.valueChanged.connect (self.newImageValue)
+        self.ui.rangeSlider.valueChanged.connect (self.newSliderValue)
+        self.ui.rangeSlider.sliderReleased.connect (self.newImageValue)
+        self.ui.incrementImageButton.clicked.connect (self.incrementImageValue)
+        self.ui.decrementImageButton.clicked.connect (self.decrementImageValue)
+        
         self.ui.updateImageDispButton.clicked.connect (self.updateImage)
         self.ui.maxDNSlider.valueChanged.connect (self.maxSliderUpdate)
         self.ui.minDNSlider.valueChanged.connect (self.minSliderUpdate)
@@ -29,7 +35,9 @@ class Atrex (QtGui.QMainWindow) :
         self.imageDirectory = ''
         self.myim = myImage () 
         self.zmCentLoc = [500,500]
-        
+
+    """ Method to open the selected image
+    """
     def openImage (self) :
         wdir = self.ui.imDirLE.text ()
         self.imageFile = QtGui.QFileDialog.getOpenFileName (self, 'Open Tiff Image', wdir)
@@ -47,7 +55,8 @@ class Atrex (QtGui.QMainWindow) :
         self.ui.selectedImageLE.setText (QtCore.QString.number(mnmx[2]))
         self.ui.rangeSlider.setRange (mnmx[0],mnmx[1])
         self.ui.rangeSlider.setValue (mnmx[2])
-        
+        self.minRange = mnmx[0]
+        self.maxRange = mnmx[1]
         
         #self.ui.rangeSlider.set
 
@@ -79,11 +88,44 @@ class Atrex (QtGui.QMainWindow) :
             self.ui.imfileLE.setText (newimage)
             self.imageFile = newimage
             
+    def newSliderValue (self, newval) :
+        #val = self.ui.rangeSlider.value()
+        self.ui.selectedImageLE.setText (QtCore.QString.number(newval))
+
+    def decrementImageValue (self) :
+        val = self.ui.rangeSlider.value()
+        val = val-1
+        if (val >= self.minRange and val <= self.maxRange) :
+            self.newSliderValue (val)
+            self.ui.rangeSlider.setValue (val)
+            self.newImageValue()
+
+    def incrementImageValue (self) :
+        val = self.ui.rangeSlider.value()
+        val = val+1
+        if (val >= self.minRange and val <= self.maxRange) :
+            self.newSliderValue (val)
+            self.ui.rangeSlider.setValue (val)
+            self.newImageValue()
+        
+
+
     """ newImageValue is called by the range slider callback and updates the selectedImageLE
         image number
     """
-    def newImageValue (self, newval) :
-       self.ui.selectedImageLE.setText (QtCore.QString.number(newval))
+    def newImageValue (self) :
+        newval = self.ui.rangeSlider.value()
+        QtGui.QApplication.setOverrideCursor(QtGui.QCursor (QtCore.Qt.BusyCursor))
+        #self.ui.selectedImageLE.setText (QtCore.QString.number(newval))
+        z = QtCore.QChar ('0')
+        newimage = QtCore.QString ("%1%2.tif").arg(self.imageFilePref).arg(newval,3,10,z)
+        print newimage
+        status = self.displayImage (newimage)
+        if (status) :
+            self.ui.imfileLE.setText (newimage)
+            self.imageFile = newimage
+        QtGui.QApplication.restoreOverrideCursor ()
+       
 
     """ maxSliderUpdate is called by the DN max slider and updates the text line
         edit box. The value in the edit box is used when 
