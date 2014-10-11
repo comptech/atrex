@@ -10,7 +10,7 @@ class myImDisplay (QtGui.QWidget) :
     dispMax = 65535
     dispMin = 0
     zmFac = 3
-
+    zmRect = QtCore.QRect ()
     centPt = QtCore.pyqtSignal(QtCore.QPoint)
     
     def __init__(self, parent) :
@@ -21,6 +21,9 @@ class myImDisplay (QtGui.QWidget) :
         self.dispMax = max
         print "(min max ) are :", min, max
 
+    def setZmRect (self,rect) :
+        self.zmRect = rect
+        self.repaint()
 
     # this is for the creating of the 32BPP QImage, currently using the lut version
     def writeQImage (self, fulldata) :
@@ -129,6 +132,10 @@ class myImDisplay (QtGui.QWidget) :
         painter = QtGui.QPainter (self)
         if (self.loadImage ==1) :
                 painter.drawImage (0, 0, self.qimage, 0., 0., dim, dim)
+                topLeft = self.zmRect.topLeft() * self.zmFac
+                botRight = self.zmRect.bottomRight() * self.zmFac
+                painter.setPen (QtGui.QPen (QtCore.Qt.red))
+                painter.drawRect (QtCore.QRect(topLeft, botRight))
                 
                 
                                 

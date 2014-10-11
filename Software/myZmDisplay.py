@@ -12,6 +12,8 @@ class myZmDisplay (QtGui.QWidget) :
     zmFac = 4
     newx = 0
     newy = 0
+
+    zmRectSignal = QtCore.pyqtSignal(QtCore.QRect)
     
     def __init__(self, parent) :
         QtGui.QWidget.__init__(self, parent)
@@ -103,7 +105,8 @@ class myZmDisplay (QtGui.QWidget) :
             endy = h 
             
         tempdata = self.fulldata [starty:endy,startx:endx] 
-
+        zmRect = QtCore.QRect (QtCore.QPoint(startx, starty),QtCore.QPoint(endx,endy))
+        self.zmRectSignal.emit (zmRect)
 
         range255 = self.dispMax - self.dispMin
         self.scale = 255. / range255

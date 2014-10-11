@@ -25,6 +25,7 @@ class Atrex (QtGui.QMainWindow) :
         self.ui.minDNSlider.valueChanged.connect (self.minSliderUpdate)
         self.ui.zoomFacBox.valueChanged.connect (self.zoomFacUpdate)
         self.ui.imageWidget.centPt.connect (self.newCent)
+        self.ui.zoomWidget.zmRectSignal.connect (self.newZmBox)
         self.ui.maxDNSlider.setRange (0, 65535)
         self.ui.minDNSlider.setRange (0, 65535)
         self.ui.maxDNSlider.setSingleStep (100)
@@ -69,7 +70,12 @@ class Atrex (QtGui.QMainWindow) :
         self.zmCentLoc[0] = newloc.x()
         self.zmCentLoc[1] = newloc.y()
         self.ui.zoomWidget.writeQImage_lut (self.myim.imArray, self.zmCentLoc)
-        
+
+    """ newZmBox method called when a the zoom window is updated.
+        This sends the zoom rect to the imageWidget to update the zoom box outline.
+        """
+    def newZmBox (self, zmrect) :
+        self.ui.imageWidget.setZmRect (zmrect) 
 
     """ updateImage method called when Update button is clicked.
         This will read the selectedImageLE text, convert to an int, then
