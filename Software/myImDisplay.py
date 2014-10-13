@@ -12,6 +12,7 @@ class myImDisplay (QtGui.QWidget) :
     zmFac = 3
     zmRect = QtCore.QRect ()
     centPt = QtCore.pyqtSignal(QtCore.QPoint)
+    dragZm = False
     
     def __init__(self, parent) :
         QtGui.QWidget.__init__(self, parent)
@@ -22,7 +23,10 @@ class myImDisplay (QtGui.QWidget) :
         print "(min max ) are :", min, max
 
     def setZmRect (self,rect) :
+        topLeft = rect.topLeft()
+        bottomRight = rect.bottomRight()
         self.zmRect = rect
+        self.zmSize = bottomRight - topLeft
         self.repaint()
 
     # this is for the creating of the 32BPP QImage, currently using the lut version
@@ -113,14 +117,39 @@ class myImDisplay (QtGui.QWidget) :
         self.loadImage = 1
         self.repaint()
 
+    def mouseReleaseEvent (self, event) :
+        self.dragZm = False
+        
     def mousePressEvent (self, event) :
         xloc = int(event.x() / self.zmFac)
         yloc = int(event.y() / self.zmFac)
+
+        # check to see if near the upperLeft corner of the zoom box,
+        # if so, start dragging the zoom box
+        xdist =  (xloc - self.zmRect.topLeft().x())
+        ydist =  (yloc - self.zmRect.topLeft().y())
+        dist =  sqrt (xdist*xdist+ ydist *ydist)
+        print dist
+        if (dist < 10) :
+            self.dragZm = True
+            return
+        
+
         print '(X Y) : ', xloc, yloc
         newloc = QtCore.QPoint(xloc,yloc)
         self.centPt.emit (newloc)
+
         
+    def mouseMoveEvent (self, event) :
         
+        if (self.dragZm == False) :
+            return
+        
+        upleft = event.pos() / self.zmFac
+        self.zmRect.setTopLeft(upleft)
+        self.zmRect.setBottomRight (upleft+self.zmSize)
+        self.centPt.emit (upleft + self.zmSize/2)
+        self.repaint()
 
     def paintEvent (self, event) :
         w = self.width()
