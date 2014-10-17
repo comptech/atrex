@@ -5,6 +5,7 @@ from math import *
 from scipy.misc import imresize
 from scipy.ndimage import zoom
 from scipy.ndimage import filters
+from myPeaks import *
 
 class myImDisplay (QtGui.QWidget) :
     loadImage = 0
@@ -18,6 +19,7 @@ class myImDisplay (QtGui.QWidget) :
     dragZm = False
     zoomToggle = True
     peakToggle = False
+    #peaks = myPeaks ()
     
     def __init__(self, parent) :
         QtGui.QWidget.__init__(self, parent)
@@ -40,6 +42,7 @@ class myImDisplay (QtGui.QWidget) :
         self.peakToggle = True
         self.zoomToggle = False
         self.setButtonModeSignal.emit (1)
+        
         
     def setMinMax (self, min, max) :
         self.dispMin = min
@@ -146,6 +149,9 @@ class myImDisplay (QtGui.QWidget) :
         self.dragZm = False
         
     def mousePressEvent (self, event) :
+        # if right button, let context menu handlers work
+        if (event.button() == QtCore.Qt.RightButton) :
+            return 
         xloc = int(event.x() / self.zmFac)
         yloc = int(event.y() / self.zmFac)
 
@@ -169,8 +175,9 @@ class myImDisplay (QtGui.QWidget) :
             print 'new peak at ', xloc, yloc
             self.addPeakSignal.emit (QtCore.QPoint(xloc,yloc))
             
-    def mouseDoubleClickEvent (self, event) :
-        print 'DOUBLE CLICK captured'
+            
+    #def mouseDoubleClickEvent (self, event) :
+    #    print 'DOUBLE CLICK captured'
 
         
     def mouseMoveEvent (self, event) :
@@ -195,8 +202,15 @@ class myImDisplay (QtGui.QWidget) :
         self.dmax = self.dmax * dsub
         self.dmax[self.dmax<thresh]=0
         print 'shape of dmaxf', self.dmax.shape
+
+    """ Previously established myPeaks object made available to the
+        imageWidget object
+        """
+    def setPeaks (self, pks) :
+        self.peaks = pks 
         
-    
+    """ Paint routine for the imageWidget
+    """
     def paintEvent (self, event) :
         w = self.width()
         h = self.height()
@@ -211,6 +225,16 @@ class myImDisplay (QtGui.QWidget) :
                 botRight = self.zmRect.bottomRight() * self.zmFac
                 painter.setPen (QtGui.QPen (QtCore.Qt.red))
                 painter.drawRect (QtCore.QRect(topLeft, botRight))
-                
-                
+                actList = self.peaks.activeList
+                peakcount = len(self.peaks.peakLists[actList])
+                painter.setPen (QtGui.QPen (QtCore.Qt.green))
+                for i in range (peakcount) :
+                    xloc = self.peaks.peakLists[actList][i].x()*self.zmFac
+                    yloc = self.peaks.peakLists[actList][i].y()*self.zmFac
+                    upLeft = QtCore.QPoint (xloc-10.,yloc-10.)
+                    lowRight = QtCore.QPoint (xloc+10, yloc+10)
+                    newRect = QtCore.QRect (upLeft, lowRight)
+                    
+                    painter.drawRect (newRect)
+                painter.setPen (QtGui.QPen (QtCore.Qt.black))
                                 

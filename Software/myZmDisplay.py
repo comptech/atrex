@@ -43,6 +43,9 @@ class myZmDisplay (QtGui.QWidget) :
         self.zoomToggle = False
         self.setButtonModeSignal.emit (1)
 
+    def setPeaks (self, pks) :
+        self.peaks = pks 
+
     def setZmFac (self,zm) :
         self.zmFac = zm
 
@@ -188,7 +191,27 @@ class myZmDisplay (QtGui.QWidget) :
         if (self.loadImage ==1) :
                 #painter.drawImage (0, 0, self.qimage, 0., 0., self.newx, self.newy)
                 painter.drawImage (0,0, self.qimage, 0.,0.)
+                actList = self.peaks.activeList
+                peakcount = len(self.peaks.peakLists[actList])
+                painter.setPen (QtGui.QPen (QtCore.Qt.green))
+                startPt = self.zoomRect.topLeft()
+                for i in range (peakcount) :
+                    xloc = self.peaks.peakLists[actList][i].x()
+                    yloc = self.peaks.peakLists[actList][i].y()
+                    #check if in zoom window
+                    centpt = QtCore.QPoint(xloc,yloc)
+                    inside = self.zoomRect.contains (centpt)
+                    if (inside != True):
+                        continue ;
+                    xloc = (xloc  - startPt.x()) * self.zmFac
+                    yloc =  (yloc - startPt.y()) * self.zmFac
+                    upLeft = QtCore.QPoint (xloc-10.,yloc-10.)
+                    lowRight = QtCore.QPoint (xloc+10, yloc+10)
+                    newRect = QtCore.QRect (upLeft, lowRight)
+                    
+                    painter.drawRect (newRect)
         #outline the widget
+        painter.setPen (QtGui.QPen (QtCore.Qt.black))
         qrFrame = QtCore.QRect (0,0,w-1,h-1)
         painter.drawRect (qrFrame)
                                 

@@ -747,6 +747,16 @@
      <string>Select Peaks</string>
     </property>
    </widget>
+   <widget class="QLineEdit" name="numPeaksLE">
+    <property name="geometry">
+     <rect>
+      <x>470</x>
+      <y>870</y>
+      <width>311</width>
+      <height>23</height>
+     </rect>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">

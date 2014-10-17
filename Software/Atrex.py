@@ -48,11 +48,15 @@ class Atrex (QtGui.QMainWindow) :
         self.myim = myImage () 
         self.zmCentLoc = [500,500]
         self.peaks = myPeaks ()
+        self.imageWidget.setPeaks (self.peaks)
+        self.zoomWidget.setPeaks (self.peaks)
       
         
         self.ui.zoomButton.setStyleSheet ("QPushButton {background-color: green}")
         self.ui.addPeakButton.setStyleSheet ("QPushButton {background-color: yellow}")
         self.ui.selectButton.setStyleSheet ("QPushButton {background-color: yellow}")
+
+        self.updatePeakNumberLE ()
 
     """ Method to open the selected image
     """
@@ -205,9 +209,12 @@ class Atrex (QtGui.QMainWindow) :
     """
     def newPeak (self, pt) :
         
-        self.peaks.addPeak (0, pt.x(), pt.y())
+        self.peaks.addPeak (pt.x(), pt.y())
         lstr = QtCore.QString(" %1\t%2").arg( pt.x()).arg( pt.y())
         self.ui.peakListWidget.addItem (lstr)
+        self.updatePeakNumberLE ()
+        self.imageWidget.repaint()
+        self.zoomWidget.repaint()
 
     """ zoomMode turns the cursor in the image and zoom widgets to zoom select
     """
@@ -219,6 +226,7 @@ class Atrex (QtGui.QMainWindow) :
     def addPeakMode (self) :
         self.ui.imageWidget.peakAdd()
         self.ui.zoomWidget.peakAdd()
+        
         self.setButtons (1)
 
     def selectMode (self) :
@@ -245,8 +253,11 @@ class Atrex (QtGui.QMainWindow) :
             self.ui.addPeakButton.setStyleSheet ("QPushButton {background-color: yellow}")
             self.ui.selectButton.setStyleSheet ("QPushButton {background-color: green}")
         
-        
-
+    """ Update of the line edit to display # of list 1 and list 2 peaks
+    """
+    def updatePeakNumberLE (self) :
+        str = QtCore.QString ("List 1 : %1\tList 2 : %2").arg(len(self.peaks.peakLists[0])).arg(len(self.peaks.peakLists[1]))
+        self.ui.numPeaksLE.setText(str)
       
 app = QtGui.QApplication (sys.argv)
 atrex = Atrex ()
