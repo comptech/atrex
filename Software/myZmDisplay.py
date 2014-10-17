@@ -12,11 +12,36 @@ class myZmDisplay (QtGui.QWidget) :
     zmFac = 4
     newx = 0
     newy = 0
+    zoomToggle = True
+    peakToggle = False
+    zoomRect = QtCore.QRect()
 
+    # Class Signals 
+    addPeakSignal = QtCore.pyqtSignal (QtCore.QPoint)
+    setButtonModeSignal = QtCore.pyqtSignal (int)
     zmRectSignal = QtCore.pyqtSignal(QtCore.QRect)
     
     def __init__(self, parent) :
         QtGui.QWidget.__init__(self, parent)
+        self.setContextMenuPolicy (QtCore.Qt.CustomContextMenu)
+        self.customContextMenuRequested.connect (self.contextMenuKickoff)
+
+    def contextMenuKickoff (self, point) :
+        gPos = self.mapToGlobal (point)
+        cMenu = QtGui.QMenu ()
+        cMenu.addAction ("Zoom", self.zoomOn)
+        cMenu.addAction ("Add Peak", self.peakAdd)
+        cMenu.exec_(gPos)
+
+    def zoomOn (self) :
+        self.zoomToggle = True
+        self.peakToggle = False
+        self.setButtonModeSignal.emit (0)
+
+    def peakAdd (self) :
+        self.peakToggle = True
+        self.zoomToggle = False
+        self.setButtonModeSignal.emit (1)
 
     def setZmFac (self,zm) :
         self.zmFac = zm
@@ -107,6 +132,7 @@ class myZmDisplay (QtGui.QWidget) :
         tempdata = self.fulldata [starty:endy,startx:endx] 
         zmRect = QtCore.QRect (QtCore.QPoint(startx, starty),QtCore.QPoint(endx,endy))
         self.zmRectSignal.emit (zmRect)
+        self.zoomRect = zmRect
 
         range255 = self.dispMax - self.dispMin
         self.scale = 255. / range255
@@ -141,6 +167,13 @@ class myZmDisplay (QtGui.QWidget) :
         self.qimage.ndarray = a
         self.loadImage = 1
         self.repaint()
+
+    def mousePressEvent (self, event) :
+        startPt = self.zoomRect.topLeft()
+        xloc = event.x() / self.zmFac + startPt.x()
+        yloc = event.y() / self.zmFac + startPt.y()
+        if (self.peakToggle) :
+            self.addPeakSignal.emit (QtCore.QPoint(xloc,yloc))
 
     def paintEvent (self, event) :
         w = self.width()

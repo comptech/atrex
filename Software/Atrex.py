@@ -2,6 +2,7 @@ from PyQt4 import QtCore, QtGui, uic
 from myImage import *
 from myImDisplay import *
 from atrex_utils import *
+from myPeaks import *
 import sys
 import time
 
@@ -13,6 +14,8 @@ class Atrex (QtGui.QMainWindow) :
     def __init__(self) :
         QtGui.QMainWindow.__init__(self)
         self.ui = uic.loadUi ("uiMainWin.ui", self)
+
+
         self.ui.openImageButton.clicked.connect (self.openImage)
         self.ui.browseImageDirButton.clicked.connect (self.defImageDir)
         self.ui.rangeSlider.valueChanged.connect (self.newSliderValue)
@@ -25,6 +28,14 @@ class Atrex (QtGui.QMainWindow) :
         self.ui.minDNSlider.valueChanged.connect (self.minSliderUpdate)
         self.ui.zoomFacBox.valueChanged.connect (self.zoomFacUpdate)
         self.ui.imageWidget.centPt.connect (self.newCent)
+        self.ui.imageWidget.addPeakSignal.connect (self.newPeak)
+        self.ui.imageWidget.setButtonModeSignal.connect (self.setButtons)
+        self.ui.zoomWidget.addPeakSignal.connect (self.newPeak)
+        self.ui.zoomWidget.setButtonModeSignal.connect (self.setButtons)
+        self.ui.zoomButton.clicked.connect (self.zoomMode)
+        self.ui.addPeakButton.clicked.connect (self.addPeakMode)
+        self.ui.selectButton.clicked.connect (self.selectMode)
+        
         self.ui.zoomWidget.zmRectSignal.connect (self.newZmBox)
         self.ui.maxDNSlider.setRange (0, 65535)
         self.ui.minDNSlider.setRange (0, 65535)
@@ -36,6 +47,12 @@ class Atrex (QtGui.QMainWindow) :
         self.imageDirectory = ''
         self.myim = myImage () 
         self.zmCentLoc = [500,500]
+        self.peaks = myPeaks ()
+      
+        
+        self.ui.zoomButton.setStyleSheet ("QPushButton {background-color: green}")
+        self.ui.addPeakButton.setStyleSheet ("QPushButton {background-color: yellow}")
+        self.ui.selectButton.setStyleSheet ("QPushButton {background-color: yellow}")
 
     """ Method to open the selected image
     """
@@ -183,7 +200,54 @@ class Atrex (QtGui.QMainWindow) :
         self.ui.zoomWidget.writeQImage_lut (self.myim.imArray, self.zmCentLoc) 
         self.ui.displayFileLabel.setText (filename)
         return (True)
+
+    """ called by either imageWidget or zoomWidget when a user adds a new peak manually
+    """
+    def newPeak (self, pt) :
         
+        self.peaks.addPeak (0, pt.x(), pt.y())
+        lstr = QtCore.QString(" %1\t%2").arg( pt.x()).arg( pt.y())
+        self.ui.peakListWidget.addItem (lstr)
+
+    """ zoomMode turns the cursor in the image and zoom widgets to zoom select
+    """
+    def zoomMode (self) :
+        self.ui.imageWidget.zoomOn ()
+        self.ui.zoomWidget.zoomOn () 
+        self.setButtons (0)
+
+    def addPeakMode (self) :
+        self.ui.imageWidget.peakAdd()
+        self.ui.zoomWidget.peakAdd()
+        self.setButtons (1)
+
+    def selectMode (self) :
+        self.ui.setButtons (2)
+
+        
+    
+
+
+    """ function to change background button color from gray when mode is inactive to
+        yellow when active
+    """
+    def setButtons (self, buttonNumber) :
+        if (buttonNumber ==0) :
+            self.ui.zoomButton.setStyleSheet ("QPushButton {background-color: green}")
+            self.ui.addPeakButton.setStyleSheet ("QPushButton {background-color: yellow}")
+            self.ui.selectButton.setStyleSheet ("QPushButton {background-color: yellow}")
+        if (buttonNumber ==1) :
+            self.ui.zoomButton.setStyleSheet ("QPushButton {background-color: yellow}")
+            self.ui.addPeakButton.setStyleSheet ("QPushButton {background-color: green}")
+            self.ui.selectButton.setStyleSheet ("QPushButton {background-color: yellow}")
+        if (buttonNumber ==2) :
+            self.ui.zoomButton.setStyleSheet ("QPushButton {background-color: yellow}")
+            self.ui.addPeakButton.setStyleSheet ("QPushButton {background-color: yellow}")
+            self.ui.selectButton.setStyleSheet ("QPushButton {background-color: green}")
+        
+        
+
+      
 app = QtGui.QApplication (sys.argv)
 atrex = Atrex ()
 atrex.show()

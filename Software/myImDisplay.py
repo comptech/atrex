@@ -4,6 +4,7 @@ import numpy as np
 from math import *
 from scipy.misc import imresize
 from scipy.ndimage import zoom
+from scipy.ndimage import filters
 
 class myImDisplay (QtGui.QWidget) :
     loadImage = 0
@@ -12,11 +13,34 @@ class myImDisplay (QtGui.QWidget) :
     zmFac = 3
     zmRect = QtCore.QRect ()
     centPt = QtCore.pyqtSignal(QtCore.QPoint)
+    addPeakSignal = QtCore.pyqtSignal (QtCore.QPoint)
+    setButtonModeSignal = QtCore.pyqtSignal (int)
     dragZm = False
+    zoomToggle = True
+    peakToggle = False
     
     def __init__(self, parent) :
         QtGui.QWidget.__init__(self, parent)
+        self.setContextMenuPolicy (QtCore.Qt.CustomContextMenu)
+        self.customContextMenuRequested.connect (self.contextMenuKickoff)
 
+    def contextMenuKickoff (self, point) :
+        gPos = self.mapToGlobal (point)
+        cMenu = QtGui.QMenu ()
+        cMenu.addAction ("Zoom", self.zoomOn)
+        cMenu.addAction ("Add Peak", self.peakAdd)
+        cMenu.exec_(gPos)
+
+    def zoomOn (self) :
+        self.zoomToggle = True
+        self.peakToggle = False
+        self.setButtonModeSignal.emit (0)
+
+    def peakAdd (self) :
+        self.peakToggle = True
+        self.zoomToggle = False
+        self.setButtonModeSignal.emit (1)
+        
     def setMinMax (self, min, max) :
         self.dispMin = min
         self.dispMax = max
@@ -116,6 +140,7 @@ class myImDisplay (QtGui.QWidget) :
         self.qimage.ndarray = a
         self.loadImage = 1
         self.repaint()
+        #self.peakFind()
 
     def mouseReleaseEvent (self, event) :
         self.dragZm = False
@@ -126,6 +151,7 @@ class myImDisplay (QtGui.QWidget) :
 
         # check to see if near the upperLeft corner of the zoom box,
         # if so, start dragging the zoom box
+        
         xdist =  (xloc - self.zmRect.topLeft().x())
         ydist =  (yloc - self.zmRect.topLeft().y())
         dist =  sqrt (xdist*xdist+ ydist *ydist)
@@ -137,7 +163,14 @@ class myImDisplay (QtGui.QWidget) :
 
         print '(X Y) : ', xloc, yloc
         newloc = QtCore.QPoint(xloc,yloc)
-        self.centPt.emit (newloc)
+        if (self.zoomToggle) :
+            self.centPt.emit (newloc)
+        else :
+            print 'new peak at ', xloc, yloc
+            self.addPeakSignal.emit (QtCore.QPoint(xloc,yloc))
+            
+    def mouseDoubleClickEvent (self, event) :
+        print 'DOUBLE CLICK captured'
 
         
     def mouseMoveEvent (self, event) :
@@ -151,6 +184,19 @@ class myImDisplay (QtGui.QWidget) :
         self.centPt.emit (upleft + self.zmSize/2)
         self.repaint()
 
+    ''' test routine for peak finding based upon kernel maximum filter
+        and threshold value'''
+    
+    def peakFind (self) :
+        thresh = 1500
+        neigh = 11
+        self.dmax = filters.maximum_filter (self.fulldata, neigh).astype(np.float32)
+        dsub = [self.dmax==self.fulldata]
+        self.dmax = self.dmax * dsub
+        self.dmax[self.dmax<thresh]=0
+        print 'shape of dmaxf', self.dmax.shape
+        
+    
     def paintEvent (self, event) :
         w = self.width()
         h = self.height()
