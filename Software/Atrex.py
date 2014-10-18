@@ -215,6 +215,28 @@ class Atrex (QtGui.QMainWindow) :
         self.imageWidget.repaint()
         self.zoomWidget.repaint()
 
+    """ update peak list usually called when one of the peakList radio boxes is called
+    """
+    def updatePeakList (self) :
+        self.ui.peakListWidget.clear ()
+        curList = self.peaks.peakLists[self.peaks.activeList]
+        print 'number of points in list are : ',len (curList)
+        for i in range (len(curList)) :
+            lstr = QtCore.QString(" %1\t%2").arg(curList[i].x()).arg(curList[i].y())
+            self.ui.peakListWidget.addItem (lstr)
+
+    
+    def listButtonChanged (self, event) :
+        status = self.list1Button.isChecked()
+        if (status) :
+            self.peaks.setActiveList (0)
+        else :
+            self.peaks.setActiveList (1)
+        self.updatePeakList () ;
+        self.ui.imageWidget.repaint()
+        self.ui.zoomWidget.repaint()
+
+
     """ zoomMode turns the cursor in the image and zoom widgets to zoom select
     """
     def zoomMode (self) :
@@ -253,14 +275,8 @@ class Atrex (QtGui.QMainWindow) :
         str = QtCore.QString ("List 1 : %1\tList 2 : %2").arg(len(self.peaks.peakLists[0])).arg(len(self.peaks.peakLists[1]))
         self.ui.numPeaksLE.setText(str)
 
-    def listButtonChanged (self, event) :
-        status = self.list1Button.isChecked()
-        if (status) :
-            self.peaks.activeList = 0
-        else :
-            self.peaks.activeList = 1 
-        
-      
+              
+          
 app = QtGui.QApplication (sys.argv)
 atrex = Atrex ()
 atrex.show()
