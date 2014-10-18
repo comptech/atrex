@@ -35,6 +35,7 @@ class Atrex (QtGui.QMainWindow) :
         self.ui.zoomButton.clicked.connect (self.zoomMode)
         self.ui.addPeakButton.clicked.connect (self.addPeakMode)
         self.ui.selectButton.clicked.connect (self.selectMode)
+        self.ui.list1Button.toggled.connect (self.listButtonChanged)
         
         self.ui.zoomWidget.zmRectSignal.connect (self.newZmBox)
         self.ui.maxDNSlider.setRange (0, 65535)
@@ -50,12 +51,10 @@ class Atrex (QtGui.QMainWindow) :
         self.peaks = myPeaks ()
         self.imageWidget.setPeaks (self.peaks)
         self.zoomWidget.setPeaks (self.peaks)
-      
-        
+
         self.ui.zoomButton.setStyleSheet ("QPushButton {background-color: green}")
         self.ui.addPeakButton.setStyleSheet ("QPushButton {background-color: yellow}")
         self.ui.selectButton.setStyleSheet ("QPushButton {background-color: yellow}")
-
         self.updatePeakNumberLE ()
 
     """ Method to open the selected image
@@ -226,15 +225,10 @@ class Atrex (QtGui.QMainWindow) :
     def addPeakMode (self) :
         self.ui.imageWidget.peakAdd()
         self.ui.zoomWidget.peakAdd()
-        
         self.setButtons (1)
 
     def selectMode (self) :
         self.ui.setButtons (2)
-
-        
-    
-
 
     """ function to change background button color from gray when mode is inactive to
         yellow when active
@@ -258,6 +252,14 @@ class Atrex (QtGui.QMainWindow) :
     def updatePeakNumberLE (self) :
         str = QtCore.QString ("List 1 : %1\tList 2 : %2").arg(len(self.peaks.peakLists[0])).arg(len(self.peaks.peakLists[1]))
         self.ui.numPeaksLE.setText(str)
+
+    def listButtonChanged (self, event) :
+        status = self.list1Button.isChecked()
+        if (status) :
+            self.peaks.activeList = 0
+        else :
+            self.peaks.activeList = 1 
+        
       
 app = QtGui.QApplication (sys.argv)
 atrex = Atrex ()
