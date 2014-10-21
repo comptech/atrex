@@ -34,7 +34,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="FileTab">
      <attribute name="title">
@@ -104,7 +104,7 @@
         <string>Output Directory :</string>
        </property>
       </widget>
-      <widget class="QPushButton" name="browseImageDirectory_2">
+      <widget class="QPushButton" name="browseWorkDirButton">
        <property name="geometry">
         <rect>
          <x>410</x>
@@ -535,20 +535,20 @@
      <widget class="QListWidget" name="peakListWidget">
       <property name="geometry">
        <rect>
-        <x>10</x>
-        <y>40</y>
+        <x>220</x>
+        <y>30</y>
         <width>261</width>
-        <height>471</height>
+        <height>241</height>
        </rect>
       </property>
      </widget>
      <widget class="QGroupBox" name="groupBox_4">
       <property name="geometry">
        <rect>
-        <x>290</x>
+        <x>10</x>
         <y>10</y>
         <width>161</width>
-        <height>62</height>
+        <height>51</height>
        </rect>
       </property>
       <property name="title">
@@ -577,7 +577,7 @@
      <widget class="QLabel" name="label_12">
       <property name="geometry">
        <rect>
-        <x>10</x>
+        <x>240</x>
         <y>10</y>
         <width>161</width>
         <height>20</height>
@@ -585,6 +585,16 @@
       </property>
       <property name="text">
        <string>      X             Y</string>
+      </property>
+     </widget>
+     <widget class="QWidget" name="peakDisplayWidget" native="true">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>70</y>
+        <width>200</width>
+        <height>200</height>
+       </rect>
       </property>
      </widget>
     </widget>

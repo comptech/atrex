@@ -4,6 +4,7 @@ from myImDisplay import *
 from atrex_utils import *
 from myPeaks import *
 import sys
+import os.path
 import time
 
 class Atrex (QtGui.QMainWindow) :
@@ -18,6 +19,7 @@ class Atrex (QtGui.QMainWindow) :
 
         self.ui.openImageButton.clicked.connect (self.openImage)
         self.ui.browseImageDirButton.clicked.connect (self.defImageDir)
+        self.ui.browseWorkDirButton.clicked.connect (self.defWorkDir)
         self.ui.rangeSlider.valueChanged.connect (self.newSliderValue)
         self.ui.rangeSlider.sliderReleased.connect (self.newImageValue)
         self.ui.incrementImageButton.clicked.connect (self.incrementImageValue)
@@ -44,8 +46,9 @@ class Atrex (QtGui.QMainWindow) :
         self.ui.minDNSlider.setSingleStep (100)
         self.ui.maxDNSlider.setValue (1000)
         self.ui.rangeSlider.setSingleStep(1) 
-        self.workDirectory = ''
-        self.imageDirectory = ''
+        self.workDirectory = QtCore.QString('')
+        self.imageDirectory = QtCore.QString('')
+        self.imageFile = QtCore.QString ('')
         self.myim = myImage () 
         self.zmCentLoc = [500,500]
         self.peaks = myPeaks ()
@@ -56,16 +59,98 @@ class Atrex (QtGui.QMainWindow) :
         self.ui.addPeakButton.setStyleSheet ("QPushButton {background-color: yellow}")
         self.ui.selectButton.setStyleSheet ("QPushButton {background-color: yellow}")
         self.updatePeakNumberLE ()
+        self.getHome ()
+        self.ui.tabWidget.setCurrentIndex (0)
+
+    def getHome (self) :
+        # get the users home directory
+        homedir = os.path.expanduser("~")
+        self.paramFile = QtCore.QString("%1/atrex_params.txt").arg(homedir) 
+        # then check to see if the atrex_params.txt file exists
+        status = os.path.isfile (self.paramFile)
+        str = QtCore.QString("")
+        if (status) :
+            qf = QtCore.QFile (self.paramFile)
+            qf.open (QtCore.QIODevice.ReadOnly)
+            qts = QtCore.QTextStream (qf)
+            str = qts.readLine()
+            if (str.length()>2) :
+                self.ui.imDirLE.setText (str)
+            str = qts.readLine()
+            if (str.length()>2) :
+                self.ui.imfileLE.setText (str)
+                self.imageFile = str
+                print 'displaying ',str
+                self.openImageFile (str)
+            str = qts.readLine()
+            if (str.length()>2) :
+                self.ui.outDirLE.setText (str)
+            
+        print 'looking for ',self.paramFile
+        
+
+    def closeEvent (self, event) :
+        print 'Shutting down....'
+        qf = QtCore.QFile (self.paramFile)
+        qf.open (QtCore.QIODevice.WriteOnly)
+        qts = QtCore.QTextStream (qf)
+        if (self.imageDirectory.size()>1) :
+            qts << self.imageDirectory << "\r\n" 
+        else :
+            qts << "\r\n"
+        if (self.imageFile.size() > 1) :
+            qts << self.imageFile << "\r\n"
+        else :
+            qts << "\r\n"
+        if (self.workDirectory.size() > 1) :
+            qts << self.workDirectory << "\r\n"
+        else :
+            qts << "\r\n"
+            
+        
+        qf.close()
+        
+        
 
     """ Method to open the selected image
     """
     def openImage (self) :
         wdir = self.ui.imDirLE.text ()
         self.imageFile = QtGui.QFileDialog.getOpenFileName (self, 'Open Tiff Image', wdir)
+        # get the path and put it in imDirLE
+        z = QtCore.QDir.separator()
+        wdir = self.imageFile.left (self.imageFile.lastIndexOf (z))
+        self.ui.imDirLE.setText (wdir)
         # image file prefix will be used to build new images to display
         prefind = self.imageFile.lastIndexOf(".tif")
         self.imageFilePref = self.imageFile.left (prefind-3)
         print 'pref is ',self.imageFilePref
+        self.imfileLE.setText (self.imageFile)
+        self.displayImage (self.imageFile)
+        #self.myim.readTiff (self.imageFile)
+        #self.ui.imageWidget.writeQImage (self.myim.imArray)
+        mnmx = getImageRange (wdir, self.imageFile)
+        self.ui.minRangeLabel.setText (QtCore.QString.number(mnmx[0]))
+        self.ui.maxRangeLabel.setText (QtCore.QString.number(mnmx[1]))
+        self.ui.selectedImageLE.setText (QtCore.QString.number(mnmx[2]))
+        self.ui.rangeSlider.setRange (mnmx[0],mnmx[1])
+        self.ui.rangeSlider.setValue (mnmx[2])
+        self.minRange = mnmx[0]
+        self.maxRange = mnmx[1]
+
+    """ Method to open the selected image
+    """
+    def openImageFile (self, filename) :
+        self.imageFile = filename
+        z = QtCore.QDir.separator()
+        wdir = self.imageFile.left (self.imageFile.lastIndexOf (z))
+        self.ui.imDirLE.setText (wdir)
+        # image file prefix will be used to build new images to display
+        
+        prefind = self.imageFile.lastIndexOf(".tif")
+        self.imageFilePref = self.imageFile.left (prefind-3)
+        print 'pref is ',self.imageFilePref
+        print 'filename is ',self.imageFile
         self.imfileLE.setText (self.imageFile)
         self.displayImage (self.imageFile)
         #self.myim.readTiff (self.imageFile)
@@ -170,8 +255,15 @@ class Atrex (QtGui.QMainWindow) :
         self.imageDirectory = QtGui.QFileDialog.getExistingDirectory (self, 'Define Image Directory',
                                                       self.imageDirectory,
                                                       QtGui.QFileDialog.ShowDirsOnly)
-        print self.imageDirectory
+        #print self.imageDirectory
         self.ui.imDirLE.setText (self.imageDirectory)
+
+    def defWorkDir (self) :
+        self.workDirectory = QtGui.QFileDialog.getExistingDirectory (self, 'Define Work Directory',
+                                                      self.workDirectory,
+                                                      QtGui.QFileDialog.ShowDirsOnly)
+        #print self.imageDirectory
+        self.ui.outDirLE.setText (self.workDirectory)
         
 
     def displayImage (self, filename) :
@@ -282,3 +374,4 @@ atrex = Atrex ()
 atrex.show()
 
 sys.exit (app.exec_())
+print 'hello here'
