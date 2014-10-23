@@ -31,6 +31,7 @@ class Atrex (QtGui.QMainWindow) :
         self.ui.zoomFacBox.valueChanged.connect (self.zoomFacUpdate)
         self.ui.imageWidget.centPt.connect (self.newCent)
         self.ui.imageWidget.addPeakSignal.connect (self.newPeak)
+        self.ui.imageWidget.selectRectSignal.connect (self.selectRect)
         self.ui.imageWidget.setButtonModeSignal.connect (self.setButtons)
         self.ui.zoomWidget.addPeakSignal.connect (self.newPeak)
         self.ui.zoomWidget.setButtonModeSignal.connect (self.setButtons)
@@ -86,7 +87,7 @@ class Atrex (QtGui.QMainWindow) :
             if (str.length()>2) :
                 self.ui.outDirLE.setText (str)
             
-        print 'looking for ',self.paramFile
+        
         
 
     def closeEvent (self, event) :
@@ -342,7 +343,14 @@ class Atrex (QtGui.QMainWindow) :
         self.setButtons (1)
 
     def selectMode (self) :
+        self.ui.imageWidget.selectOn ()
         self.ui.setButtons (2)
+
+    def selectRect (self, rect) :
+        print 'select peaks called'
+        self.peaks.setSelected (rect)
+        self.ui.imageWidget.repaint()
+        
 
     """ function to change background button color from gray when mode is inactive to
         yellow when active

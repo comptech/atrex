@@ -26,3 +26,14 @@ class myPeaks (QtCore.QObject) :
 
     def setActiveList (self, ind) :
         self.activeList = ind 
+
+    def setSelected (self, rectCoords) :
+        print rectCoords
+        curList = self.peakLists[self.activeList]
+        nPeaks = self.count[self.activeList]
+        for i in range (nPeaks) :
+            point = QtCore.QPoint (curList[i].x(), curList[i].y())
+            state = rectCoords.contains (point)
+            if (state) :
+                curList[i].setSelected (True)
+        

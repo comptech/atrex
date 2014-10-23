@@ -15,10 +15,12 @@ class myImDisplay (QtGui.QWidget) :
     zmRect = QtCore.QRect ()
     centPt = QtCore.pyqtSignal(QtCore.QPoint)
     addPeakSignal = QtCore.pyqtSignal (QtCore.QPoint)
+    selectRectSignal = QtCore.pyqtSignal (QtCore.QRect)
     setButtonModeSignal = QtCore.pyqtSignal (int)
     dragZm = False
     zoomToggle = True
     peakToggle = False
+    selectFlag = False
     #peaks = myPeaks ()
     
     def __init__(self, parent) :
@@ -36,11 +38,19 @@ class myImDisplay (QtGui.QWidget) :
     def zoomOn (self) :
         self.zoomToggle = True
         self.peakToggle = False
+        self.selectFlag = False
         self.setButtonModeSignal.emit (0)
 
     def peakAdd (self) :
         self.peakToggle = True
         self.zoomToggle = False
+        self.selectFlag = False
+        self.setButtonModeSignal.emit (1)
+
+    def selectOn (self) :
+        self.peakToggle = False
+        self.zoomToggle = False
+        self.selectFlag = True
         self.setButtonModeSignal.emit (1)
         
         
@@ -145,16 +155,44 @@ class myImDisplay (QtGui.QWidget) :
         self.repaint()
         #self.peakFind()
 
+
+    #############################################################
+    ####    Mouse Functions
     def mouseReleaseEvent (self, event) :
         self.dragZm = False
+        if (self.selectFlag) :
+            self.selectPointLR = event.pos ()
+            #need to convert to fullres coords
+            x1 = self.selectPointLR.x() / self.zmFac
+            y1 = self.selectPointLR.y() / self.zmFac
+            x0 = self.selectPointUL.x() / self.zmFac
+            y0 = self.selectPointUL.y() / self.zmFac
+            newRect = QtCore.QRect (x0, y0, x1-x0, y1-y0)
+            # emit the signal so that the Atrex class can mark selected peaks
+            self.selectRectSignal.emit (newRect)
+            
+            
         
     def mousePressEvent (self, event) :
         # if right button, let context menu handlers work
         if (event.button() == QtCore.Qt.RightButton) :
-            return 
+            return
+
+        # full res coords
         xloc = int(event.x() / self.zmFac)
         yloc = int(event.y() / self.zmFac)
+        # display coords
+        xwin = event.x()
+        ywin = event.y()
 
+        # if the select button has been triggered, need to first
+        # put down an anchor point or left point for qrect
+        # return after setting the upper left
+        if (self.selectFlag) :
+            self.selectPointUL = event.pos()
+            self.selectPointLR = event.pos()
+            return
+        
         # check to see if near the upperLeft corner of the zoom box,
         # if so, start dragging the zoom box
         
@@ -182,14 +220,18 @@ class myImDisplay (QtGui.QWidget) :
         
     def mouseMoveEvent (self, event) :
         
-        if (self.dragZm == False) :
-            return
+        if (self.dragZm ) :
+            
         
-        upleft = event.pos() / self.zmFac
-        self.zmRect.setTopLeft(upleft)
-        self.zmRect.setBottomRight (upleft+self.zmSize)
-        self.centPt.emit (upleft + self.zmSize/2)
-        self.repaint()
+            upleft = event.pos() / self.zmFac
+            self.zmRect.setTopLeft(upleft)
+            self.zmRect.setBottomRight (upleft+self.zmSize)
+            self.centPt.emit (upleft + self.zmSize/2)
+            self.repaint()
+        if (self.selectFlag) :
+            self.selectPointLR =(event.pos())
+            self.repaint()
+            
 
     ''' test routine for peak finding based upon kernel maximum filter
         and threshold value'''
@@ -234,7 +276,11 @@ class myImDisplay (QtGui.QWidget) :
                     upLeft = QtCore.QPoint (xloc-10.,yloc-10.)
                     lowRight = QtCore.QPoint (xloc+10, yloc+10)
                     newRect = QtCore.QRect (upLeft, lowRight)
-                    
+                    if self.peaks.peakLists[actList][i].selected :
+                        painter.setPen (QtGui.QPen (QtCore.Qt.magenta))
+                    else :
+                        painter.setPen (QtGui.QPen (QtCore.Qt.green))
                     painter.drawRect (newRect)
-                painter.setPen (QtGui.QPen (QtCore.Qt.black))
-                                
+                if (self.selectFlag) :
+                    painter.setPen (QtGui.QPen (QtCore.Qt.magenta))
+                    painter.drawRect (QtCore.QRect(self.selectPointUL, self.selectPointLR))            
