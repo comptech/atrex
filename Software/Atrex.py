@@ -6,6 +6,7 @@ from myPeaks import *
 import sys
 import os.path
 import time
+import myPeakTable
 
 class Atrex (QtGui.QMainWindow) :
     displayedImage = False
@@ -52,7 +53,10 @@ class Atrex (QtGui.QMainWindow) :
         self.imageFile = QtCore.QString ('')
         self.myim = myImage () 
         self.zmCentLoc = [500,500]
-        self.peaks = myPeaks ()
+        self.activeList = 1
+        self.peaks = myPeakTable.myPeakTable() # This is the PeakTable
+        self.peaks0 = myPeakTable.myPeakTable() # This is the PeakTable
+        self.peaks1 = myPeakTable.myPeakTable() # This is the PeakTable
         self.imageWidget.setPeaks (self.peaks)
         self.zoomWidget.setPeaks (self.peaks)
 
@@ -300,8 +304,9 @@ class Atrex (QtGui.QMainWindow) :
     """ called by either imageWidget or zoomWidget when a user adds a new peak manually
     """
     def newPeak (self, pt) :
-        
-        self.peaks.addPeak (pt.x(), pt.y())
+        peak=myPeakTable.myPeak()
+        peak.setDetxy ([pt.x(), pt.y()])
+        self.peaks.addPeak(peak)
         lstr = QtCore.QString(" %1\t%2").arg( pt.x()).arg( pt.y())
         self.ui.peakListWidget.addItem (lstr)
         self.updatePeakNumberLE ()
@@ -312,19 +317,21 @@ class Atrex (QtGui.QMainWindow) :
     """
     def updatePeakList (self) :
         self.ui.peakListWidget.clear ()
-        curList = self.peaks.peakLists[self.peaks.activeList]
-        print 'number of points in list are : ',len (curList)
-        for i in range (len(curList)) :
-            lstr = QtCore.QString(" %1\t%2").arg(curList[i].x()).arg(curList[i].y())
+        #curList = self.peaks.peakLists[self.peaks.activeList]
+        print 'number of points in list are : ',self.peaks.getpeakno()
+        for i in range (self.peaks.getpeakno()) :
+            x=self.peaks.getPeaklistDetX()
+            y=self.peaks.getPeaklistDetY()
+            lstr = QtCore.QString(" %1\t%2").arg(x[i]).arg(y[i])
             self.ui.peakListWidget.addItem (lstr)
 
     
     def listButtonChanged (self, event) :
         status = self.list1Button.isChecked()
         if (status) :
-            self.peaks.setActiveList (0)
+            self.peaks.setActiveList(self.peaks0, self.peaks1, 0)
         else :
-            self.peaks.setActiveList (1)
+            self.peaks.setActiveList(self.peaks0, self.peaks1, 1)
         self.updatePeakList () ;
         self.ui.imageWidget.repaint()
         self.ui.zoomWidget.repaint()
@@ -372,7 +379,9 @@ class Atrex (QtGui.QMainWindow) :
     """ Update of the line edit to display # of list 1 and list 2 peaks
     """
     def updatePeakNumberLE (self) :
-        str = QtCore.QString ("List 1 : %1\tList 2 : %2").arg(len(self.peaks.peakLists[0])).arg(len(self.peaks.peakLists[1]))
+        pn=self.peaks.getpeakno()
+        pn1=self.peaks1.getpeakno()
+        str = QtCore.QString ("List 1 : %1\tList 2 : %2").arg(pn).arg(pn1)
         self.ui.numPeaksLE.setText(str)
 
               
