@@ -8,7 +8,7 @@ import os.path
 import time
 import myPeakTable
 
-class Atrex (QtGui.QMainWindow) :
+class Atrex (QtGui.QMainWindow):
     displayedImage = False
     minRange = 0
     maxRange = 99
@@ -40,7 +40,14 @@ class Atrex (QtGui.QMainWindow) :
         self.ui.addPeakButton.clicked.connect (self.addPeakMode)
         self.ui.selectButton.clicked.connect (self.selectMode)
         self.ui.list1Button.toggled.connect (self.listButtonChanged)
-        
+
+        # peak tab buttons
+        self.ui.selectAllButton.clicked.connect(self.selAllPeaks)
+        self.ui.clearAllButton.clicked.connect (self.clearAllPeaks)
+        self.ui.mvSelPeaksButton.clicked.connect(self.moveSelPeaks)
+        self.ui.delSelPeaksButton.clicked.connect(self.delSelPeaks)
+
+
         self.ui.zoomWidget.zmRectSignal.connect (self.newZmBox)
         self.ui.maxDNSlider.setRange (0, 65535)
         self.ui.minDNSlider.setRange (0, 65535)
@@ -313,16 +320,24 @@ class Atrex (QtGui.QMainWindow) :
         self.imageWidget.repaint()
         self.zoomWidget.repaint()
 
+
     """ update peak list usually called when one of the peakList radio boxes is called
     """
     def updatePeakList (self) :
         self.ui.peakListWidget.clear ()
+<<<<<<< HEAD
         #curList = self.peaks.peakLists[self.peaks.activeList]
         print 'number of points in list are : ',self.peaks.getpeakno()
         for i in range (self.peaks.getpeakno()) :
             x=self.peaks.getPeaklistDetX()
             y=self.peaks.getPeaklistDetY()
             lstr = QtCore.QString(" %1\t%2").arg(x[i]).arg(y[i])
+=======
+        curList = self.peaks.peakLists[self.peaks.activeList]
+        print 'number of points in list are : ',len (curList)
+        for peak in curList :
+            lstr = QtCore.QString(" %1\t%2").arg(peak.x()).arg(peak.y())
+>>>>>>> origin/master
             self.ui.peakListWidget.addItem (lstr)
 
     
@@ -358,6 +373,27 @@ class Atrex (QtGui.QMainWindow) :
         self.peaks.setSelected (rect)
         self.ui.imageWidget.repaint()
         
+    def selAllPeaks (self) :
+        self.peaks.selectAll ()
+        self.ui.imageWidget.repaint()
+
+    def clearAllPeaks (self) :
+        self.peaks.clearAll()
+        self.ui.imageWidget.repaint()
+
+    def moveSelPeaks (self):
+        self.peaks.moveSelected()
+        self.updatePeakNumberLE()
+        self.updatePeakList()
+        self.ui.imageWidget.repaint()
+
+    def delSelPeaks (self):
+        self.peaks.deleteSelected()
+        self.updatePeakNumberLE()
+        self.updatePeakList()
+        self.ui.imageWidget.repaint()
+
+
 
     """ function to change background button color from gray when mode is inactive to
         yellow when active

@@ -192,12 +192,21 @@ class myZmDisplay (QtGui.QWidget) :
                 #painter.drawImage (0, 0, self.qimage, 0., 0., self.newx, self.newy)
                 painter.drawImage (0,0, self.qimage, 0.,0.)
                 actList = self.peaks.activeList
+<<<<<<< HEAD
                 peakcount = self.peaks.getpeakno()
                 painter.setPen (QtGui.QPen (QtCore.Qt.green))
                 startPt = self.zoomRect.topLeft()
                 for i in range (peakcount) :
                     xloc = self.peaks.peaks[i].getDetxy()[0]
                     yloc = self.peaks.peaks[i].getDetxy()[0]
+=======
+                curList = self.peaks.peakLists[actList]
+                painter.setPen (QtGui.QPen (QtCore.Qt.green))
+                startPt = self.zoomRect.topLeft()
+                for peak in curList :
+                    xloc = peak.x()
+                    yloc = peak.y()
+>>>>>>> origin/master
                     #check if in zoom window
                     centpt = QtCore.QPoint(xloc,yloc)
                     inside = self.zoomRect.contains (centpt)
@@ -208,7 +217,10 @@ class myZmDisplay (QtGui.QWidget) :
                     upLeft = QtCore.QPoint (xloc-10.,yloc-10.)
                     lowRight = QtCore.QPoint (xloc+10, yloc+10)
                     newRect = QtCore.QRect (upLeft, lowRight)
-                    
+                    painter.setPen (QtGui.QPen (QtCore.Qt.magenta))
+                    if peak.selected :
+                        painter.setPen (QtGui.QPen (QtCore.Qt.green))
+
                     painter.drawRect (newRect)
         #outline the widget
         painter.setPen (QtGui.QPen (QtCore.Qt.black))
