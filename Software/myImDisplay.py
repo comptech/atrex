@@ -15,12 +15,13 @@ class myImDisplay (QtGui.QWidget) :
     zmRect = QtCore.QRect ()
     centPt = QtCore.pyqtSignal(QtCore.QPoint)
     addPeakSignal = QtCore.pyqtSignal (QtCore.QPoint)
-    selectRectSignal = QtCore.pyqtSignal (QtCore.QRect)
+    selectRectSignal = QtCore.pyqtSignal (QtCore.QRect, bool)
     setButtonModeSignal = QtCore.pyqtSignal (int)
     dragZm = False
     zoomToggle = True
     peakToggle = False
     selectFlag = False
+    unselectFlag = False
     #peaks = myPeaks ()
     
     def __init__(self, parent) :
@@ -33,26 +34,38 @@ class myImDisplay (QtGui.QWidget) :
         cMenu = QtGui.QMenu ()
         cMenu.addAction ("Zoom", self.zoomOn)
         cMenu.addAction ("Add Peak", self.peakAdd)
+        cMenu.addAction ("SelectPeaks", self.selectOn)
+        cMenu.addAction ("DeselectPeaks", self.unselectOn)
+
         cMenu.exec_(gPos)
 
     def zoomOn (self) :
         self.zoomToggle = True
         self.peakToggle = False
         self.selectFlag = False
+        self.unselectFlag = False
         self.setButtonModeSignal.emit (0)
 
     def peakAdd (self) :
         self.peakToggle = True
         self.zoomToggle = False
         self.selectFlag = False
+        self.unselectFlag = False
         self.setButtonModeSignal.emit (1)
 
     def selectOn (self) :
         self.peakToggle = False
         self.zoomToggle = False
         self.selectFlag = True
-        self.setButtonModeSignal.emit (1)
-        
+        self.unselectFlag = False
+        self.setButtonModeSignal.emit (2)
+
+    def unselectOn (self) :
+        self.peakToggle = False
+        self.zoomToggle = False
+        self.selectFlag = False
+        self.unselectFlag = True
+        self.setButtonModeSignal.emit (2)
         
     def setMinMax (self, min, max) :
         self.dispMin = min
@@ -160,7 +173,7 @@ class myImDisplay (QtGui.QWidget) :
     ####    Mouse Functions
     def mouseReleaseEvent (self, event) :
         self.dragZm = False
-        if (self.selectFlag) :
+        if (self.selectFlag | self.unselectFlag) :
             self.selectPointLR = event.pos ()
             #need to convert to fullres coords
             x1 = self.selectPointLR.x() / self.zmFac
@@ -168,8 +181,11 @@ class myImDisplay (QtGui.QWidget) :
             x0 = self.selectPointUL.x() / self.zmFac
             y0 = self.selectPointUL.y() / self.zmFac
             newRect = QtCore.QRect (x0, y0, x1-x0, y1-y0)
+            smode = True
+            if (self.unselectFlag) :
+                smode = False
             # emit the signal so that the Atrex class can mark selected peaks
-            self.selectRectSignal.emit (newRect)
+            self.selectRectSignal.emit (newRect, smode)
             
             
         
@@ -188,7 +204,7 @@ class myImDisplay (QtGui.QWidget) :
         # if the select button has been triggered, need to first
         # put down an anchor point or left point for qrect
         # return after setting the upper left
-        if (self.selectFlag) :
+        if (self.selectFlag | self.unselectFlag) :
             self.selectPointUL = event.pos()
             self.selectPointLR = event.pos()
             return
@@ -228,7 +244,7 @@ class myImDisplay (QtGui.QWidget) :
             self.zmRect.setBottomRight (upleft+self.zmSize)
             self.centPt.emit (upleft + self.zmSize/2)
             self.repaint()
-        if (self.selectFlag) :
+        if (self.selectFlag | self.unselectFlag) :
             self.selectPointLR =(event.pos())
             self.repaint()
             
@@ -282,4 +298,8 @@ class myImDisplay (QtGui.QWidget) :
                     painter.drawRect (newRect)
                 if (self.selectFlag) :
                     painter.setPen (QtGui.QPen (QtCore.Qt.magenta))
-                    painter.drawRect (QtCore.QRect(self.selectPointUL, self.selectPointLR))            
+                    painter.drawRect (QtCore.QRect(self.selectPointUL, self.selectPointLR))
+                if (self.unselectFlag) :
+                    painter.setPen (QtGui.QPen (QtCore.Qt.cyan))
+                    painter.drawRect (QtCore.QRect(self.selectPointUL, self.selectPointLR))
+

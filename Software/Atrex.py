@@ -37,6 +37,7 @@ class Atrex (QtGui.QMainWindow):
         self.ui.zoomButton.clicked.connect (self.zoomMode)
         self.ui.addPeakButton.clicked.connect (self.addPeakMode)
         self.ui.selectButton.clicked.connect (self.selectMode)
+        self.ui.unselectButton.clicked.connect (self.unselectMode)
         self.ui.list1Button.toggled.connect (self.listButtonChanged)
 
         # peak tab buttons
@@ -69,6 +70,8 @@ class Atrex (QtGui.QMainWindow):
         self.ui.zoomButton.setStyleSheet ("QPushButton {background-color: green}")
         self.ui.addPeakButton.setStyleSheet ("QPushButton {background-color: yellow}")
         self.ui.selectButton.setStyleSheet ("QPushButton {background-color: yellow}")
+        self.ui.unselectButton.setStyleSheet ("QPushButton {background-color: yellow}")
+
         self.updatePeakNumberLE ()
         self.getHome ()
         self.ui.tabWidget.setCurrentIndex (0)
@@ -362,9 +365,16 @@ class Atrex (QtGui.QMainWindow):
         self.ui.imageWidget.selectOn ()
         self.ui.setButtons (2)
 
-    def selectRect (self, rect) :
+    def unselectMode (self) :
+        self.ui.imageWidget.unselectOn()
+        self.ui.setButtons (3)
+
+    def selectRect (self, rect, sFlag) :
         print 'select peaks called'
-        self.peaks.setSelected (rect)
+        if (sFlag) :
+            self.peaks.setSelected (rect)
+        else :
+            self.peaks.setUnselected (rect)
         self.ui.imageWidget.repaint()
         
     def selAllPeaks (self) :
@@ -393,18 +403,19 @@ class Atrex (QtGui.QMainWindow):
         yellow when active
     """
     def setButtons (self, buttonNumber) :
+        self.ui.zoomButton.setStyleSheet ("QPushButton {background-color: yellow}")
+        self.ui.addPeakButton.setStyleSheet ("QPushButton {background-color: yellow}")
+        self.ui.selectButton.setStyleSheet ("QPushButton {background-color: yellow}")
+        self.ui.unselectButton.setStyleSheet ("QPushButton {background-color: yellow}")
         if (buttonNumber ==0) :
             self.ui.zoomButton.setStyleSheet ("QPushButton {background-color: green}")
-            self.ui.addPeakButton.setStyleSheet ("QPushButton {background-color: yellow}")
-            self.ui.selectButton.setStyleSheet ("QPushButton {background-color: yellow}")
         if (buttonNumber ==1) :
-            self.ui.zoomButton.setStyleSheet ("QPushButton {background-color: yellow}")
             self.ui.addPeakButton.setStyleSheet ("QPushButton {background-color: green}")
-            self.ui.selectButton.setStyleSheet ("QPushButton {background-color: yellow}")
         if (buttonNumber ==2) :
-            self.ui.zoomButton.setStyleSheet ("QPushButton {background-color: yellow}")
-            self.ui.addPeakButton.setStyleSheet ("QPushButton {background-color: yellow}")
             self.ui.selectButton.setStyleSheet ("QPushButton {background-color: green}")
+        if (buttonNumber ==3) :
+            self.ui.unselectButton.setStyleSheet ("QPushButton {background-color: green}")
+
         
     """ Update of the line edit to display # of list 1 and list 2 peaks
     """
