@@ -21,14 +21,18 @@ class myPeaks (QtCore.QObject) :
     def setActiveList (self, ind):
         self.activeList = ind 
 
+    """ setSelected will set the select bool variable to state
+        if the detXY coords are within rectCoords
+        """
     def setSelected (self, rectCoords):
         print rectCoords
+        state = True
         curList = self.peakLists[self.activeList]
         for peak in curList:
             point = QtCore.QPoint (peak.x(), peak.y())
             state = rectCoords.contains (point)
             if state:
-                peak.setSelected (True)
+                peak.setSelected (state)
         
 
     def selectAll (self):

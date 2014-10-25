@@ -16,8 +16,6 @@ class Atrex (QtGui.QMainWindow):
     def __init__(self) :
         QtGui.QMainWindow.__init__(self)
         self.ui = uic.loadUi ("uiMainWin.ui", self)
-
-
         self.ui.openImageButton.clicked.connect (self.openImage)
         self.ui.browseImageDirButton.clicked.connect (self.defImageDir)
         self.ui.browseWorkDirButton.clicked.connect (self.defWorkDir)
@@ -205,7 +203,7 @@ class Atrex (QtGui.QMainWindow):
         imnum = tmpstr.toInt ()
         print 'New image number ',imnum[0]
         newimage = QtCore.QString ("%1%2.tif").arg(self.imageFilePref).arg(imnum[0],3,10,z)
-        print newimage
+
         status = self.displayImage (newimage)
         if (status) :
             self.ui.imfileLE.setText (newimage)
@@ -325,21 +323,16 @@ class Atrex (QtGui.QMainWindow):
     """
     def updatePeakList (self) :
         self.ui.peakListWidget.clear ()
-<<<<<<< HEAD
         #curList = self.peaks.peakLists[self.peaks.activeList]
-        print 'number of points in list are : ',self.peaks.getpeakno()
-        for i in range (self.peaks.getpeakno()) :
-            x=self.peaks.getPeaklistDetX()
-            y=self.peaks.getPeaklistDetY()
-            lstr = QtCore.QString(" %1\t%2").arg(x[i]).arg(y[i])
-=======
-        curList = self.peaks.peakLists[self.peaks.activeList]
-        print 'number of points in list are : ',len (curList)
-        for peak in curList :
-            lstr = QtCore.QString(" %1\t%2").arg(peak.x()).arg(peak.y())
->>>>>>> origin/master
+        #for i in range (self.peaks.getpeakno()) :
+        #    x=self.peaks.getPeaklistDetX()
+        #   y=self.peaks.getPeaklistDetY()
+        #  lstr = QtCore.QString(" %1\t%2").arg(x[i]).arg(y[i])
+        #   self.ui.peakListWidget.addItem (lstr)
+        for p in self.peaks.peaks:
+            xy = p.DetXY
+            lstr = QtCore.QString(" %1\t%2").arg(xy[0]).arg(xy[1])
             self.ui.peakListWidget.addItem (lstr)
-
     
     def listButtonChanged (self, event) :
         status = self.list1Button.isChecked()
@@ -378,7 +371,7 @@ class Atrex (QtGui.QMainWindow):
         self.ui.imageWidget.repaint()
 
     def clearAllPeaks (self) :
-        self.peaks.clearAll()
+        self.peaks.unselectAll()
         self.ui.imageWidget.repaint()
 
     def moveSelPeaks (self):

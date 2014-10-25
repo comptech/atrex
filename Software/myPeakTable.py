@@ -54,15 +54,23 @@ class myPeakTable:
         self.selectedno=0
         self.peaks=[]
         self.activeList=0
-        for i in range(10000):
-            self.peaks.append(myPeak())
+        #for i in range(10000):
+        #    self.peaks.append(myPeak())
 
     def setSelected (self, rectCoords) :
-        for i in range (self.peakno-1) :
-            point = QtCore.QPoint (self.peaks[i].DetXY[0], self.peaks[i].DetXY[1])
+        for p in self.peaks[:]:
+            point = QtCore.QPoint (p.DetXY[0], p.DetXY[1])
             state = rectCoords.contains (point)
             if (state) :
-                self.peaks[i].selected[0]=1
+                p.selected[0]=1
+
+    def setUnselected (self, rectCoords) :
+        for p in self.peaks[:]:
+            point = QtCore.QPoint (p.DetXY[0], p.DetXY[1])
+            state = rectCoords.contains (point)
+            if (state) :
+                p.selected[0]=0
+
 
     def getPeaklistDetX(self):
         b=[]
@@ -89,10 +97,16 @@ class myPeakTable:
             self.copy_peaktable(peaks0) 
         else:
             peaks0.copy_peaktable(self) 
-            self.copy_peaktable(peaks1) 
+            self.copy_peaktable(peaks1)
+
+    def deleteSelected (self):
+        for p in self.peaks[:]:
+            if p.selected[0]==1:
+                self.peaks.remove(p)
 
     def getpeakno(self):
-        return self.peakno
+        return len (self.peaks)
+        #return self.peakno
 
     def get_peaks(self):
         return self.peaks
@@ -104,8 +118,10 @@ class myPeakTable:
         self.peakno=pn
 
     def addPeak(self, peak):
-        self.peaks[self.peakno]=peak
-        self.peakno=self.peakno+1
+        self.peaks.append (peak)
+        #self.peaks[self.peakno]=peak
+        #self.peakno=self.peakno+1
+        self.peakno = len(self.peaks)
 
     def removePeaks(self, plist):
         for i in plist:
@@ -117,14 +133,18 @@ class myPeakTable:
             self.peaks[i].selected[0]=1
 
     def unselectPeak(self, pn):
-        for i in plist:
+        for i in pn:
             self.peaks[i].selected[0]=0
 
     def unselectAll(self):
-        self.peaks[:].selected[0]=0
+        for p in self.peaks:
+            p.selected[0]=0
+        #self.peaks[:].selected[0]=0
 
     def selectAll(self):
-        self.peaks[:].selected[0]=1
+        for p in self.peaks:
+            p.selected[0]=1
+        #self.peaks[:].selected[0]=1
      
     def write_to_file(self, filename):
         self.truncate()

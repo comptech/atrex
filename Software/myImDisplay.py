@@ -267,7 +267,6 @@ class myImDisplay (QtGui.QWidget) :
                 botRight = self.zmRect.bottomRight() * self.zmFac
                 painter.setPen (QtGui.QPen (QtCore.Qt.red))
                 painter.drawRect (QtCore.QRect(topLeft, botRight))
-<<<<<<< HEAD
                 peakcount = self.peaks.getpeakno()
                 painter.setPen (QtGui.QPen (QtCore.Qt.green))
                 for i in range (peakcount) :
@@ -277,18 +276,6 @@ class myImDisplay (QtGui.QWidget) :
                     lowRight = QtCore.QPoint (xloc+10, yloc+10)
                     newRect = QtCore.QRect (upLeft, lowRight)
                     if self.peaks.peaks[i].selected[0] :
-=======
-                actList = self.peaks.activeList
-                curList = self.peaks.peakLists[actList]
-                painter.setPen (QtGui.QPen (QtCore.Qt.green))
-                for peak in curList :
-                    xloc = peak.x()*self.zmFac
-                    yloc = peak.y()*self.zmFac
-                    upLeft = QtCore.QPoint (xloc-10.,yloc-10.)
-                    lowRight = QtCore.QPoint (xloc+10, yloc+10)
-                    newRect = QtCore.QRect (upLeft, lowRight)
-                    if peak.selected :
->>>>>>> origin/master
                         painter.setPen (QtGui.QPen (QtCore.Qt.magenta))
                     else :
                         painter.setPen (QtGui.QPen (QtCore.Qt.green))
