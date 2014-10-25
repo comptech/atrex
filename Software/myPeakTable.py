@@ -64,6 +64,7 @@ class myPeakTable:
             if (state) :
                 p.selected[0]=1
 
+
     def setUnselected (self, rectCoords) :
         for p in self.peaks[:]:
             point = QtCore.QPoint (p.DetXY[0], p.DetXY[1])
@@ -92,17 +93,32 @@ class myPeakTable:
         self.selectedno=PT.getselectedno()
     
     def setActiveList (self, peaks0, peaks1, ind) :
+        self.activeList = ind
         if ind == 0:
             peaks1.copy_peaktable(self) 
-            self.copy_peaktable(peaks0) 
+            self.copy_peaktable(peaks0)
+            self.peaks1 = peaks1
         else:
             peaks0.copy_peaktable(self) 
             self.copy_peaktable(peaks1)
+            self.peaks0 = peaks0
 
     def deleteSelected (self):
         for p in self.peaks[:]:
             if p.selected[0]==1:
                 self.peaks.remove(p)
+
+    def moveSelected (self):
+        if (self.activeList==0) :
+            ptOther = self.peaks1
+        else :
+            ptOther = self.peaks0
+        for p in self.peaks[:] :
+            if p.selected[0]==1:
+                p.selected[0]=0
+                ptOther.addPeak (p)
+                self.peaks.remove(p)
+
 
     def getpeakno(self):
         return len (self.peaks)

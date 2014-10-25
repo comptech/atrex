@@ -58,10 +58,11 @@ class Atrex (QtGui.QMainWindow):
         self.imageFile = QtCore.QString ('')
         self.myim = myImage () 
         self.zmCentLoc = [500,500]
-        self.activeList = 1
+        self.activeList = 0
         self.peaks = myPeakTable.myPeakTable() # This is the PeakTable
         self.peaks0 = myPeakTable.myPeakTable() # This is the PeakTable
         self.peaks1 = myPeakTable.myPeakTable() # This is the PeakTable
+        self.peaks.setActiveList(self.peaks0, self.peaks1, self.activeList)
         self.imageWidget.setPeaks (self.peaks)
         self.zoomWidget.setPeaks (self.peaks)
 
