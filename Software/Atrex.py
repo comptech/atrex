@@ -7,6 +7,7 @@ import sys
 import os.path
 import time
 import myPeakTable
+import myDetector
 
 class Atrex (QtGui.QMainWindow):
     displayedImage = False
@@ -23,7 +24,12 @@ class Atrex (QtGui.QMainWindow):
         self.ui.rangeSlider.sliderReleased.connect (self.newImageValue)
         self.ui.incrementImageButton.clicked.connect (self.incrementImageValue)
         self.ui.decrementImageButton.clicked.connect (self.decrementImageValue)
-        
+
+        self.ui.pushButton_Detector_Open_calibration.clicked.connect (self.openDetectorCalibration)
+        self.ui.pushButton_Detector_Save_calibration.clicked.connect (self.saveDetectorCalibration)
+
+        self.ui.Peaks_Button_Search.clicked.connect (self.SearchForPeaks)
+
         self.ui.updateImageDispButton.clicked.connect (self.updateImage)
         self.ui.maxDNSlider.valueChanged.connect (self.maxSliderUpdate)
         self.ui.minDNSlider.valueChanged.connect (self.minSliderUpdate)
@@ -40,12 +46,17 @@ class Atrex (QtGui.QMainWindow):
         self.ui.unselectButton.clicked.connect (self.unselectMode)
         self.ui.list1Button.toggled.connect (self.listButtonChanged)
 
+        self.ui.peakListWidget.itemSelectionChanged.connect (self.PeakListBrowse)
+
         # peak tab buttons
         self.ui.selectAllButton.clicked.connect(self.selAllPeaks)
         self.ui.clearAllButton.clicked.connect (self.clearAllPeaks)
         self.ui.mvSelPeaksButton.clicked.connect(self.moveSelPeaks)
         self.ui.delSelPeaksButton.clicked.connect(self.delSelPeaks)
+        self.ui.clearAllButton.clicked.connect(self.RemoveAllPeaks)
 
+        self.ui.Peaks_Button_Open_PT.clicked.connect(self.OpenPeakTable)
+        self.ui.Peaks_Button_Save_PT.clicked.connect(self.SavePeakTable)
 
         self.ui.zoomWidget.zmRectSignal.connect (self.newZmBox)
         self.ui.maxDNSlider.setRange (0, 65535)
@@ -60,9 +71,10 @@ class Atrex (QtGui.QMainWindow):
         self.myim = myImage () 
         self.zmCentLoc = [500,500]
         self.activeList = 0
-        self.peaks = myPeakTable.myPeakTable() # This is the PeakTable
-        self.peaks0 = myPeakTable.myPeakTable() # This is the PeakTable
-        self.peaks1 = myPeakTable.myPeakTable() # This is the PeakTable
+        self.peaks = myPeakTable.myPeakTable() # This is the active PeakTable
+        self.peaks0 = myPeakTable.myPeakTable() # This is the PeakTable0
+        self.peaks1 = myPeakTable.myPeakTable() # This is the PeakTable1
+        self.detector=myDetector.myDetector()
         self.peaks.setActiveList(self.peaks0, self.peaks1, self.activeList)
         self.imageWidget.setPeaks (self.peaks)
         self.zoomWidget.setPeaks (self.peaks)
@@ -186,6 +198,7 @@ class Atrex (QtGui.QMainWindow):
             self.ui.zoomWidget.writeQImage_lut (self.myim.imArray, self.zmCentLoc)
         
     def newCent (self, newloc) :
+        print 'newCent'
         self.zmCentLoc[0] = newloc.x()
         self.zmCentLoc[1] = newloc.y()
         self.ui.zoomWidget.writeQImage_lut (self.myim.imArray, self.zmCentLoc)
@@ -391,6 +404,14 @@ class Atrex (QtGui.QMainWindow):
         self.updatePeakList()
         self.ui.imageWidget.repaint()
 
+
+    def RemoveAllPeaks(self):
+        print 'remove all peaks'
+        self.peaks.remove_all_peaks()
+        self.updatePeakNumberLE()
+        self.updatePeakList()
+        self.ui.imageWidget.repaint()
+
     def delSelPeaks (self):
         self.peaks.deleteSelected()
         self.updatePeakNumberLE()
@@ -425,8 +446,78 @@ class Atrex (QtGui.QMainWindow):
         str = QtCore.QString ("List 1 : %1\tList 2 : %2").arg(pn).arg(pn1)
         self.ui.numPeaksLE.setText(str)
 
-              
-          
+    def openDetectorCalibration (self):
+        self.Display_Detector_calibration(self.detector)
+
+    def saveDetectorCalibration (self):
+        self.Update_Detector_calibration()
+
+    def Display_Detector_calibration(self, det):
+        self.ui.imDirLE_Detector_Distance.setText (str(det.getdist()))
+        XY=det.getbeamXY()
+        self.ui.imDirLE_Detector_Beam_X.setText (str(XY[0]))
+        self.ui.imDirLE_Detector_Beam_Y.setText (str(XY[1]))
+        PS=det.getpsizeXY()
+        self.ui.imDirLE_Detector_Pixel_size_X.setText (str(PS[0]))
+        self.ui.imDirLE_Detector_Pixel_size_Y.setText (str(PS[1]))
+        self.ui.imDirLE_Detector_Wavelength.setText (str(det.getwavelength()))
+        self.ui.imDirLE_Detector_Rotation.setText (str(det.gettiltch()))
+        self.ui.imDirLE_Detector_Tilt.setText (str(det.gettiltom()))
+        self.ui.imDirLE_Detector_Twist.setText (str(det.gettwist()))
+        self.ui.imDirLE_Detector_2theta.setText (str(det.getttheta()))
+
+    def Update_Detector_calibration(self):
+        self.detector.setdist(float(self.ui.imDirLE_Detector_Distance.text()))
+        self.detector.setwavelength(float(self.ui.imDirLE_Detector_Wavelength.text ()))
+        self.detector.settiltch(float(self.ui.imDirLE_Detector_Rotation.text ()))
+        self.detector.settiltom(float(self.ui.imDirLE_Detector_Tilt.text ()))
+        self.detector.settwist(float(self.ui.imDirLE_Detector_Twist.text ()))
+        self.detector.setttheta(float(self.ui.imDirLE_Detector_2theta.text ()))
+        bx=float(self.ui.imDirLE_Detector_Beam_X.text ())
+        by=float(self.ui.imDirLE_Detector_Beam_Y.text ())
+        px=float(self.ui.imDirLE_Detector_Pixel_size_X.text ())
+        py=float(self.ui.imDirLE_Detector_Pixel_size_Y.text ())
+        self.detector.setbeamXY([bx,by])
+        self.detector.setpsizeXY([px,py])
+
+    def SearchForPeaks(self):
+        print 'Search for peaks'
+
+        #thr=self.threshold                       # 100:       raw counts threshold for locating peaks
+        #max_peak_size=self.mindist               # 10:        max allowed peak size with pixels above local background + Imin
+        #num_of_segments = [self.pbox,self.pbox]  # [50.,50.]: number of segments in X and Y for local labckground estimation
+        #perc=self.bbox                           # 1.0:       percent of median for background
+
+        self.myim.search_for_peaks(self.peaks, 100, 10, [50.,50.],1.0)
+        self.updatePeakNumberLE ()
+        self.imageWidget.repaint()
+        self.zoomWidget.repaint()
+        self.updatePeakList()
+        self.ui.imageWidget.repaint()
+
+        print 'number of peaks received', self.peaks.getpeakno()
+
+    def SavePeakTable(self):
+        print 'write PT'
+        wdir = self.ui.imDirLE.text ()
+        PTFile = QtGui.QFileDialog.getSaveFileName (self, 'Save Peak Table', wdir)
+        self.peaks.write_to_file(PTFile )
+
+    def OpenPeakTable(self):
+        print 'read PT'
+        wdir = self.ui.imDirLE.text ()
+        PTFile = QtGui.QFileDialog.getOpenFileName (self, 'Open Peak Table', wdir)
+        self.peaks.read_from_file(PTFile )
+        self.updatePeakNumberLE ()
+        self.updatePeakList()
+        self.ui.imageWidget.repaint()
+
+    def PeakListBrowse(self):
+        print 'peak list browse', self.ui.peakListWidget.currentRow()
+        self.zmCentLoc[0] = 200
+        self.zmCentLoc[1] = 300
+        self.ui.PeakZoomWidget1.writeQImage_lut1 (self.myim.imArray, self.zmCentLoc)
+
 app = QtGui.QApplication (sys.argv)
 atrex = Atrex ()
 atrex.show()

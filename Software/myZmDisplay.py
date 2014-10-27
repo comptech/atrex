@@ -171,6 +171,9 @@ class myZmDisplay (QtGui.QWidget) :
         self.loadImage = 1
         self.repaint()
 
+
+
+
     def mousePressEvent (self, event) :
         startPt = self.zoomRect.topLeft()
         xloc = event.x() / self.zmFac + startPt.x()
@@ -209,7 +212,7 @@ class myZmDisplay (QtGui.QWidget) :
                     lowRight = QtCore.QPoint (xloc+10, yloc+10)
                     newRect = QtCore.QRect (upLeft, lowRight)
                     painter.setPen (QtGui.QPen (QtCore.Qt.magenta))
-                    if self.peaks.peaks[i].selected==1 :
+                    if self.peaks.peaks[i].isselected() :
                         painter.setPen (QtGui.QPen (QtCore.Qt.green))
 
                     painter.drawRect (newRect)

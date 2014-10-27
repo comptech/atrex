@@ -3,25 +3,9 @@ from math import *
 from struct import *
 import pickle
 from PyQt4 import QtCore
+import myDetector
 
 
-
-class myDetector:
-
-    def __init__(self):
-       self.dist   = 0.0
-       self.beamx  = 0.0
-       self.beamy  = 0.0
-       self.psizex = 0.0
-       self.psizey = 0.0
-       self.nopixx = 0
-       self.nopixY = 0
-       self.angle  = 0.0
-       self.alpha  = 0.0
-       self.omega0 = 0.0
-       self.ttheta0= 0.0     
-       self.tiltom = 0.0       
-       self.tiltch = 0.0
 
 
 class myPeak:
@@ -39,13 +23,26 @@ class myPeak:
         self.IntAD    = np.zeros(2,dtype=np.float)   # Intensity from area detector with e.s.d
         self.position = np.zeros(3,dtype=np.float)   # Intensity from area detector with e.s.d
         self.IntSSD   = np.zeros(2,dtype=np.float)   # Will now be used to store individualized peak fitting box size
-        self.Adp      = myDetector()                 # Area detector parameters
+        self.Adp      = myDetector.myDetector()                 # Area detector parameters
 
     def setDetxy(self, XY):
         self.DetXY=XY
 
     def getDetxy(self):
         return self.DetXY
+
+    def isselected(self):
+        return self.selected[0]
+
+    def distance (self, peak):
+        x1=self.DetXY[0]
+        y1=self.DetXY[1]
+        xy=peak.getDetxy()
+        x2=xy[0]
+        y2=xy[1]
+        return pow(pow(x1-x2,2)+pow(y1-y2,2),0.5)
+
+#--------------------------------------------------------------------------
 
 class myPeakTable:
     
@@ -127,6 +124,9 @@ class myPeakTable:
     def get_peaks(self):
         return self.peaks
 
+    def getonepeak(self, i):
+        return self.peaks[i]
+
     def getselectedno(self):
         return self.selectedno
     
@@ -146,7 +146,7 @@ class myPeakTable:
 
     def selectPeaks(self, plist):
         for i in plist:
-            self.peaks[i].selected[0]=1
+            self.peaks[int(i)].selected[0]=1
 
     def unselectPeak(self, pn):
         for i in pn:
@@ -164,7 +164,8 @@ class myPeakTable:
      
     def write_to_file(self, filename):
         self.truncate()
-        pickle.dump( self, open( filename, "wb" ))  
+        f=open(filename, "wb")
+        pickle.dump(self, f)
 
     def read_from_file(self, filename):
         a=pickle.load( open( filename, "rb" ) )   
@@ -175,4 +176,39 @@ class myPeakTable:
     def truncate(self):
         self.peaks=self.peaks[0:self.peakno-1]
 
-       
+    def remove_all_peaks(self):
+        self.peakno=0
+        del self.peaks[:]
+
+
+
+
+    def find_closest_peak(self, peak, START_NO):
+        tab=np.zeros([self.peakno-START_NO,2],dtype=np.float)
+        for i in range (START_NO, self.peakno) :
+            disti=peak.distance(self.getonepeak(i))
+            tab[i-START_NO,0]=disti
+            tab[i-START_NO,1]=i
+        return tab
+
+
+    def find_multiple_peak_copies(self):
+        i=0
+        while (i < self.peakno-2):
+            p=self.getonepeak(i)
+            di=self.find_closest_peak(p,i+1)
+            b=di[:,0]
+            w=np.where(b < 3)
+            #w1=w.tolist()
+            #if len(w) > 0:
+           #     di=[[di],transpose([0,i])]
+           #     w=[w,n_elements(di2)/2]
+            #m=max(self.peaks[di[w,1]].intAD[0],kk)
+            for j in w: self.selectPeaks((di[j,1]))
+                #self.unselect_peak, di[w[kk],1]
+           # self.deleteSelected()
+           #     pn=self->peakno()
+           #     if kk ne i then i=i+1
+           # else:
+            i=i+1
+        self.deleteSelected()
