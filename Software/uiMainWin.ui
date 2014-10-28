@@ -34,7 +34,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="FileTab">
      <attribute name="title">
@@ -1455,7 +1455,7 @@
      <string>Unselect Peaks</string>
     </property>
    </widget>
-   <widget class="QTabWidget" name="tabWidget_2">
+   <widget class="QTabWidget" name="zoomTabWidgets">
     <property name="geometry">
      <rect>
       <x>790</x>
@@ -1465,11 +1465,11 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>1</number>
     </property>
-    <widget class="QWidget" name="tab">
+    <widget class="QWidget" name="zoomTab">
      <attribute name="title">
-      <string>Tab 1</string>
+      <string>Zoom</string>
      </attribute>
      <widget class="QSpinBox" name="zoomFacBox">
       <property name="geometry">
@@ -1514,11 +1514,11 @@
       </property>
      </widget>
     </widget>
-    <widget class="QWidget" name="tab_5">
+    <widget class="QWidget" name="peakDispTab">
      <attribute name="title">
-      <string>Tab 2</string>
+      <string>Peak Zoom</string>
      </attribute>
-     <widget class="myZmDisplay" name="PeakZoomWidget1" native="true">
+     <widget class="myZmPeakDisplay" name="peakZoomWidget" native="true">
       <property name="geometry">
        <rect>
         <x>10</x>
@@ -1528,7 +1528,7 @@
        </rect>
       </property>
      </widget>
-     <widget class="myZmDisplay" name="PeakZoomWidget2" native="true">
+     <widget class="myZmPeakDisplay" name="peakZoomCalcWidget" native="true">
       <property name="geometry">
        <rect>
         <x>170</x>
@@ -1538,7 +1538,7 @@
        </rect>
       </property>
      </widget>
-     <widget class="myZmDisplay" name="PeakZoomWidget3" native="true">
+     <widget class="myZmPeakDisplay" name="peakZoomResidsWidget" native="true">
       <property name="geometry">
        <rect>
         <x>330</x>
@@ -1557,7 +1557,7 @@
      <x>0</x>
      <y>0</y>
      <width>1287</width>
-     <height>26</height>
+     <height>27</height>
     </rect>
    </property>
   </widget>
@@ -1574,6 +1574,12 @@
    <class>myZmDisplay</class>
    <extends>QWidget</extends>
    <header>myZmDisplay.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>myZmPeakDisplay</class>
+   <extends>QWidget</extends>
+   <header>myZmPeakDisplay.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

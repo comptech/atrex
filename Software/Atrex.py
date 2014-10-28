@@ -3,6 +3,7 @@ from myImage import *
 from myImDisplay import *
 from atrex_utils import *
 from myPeaks import *
+from scipy import ndimage
 import sys
 import os.path
 import time
@@ -45,6 +46,7 @@ class Atrex (QtGui.QMainWindow):
         self.ui.selectButton.clicked.connect (self.selectMode)
         self.ui.unselectButton.clicked.connect (self.unselectMode)
         self.ui.list1Button.toggled.connect (self.listButtonChanged)
+        self.ui.peakListWidget.itemClicked.connect (self.peakListClicked)
 
         self.ui.peakListWidget.itemSelectionChanged.connect (self.PeakListBrowse)
 
@@ -87,6 +89,7 @@ class Atrex (QtGui.QMainWindow):
         self.updatePeakNumberLE ()
         self.getHome ()
         self.ui.tabWidget.setCurrentIndex (0)
+        self.ui.zoomTabWidgets.setCurrentIndex(0)
 
     def getHome (self) :
         # get the users home directory
@@ -350,6 +353,24 @@ class Atrex (QtGui.QMainWindow):
             xy = p.DetXY
             lstr = QtCore.QString(" %1\t%2").arg(xy[0]).arg(xy[1])
             self.ui.peakListWidget.addItem (lstr)
+
+    # peakListCLicked will give a new color to the peak
+    def peakListClicked (self, event):
+        itemNumber = self.ui.peakListWidget.currentRow()
+        xy = self.peaks.peaks[itemNumber].DetXY
+
+        #self.ui.zoomWidget.writeQImage_lut (self.myim.imArray, xy)
+        self.ui.peakZoomWidget.writeQImage_lut (self.myim.imArray, xy)
+
+        #for demo only
+        subdat = self.myim.imArray[xy[1]-10:xy[1]+10, xy[0]-10:xy[0]+10]
+        filtered = ndimage.gaussian_filter (subdat,1)
+        self.ui.peakZoomCalcWidget.arrayToQImage (filtered)
+        resids = subdat - filtered
+        self.ui.peakZoomResidsWidget.arrayToQImage (resids)
+
+
+
     
     def listButtonChanged (self, event) :
         status = self.list1Button.isChecked()
@@ -516,7 +537,7 @@ class Atrex (QtGui.QMainWindow):
         print 'peak list browse', self.ui.peakListWidget.currentRow()
         self.zmCentLoc[0] = 200
         self.zmCentLoc[1] = 300
-        self.ui.PeakZoomWidget1.writeQImage_lut1 (self.myim.imArray, self.zmCentLoc)
+
 
 app = QtGui.QApplication (sys.argv)
 atrex = Atrex ()
