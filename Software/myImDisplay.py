@@ -22,6 +22,7 @@ class myImDisplay (QtGui.QWidget) :
     peakToggle = False
     selectFlag = False
     unselectFlag = False
+    dragFlag = False
     #peaks = myPeaks ()
     
     def __init__(self, parent) :
@@ -173,7 +174,9 @@ class myImDisplay (QtGui.QWidget) :
     ####    Mouse Functions
     def mouseReleaseEvent (self, event) :
         self.dragZm = False
+        """
         if (self.selectFlag | self.unselectFlag) :
+
             self.selectPointLR = event.pos ()
             #need to convert to fullres coords
             x1 = self.selectPointLR.x() / self.zmFac
@@ -185,8 +188,9 @@ class myImDisplay (QtGui.QWidget) :
             if (self.unselectFlag) :
                 smode = False
             # emit the signal so that the Atrex class can mark selected peaks
+            self.dragFlag = False
             self.selectRectSignal.emit (newRect, smode)
-            
+"""
             
         
     def mousePressEvent (self, event) :
@@ -204,9 +208,27 @@ class myImDisplay (QtGui.QWidget) :
         # if the select button has been triggered, need to first
         # put down an anchor point or left point for qrect
         # return after setting the upper left
-        if (self.selectFlag | self.unselectFlag) :
+        if (self.selectFlag or self.unselectFlag) and not self.dragFlag :
             self.selectPointUL = event.pos()
             self.selectPointLR = event.pos()
+            self.dragFlag = True
+            self.setMouseTracking (True)
+            return
+
+        if (self.selectFlag or self.unselectFlag) and self.dragFlag :
+            self.selectPointLR = event.pos ()
+            #need to convert to fullres coords
+            x1 = self.selectPointLR.x() / self.zmFac
+            y1 = self.selectPointLR.y() / self.zmFac
+            x0 = self.selectPointUL.x() / self.zmFac
+            y0 = self.selectPointUL.y() / self.zmFac
+            newRect = QtCore.QRect (x0, y0, x1-x0, y1-y0)
+            smode = True
+            if (self.unselectFlag) :
+                smode = False
+            # emit the signal so that the Atrex class can mark selected peaks
+            self.dragFlag = False
+            self.selectRectSignal.emit (newRect, smode)
             return
         
         # check to see if near the upperLeft corner of the zoom box,
@@ -296,10 +318,15 @@ class myImDisplay (QtGui.QWidget) :
                     else :
                         painter.setPen (QtGui.QPen (QtCore.Qt.green))
                     painter.drawRect (newRect)
-                if (self.selectFlag) :
-                    painter.setPen (QtGui.QPen (QtCore.Qt.magenta))
+                if (self.selectFlag and self.dragFlag) :
+                    pen = QtGui.QPen (QtCore.Qt.magenta)
+                    pen.setStyle (QtCore.Qt.DashLine)
+                    painter.setPen (pen)
+
                     painter.drawRect (QtCore.QRect(self.selectPointUL, self.selectPointLR))
-                if (self.unselectFlag) :
-                    painter.setPen (QtGui.QPen (QtCore.Qt.cyan))
+                if (self.unselectFlag and self.dragFlag) :
+                    pen = QtGui.QPen (QtCore.Qt.cyan)
+                    pen.setStyle (QtCore.Qt.DashLine)
+                    painter.setPen (pen)
                     painter.drawRect (QtCore.QRect(self.selectPointUL, self.selectPointLR))
 
