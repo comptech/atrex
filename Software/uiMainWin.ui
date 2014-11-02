@@ -34,7 +34,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>4</number>
     </property>
     <widget class="QWidget" name="FileTab">
      <attribute name="title">
@@ -609,13 +609,13 @@
       <property name="title">
        <string>Selected Peaks</string>
       </property>
-      <widget class="QWidget" name="layoutWidget">
+      <widget class="QWidget" name="">
        <property name="geometry">
         <rect>
          <x>10</x>
-         <y>20</y>
-         <width>181</width>
-         <height>71</height>
+         <y>24</y>
+         <width>162</width>
+         <height>125</height>
         </rect>
        </property>
        <layout class="QGridLayout" name="gridLayout">
@@ -657,61 +657,43 @@
           </property>
          </widget>
         </item>
+        <item row="2" column="0">
+         <widget class="QPushButton" name="Peaks_Button_Search">
+          <property name="font">
+           <font>
+            <pointsize>8</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>Search</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QPushButton" name="Peaks_Button_Open_PT">
+          <property name="font">
+           <font>
+            <pointsize>8</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>Open PT</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="1">
+         <widget class="QPushButton" name="Peaks_Button_Save_PT">
+          <property name="font">
+           <font>
+            <pointsize>8</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>Save PT</string>
+          </property>
+         </widget>
+        </item>
        </layout>
-      </widget>
-      <widget class="QPushButton" name="Peaks_Button_Search">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>100</y>
-         <width>86</width>
-         <height>28</height>
-        </rect>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>8</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>Search</string>
-       </property>
-      </widget>
-      <widget class="QPushButton" name="Peaks_Button_Open_PT">
-       <property name="geometry">
-        <rect>
-         <x>110</x>
-         <y>100</y>
-         <width>81</width>
-         <height>28</height>
-        </rect>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>8</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>Open PT</string>
-       </property>
-      </widget>
-      <widget class="QPushButton" name="Peaks_Button_Save_PT">
-       <property name="geometry">
-        <rect>
-         <x>110</x>
-         <y>130</y>
-         <width>81</width>
-         <height>28</height>
-        </rect>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>8</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>Save PT</string>
-       </property>
       </widget>
      </widget>
     </widget>
@@ -1325,10 +1307,49 @@
       </property>
      </widget>
     </widget>
-    <widget class="QWidget" name="tab_2">
+    <widget class="QWidget" name="MaskTab">
      <attribute name="title">
-      <string>Tab 2</string>
+      <string>Mask</string>
      </attribute>
+     <widget class="QPushButton" name="readMaskFileButton">
+      <property name="geometry">
+       <rect>
+        <x>9</x>
+        <y>50</y>
+        <width>111</width>
+        <height>27</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Read Tiff </string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="saveMaskFileButton">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>90</y>
+        <width>111</width>
+        <height>27</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Save Tiff</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="clearMaskButton">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>10</y>
+        <width>111</width>
+        <height>27</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Clear</string>
+      </property>
+     </widget>
     </widget>
    </widget>
    <widget class="QLabel" name="label_16">
@@ -1465,7 +1486,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="zoomTab">
      <attribute name="title">
@@ -1549,6 +1570,32 @@
       </property>
      </widget>
     </widget>
+   </widget>
+   <widget class="QPushButton" name="maskButton">
+    <property name="geometry">
+     <rect>
+      <x>430</x>
+      <y>790</y>
+      <width>90</width>
+      <height>27</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Mask</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="unmaskButton">
+    <property name="geometry">
+     <rect>
+      <x>530</x>
+      <y>790</y>
+      <width>90</width>
+      <height>27</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Un-Mask</string>
+    </property>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">

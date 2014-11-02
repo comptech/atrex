@@ -16,13 +16,20 @@ class myImDisplay (QtGui.QWidget) :
     centPt = QtCore.pyqtSignal(QtCore.QPoint)
     addPeakSignal = QtCore.pyqtSignal (QtCore.QPoint)
     selectRectSignal = QtCore.pyqtSignal (QtCore.QRect, bool)
+    maskRectSignal = QtCore.pyqtSignal (QtCore.QRect, bool)
     setButtonModeSignal = QtCore.pyqtSignal (int)
     dragZm = False
     zoomToggle = True
     peakToggle = False
     selectFlag = False
     unselectFlag = False
+    maskFlag = False
+    unmaskFlag = False
     dragFlag = False
+    applyMaskFlag = False
+
+
+
     #peaks = myPeaks ()
     
     def __init__(self, parent) :
@@ -37,6 +44,8 @@ class myImDisplay (QtGui.QWidget) :
         cMenu.addAction ("Add Peak", self.peakAdd)
         cMenu.addAction ("SelectPeaks", self.selectOn)
         cMenu.addAction ("DeselectPeaks", self.unselectOn)
+        cMenu.addAction ("Mask", self.maskOn)
+        cMenu.addAction ("Un-Mask", self.unmaskOn)
 
         cMenu.exec_(gPos)
 
@@ -45,6 +54,8 @@ class myImDisplay (QtGui.QWidget) :
         self.peakToggle = False
         self.selectFlag = False
         self.unselectFlag = False
+        self.maskFlag = False
+        self.unmaskFlag = False
         self.setButtonModeSignal.emit (0)
 
     def peakAdd (self) :
@@ -52,6 +63,8 @@ class myImDisplay (QtGui.QWidget) :
         self.zoomToggle = False
         self.selectFlag = False
         self.unselectFlag = False
+        self.maskFlag = False
+        self.unmaskFlag = False
         self.setButtonModeSignal.emit (1)
 
     def selectOn (self) :
@@ -59,6 +72,8 @@ class myImDisplay (QtGui.QWidget) :
         self.zoomToggle = False
         self.selectFlag = True
         self.unselectFlag = False
+        self.maskFlag = False
+        self.unmaskFlag = False
         self.setButtonModeSignal.emit (2)
 
     def unselectOn (self) :
@@ -66,7 +81,27 @@ class myImDisplay (QtGui.QWidget) :
         self.zoomToggle = False
         self.selectFlag = False
         self.unselectFlag = True
-        self.setButtonModeSignal.emit (2)
+        self.maskFlag = False
+        self.unmaskFlag = False
+        self.setButtonModeSignal.emit (3)
+
+    def maskOn (self) :
+        self.peakToggle = False
+        self.zoomToggle = False
+        self.selectFlag = False
+        self.unselectFlag = False
+        self.maskFlag = True
+        self.unmaskFlag = False
+        self.setButtonModeSignal.emit (4)
+
+    def unmaskOn (self) :
+        self.peakToggle = False
+        self.zoomToggle = False
+        self.selectFlag = False
+        self.unselectFlag = False
+        self.maskFlag = False
+        self.unmaskFlag = True
+        self.setButtonModeSignal.emit (5)
         
     def setMinMax (self, min, max) :
         self.dispMin = min
@@ -149,13 +184,18 @@ class myImDisplay (QtGui.QWidget) :
         uarr = uarr.astype(np.uint8)
         #newarr = imresize (uarr, (newdim,newdim))
         newarr = zoom (uarr, zmfac, order=3)
-        
+        self.imdata = newarr.copy()
+        if (self.applyMaskFlag) :
+            newarr = self.applyMaskToArray (newarr)
+        #if (self.applyMaskFlag) :
+        #    newarr = newarr * self.mymask
 
-        a = np.zeros ((newarr.shape[0], newarr.shape[1]), dtype=np.uint8)
-        a[:,:]=255-newarr[:,:]
+        #a = np.zeros ((newarr.shape[0], newarr.shape[1]), dtype=np.uint8)
+        #a[:,:]=255-newarr[:,:]
         
-        self.qimage = QtGui.QImage (a.data, a.shape[1], a.shape[0],
+        self.qimage = QtGui.QImage (newarr.data, newarr.shape[1], newarr.shape[0],
                                     QtGui.QImage.Format_Indexed8)
+
         #a[:,:,1]=255-uarr[:,:]
         #a[:,:,0]=255-uarr[:,:]
 
@@ -164,7 +204,7 @@ class myImDisplay (QtGui.QWidget) :
         for index in range(256) :
             self.qimage.setColor (index, QtGui.qRgb (index, index, index))
             
-        self.qimage.ndarray = a
+        #self.qimage.ndarray = a
         self.loadImage = 1
         self.repaint()
         #self.peakFind()
@@ -215,6 +255,14 @@ class myImDisplay (QtGui.QWidget) :
             self.setMouseTracking (True)
             return
 
+        # do the same thing for the mask selection
+        if (self.maskFlag or self.unmaskFlag) and not self.dragFlag :
+            self.selectPointUL = event.pos()
+            self.selectPointLR = event.pos()
+            self.dragFlag = True
+            self.setMouseTracking (True)
+            return
+
         if (self.selectFlag or self.unselectFlag) and self.dragFlag :
             self.selectPointLR = event.pos ()
             #need to convert to fullres coords
@@ -228,9 +276,30 @@ class myImDisplay (QtGui.QWidget) :
                 smode = False
             # emit the signal so that the Atrex class can mark selected peaks
             self.dragFlag = False
+            self.setMouseTracking (False)
             self.selectRectSignal.emit (newRect, smode)
             return
-        
+
+        if (self.maskFlag or self.unmaskFlag) and self.dragFlag :
+            self.selectPointLR = event.pos ()
+            #need to convert to fullres coords
+            x1 = self.selectPointLR.x() / self.zmFac
+            y1 = self.selectPointLR.y() / self.zmFac
+            x0 = self.selectPointUL.x() / self.zmFac
+            y0 = self.selectPointUL.y() / self.zmFac
+            newRect = QtCore.QRect (x0, y0, x1-x0, y1-y0)
+            smode = True
+            if (self.unmaskFlag) :
+                smode = False
+            # emit the signal so that the Atrex class can mark selected peaks
+            self.dragFlag = False
+            self.setMouseTracking (False)
+            self.maskRectSignal.emit (newRect, smode)
+            return
+
+
+
+
         # check to see if near the upperLeft corner of the zoom box,
         # if so, start dragging the zoom box
         
@@ -259,14 +328,15 @@ class myImDisplay (QtGui.QWidget) :
     def mouseMoveEvent (self, event) :
         
         if (self.dragZm ) :
-            
-        
             upleft = event.pos() / self.zmFac
             self.zmRect.setTopLeft(upleft)
             self.zmRect.setBottomRight (upleft+self.zmSize)
             self.centPt.emit (upleft + self.zmSize/2)
             self.repaint()
         if (self.selectFlag | self.unselectFlag) :
+            self.selectPointLR =(event.pos())
+            self.repaint()
+        if (self.maskFlag | self.unmaskFlag) :
             self.selectPointLR =(event.pos())
             self.repaint()
             
@@ -329,4 +399,34 @@ class myImDisplay (QtGui.QWidget) :
                     pen.setStyle (QtCore.Qt.DashLine)
                     painter.setPen (pen)
                     painter.drawRect (QtCore.QRect(self.selectPointUL, self.selectPointLR))
+                if (self.maskFlag and self.dragFlag) :
+                    pen = QtGui.QPen (QtCore.Qt.darkYellow)
+                    pen.setStyle (QtCore.Qt.DashLine)
+                    painter.setPen (pen)
 
+                    painter.drawRect (QtCore.QRect(self.selectPointUL, self.selectPointLR))
+                if (self.unmaskFlag and self.dragFlag) :
+                    pen = QtGui.QPen (QtCore.Qt.yellow)
+                    pen.setStyle (QtCore.Qt.DashLine)
+                    painter.setPen (pen)
+                    painter.drawRect (QtCore.QRect(self.selectPointUL, self.selectPointLR))
+
+    def applyMask (self, fullmask) :
+        self.applyMaskFlag = True
+        zm = zoom (fullmask, self.zmFac, order=0)
+        self.curmask = zm.astype (np.uint8)
+        newdata = self.imdata.copy()
+        #newdata[w[0],w[1]] = 0
+        newdata = self.curmask * self.imdata
+        #newdata[w[0],w[1]] = 0
+        self.qimage = QtGui.QImage (newdata.data, newdata.shape[1], newdata.shape[0],
+                                    QtGui.QImage.Format_Indexed8)
+        for index in range(256) :
+            self.qimage.setColor (index, QtGui.qRgb (index, index, index))
+
+        self.repaint()
+
+
+    def applyMaskToArray (self, arr) :
+
+        return self.curmask * arr

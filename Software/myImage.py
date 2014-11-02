@@ -18,6 +18,7 @@ class myImage :
     chi = ''
     exposureT = ''
     detector = ''
+    imArraySize =[0,0]
     
     imFileName =''
 
@@ -31,7 +32,8 @@ class myImage :
         #img = mpimg.imread(infile.toLatin1().data())
         #plt.imshow(im)
         self.imArray = np.asarray(im.getdata())
-        self.imArray = np.reshape (self.imArray,(x,y))
+        self.imArray = np.reshape (self.imArray,(y,x))
+        self.imArray_orig = self.imArray
         print self.imArray.min(), self.imArray.max()
 
     ''' readText reads the image's associated text file extracting the
@@ -164,6 +166,7 @@ class myImage :
 
         
         
-        
-
+    # applies the mask to imgArray, mask must be same shape as imgArray
+    def applyMask (self, arr):
+        self.imArray = self.imArray_orig * arr
     

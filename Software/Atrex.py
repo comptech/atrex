@@ -2,6 +2,7 @@ from PyQt4 import QtCore, QtGui, uic
 from myImage import *
 from myImDisplay import *
 from atrex_utils import *
+from myMask import *
 from myPeaks import *
 from scipy import ndimage
 import sys
@@ -14,6 +15,8 @@ class Atrex (QtGui.QMainWindow):
     displayedImage = False
     minRange = 0
     maxRange = 99
+    mymask = myMask()
+
     
     def __init__(self) :
         QtGui.QMainWindow.__init__(self)
@@ -38,6 +41,7 @@ class Atrex (QtGui.QMainWindow):
         self.ui.imageWidget.centPt.connect (self.newCent)
         self.ui.imageWidget.addPeakSignal.connect (self.newPeak)
         self.ui.imageWidget.selectRectSignal.connect (self.selectRect)
+        self.ui.imageWidget.maskRectSignal.connect (self.maskRect)
         self.ui.imageWidget.setButtonModeSignal.connect (self.setButtons)
         self.ui.zoomWidget.addPeakSignal.connect (self.newPeak)
         self.ui.zoomWidget.setButtonModeSignal.connect (self.setButtons)
@@ -45,6 +49,8 @@ class Atrex (QtGui.QMainWindow):
         self.ui.addPeakButton.clicked.connect (self.addPeakMode)
         self.ui.selectButton.clicked.connect (self.selectMode)
         self.ui.unselectButton.clicked.connect (self.unselectMode)
+        self.ui.maskButton.clicked.connect (self.maskMode)
+        self.ui.unmaskButton.clicked.connect (self.unmaskMode)
         self.ui.list1Button.toggled.connect (self.listButtonChanged)
         self.ui.peakListWidget.itemClicked.connect (self.peakListClicked)
 
@@ -55,7 +61,7 @@ class Atrex (QtGui.QMainWindow):
         self.ui.clearAllButton.clicked.connect (self.clearAllPeaks)
         self.ui.mvSelPeaksButton.clicked.connect(self.moveSelPeaks)
         self.ui.delSelPeaksButton.clicked.connect(self.delSelPeaks)
-        self.ui.clearAllButton.clicked.connect(self.RemoveAllPeaks)
+        #self.ui.clearAllButton.clicked.connect(self.RemoveAllPeaks)
 
         self.ui.Peaks_Button_Open_PT.clicked.connect(self.OpenPeakTable)
         self.ui.Peaks_Button_Save_PT.clicked.connect(self.SavePeakTable)
@@ -85,11 +91,19 @@ class Atrex (QtGui.QMainWindow):
         self.ui.addPeakButton.setStyleSheet ("QPushButton {background-color: yellow}")
         self.ui.selectButton.setStyleSheet ("QPushButton {background-color: yellow}")
         self.ui.unselectButton.setStyleSheet ("QPushButton {background-color: yellow}")
+        self.ui.maskButton.setStyleSheet ("QPushButton {background-color: yellow}")
+        self.ui.unmaskButton.setStyleSheet ("QPushButton {background-color: yellow}")
+
+        # mask tab buttons
+        self.ui.clearMaskButton.clicked.connect (self.clearMask)
+        self.ui.saveMaskFileButton.clicked.connect (self.saveMask)
+        self.ui.readMaskFileButton.clicked.connect (self.readMask)
 
         self.updatePeakNumberLE ()
         self.getHome ()
         self.ui.tabWidget.setCurrentIndex (0)
         self.ui.zoomTabWidgets.setCurrentIndex(0)
+
 
     def getHome (self) :
         # get the users home directory
@@ -192,6 +206,8 @@ class Atrex (QtGui.QMainWindow):
         self.ui.rangeSlider.setValue (mnmx[2])
         self.minRange = mnmx[0]
         self.maxRange = mnmx[1]
+
+
         
         #self.ui.rangeSlider.set
 
@@ -297,7 +313,7 @@ class Atrex (QtGui.QMainWindow):
         
 
     def displayImage (self, filename) :
-        self.displayedImage = True
+
         mn = self.ui.imageMinLE.text().toInt()
         mx = self.ui.imageMaxLE.text().toInt()
         
@@ -313,6 +329,9 @@ class Atrex (QtGui.QMainWindow):
             qf.close()
         self.myim.readTiff (filename)
         status = self.myim.readText (filename)
+        if not self.displayedImage :
+            self.mymask.createMask (self.myim.imArraySize[0], self.myim.imArraySize[1])
+            self.displayedImage = True
         if status :
             str = QtCore.QString("0: %1  R : %2").arg(self.myim.omega0).arg(self.myim.omegaR)
             self.ui.omega0Lab.setText (str)
@@ -403,14 +422,43 @@ class Atrex (QtGui.QMainWindow):
         self.ui.imageWidget.unselectOn()
         self.ui.setButtons (3)
 
+    def maskMode (self) :
+        self.ui.imageWidget.maskOn()
+        self.ui.setButtons (4)
+
+    def unmaskMode (self) :
+        self.ui.imageWidget.unmaskOn()
+        self.ui.setButtons (5)
+
     def selectRect (self, rect, sFlag) :
-        print 'select peaks called'
         if (sFlag) :
             self.peaks.setSelected (rect)
         else :
             self.peaks.setUnselected (rect)
         self.ui.imageWidget.repaint()
-        
+
+    def maskRect (self, rect, sFlag) :
+        self.mymask.setMask (rect, sFlag)
+        self.ui.imageWidget.applyMask(self.mymask.img)
+        self.ui.zoomWidget.applyMask(self.mymask.img)
+        self.myim.applyMask (self.mymask.img)
+
+    def clearMask (self):
+        self.mymask.resetMask()
+        self.ui.imageWidget.applyMask(self.mymask.img)
+        self.ui.zoomWidget.applyMask(self.mymask.img)
+        self.myim.applyMask (self.mymask.img)
+
+    def saveMask (self):
+        outstr = QtGui.QFileDialog.getSaveFileName (self, "Save Filename", self.workDirectory,'Image File (*.tif)' )
+        self.mymask.saveToFile (outstr)
+
+    def readMask (self) :
+        outstr = QtGui.QFileDialog.getOpenFileName (self, "Save Filename", self.workDirectory,'Image File (*.tif)' )
+        self.mymask.readTiff (outstr)
+        self.ui.imageWidget.applyMask(self.mymask.img)
+        self.ui.zoomWidget.applyMask(self.mymask.img)
+
     def selAllPeaks (self) :
         self.peaks.selectAll ()
         self.ui.imageWidget.repaint()
@@ -449,6 +497,8 @@ class Atrex (QtGui.QMainWindow):
         self.ui.addPeakButton.setStyleSheet ("QPushButton {background-color: yellow}")
         self.ui.selectButton.setStyleSheet ("QPushButton {background-color: yellow}")
         self.ui.unselectButton.setStyleSheet ("QPushButton {background-color: yellow}")
+        self.ui.maskButton.setStyleSheet ("QPushButton {background-color: yellow}")
+        self.ui.unmaskButton.setStyleSheet ("QPushButton {background-color: yellow}")
         if (buttonNumber ==0) :
             self.ui.zoomButton.setStyleSheet ("QPushButton {background-color: green}")
         if (buttonNumber ==1) :
@@ -457,6 +507,10 @@ class Atrex (QtGui.QMainWindow):
             self.ui.selectButton.setStyleSheet ("QPushButton {background-color: green}")
         if (buttonNumber ==3) :
             self.ui.unselectButton.setStyleSheet ("QPushButton {background-color: green}")
+        if (buttonNumber ==4) :
+            self.ui.maskButton.setStyleSheet ("QPushButton {background-color: green}")
+        if (buttonNumber ==5) :
+            self.ui.unmaskButton.setStyleSheet ("QPushButton {background-color: green}")
 
         
     """ Update of the line edit to display # of list 1 and list 2 peaks
@@ -537,6 +591,8 @@ class Atrex (QtGui.QMainWindow):
         print 'peak list browse', self.ui.peakListWidget.currentRow()
         self.zmCentLoc[0] = 200
         self.zmCentLoc[1] = 300
+
+
 
 
 app = QtGui.QApplication (sys.argv)
