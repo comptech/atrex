@@ -1,5 +1,6 @@
 from PyQt4 import QtCore, QtGui, uic
 from myImage import *
+from tifffile import *
 from myImDisplay import *
 from atrex_utils import *
 from myMask import *
@@ -28,6 +29,7 @@ class Atrex (QtGui.QMainWindow):
         self.ui.rangeSlider.sliderReleased.connect (self.newImageValue)
         self.ui.incrementImageButton.clicked.connect (self.incrementImageValue)
         self.ui.decrementImageButton.clicked.connect (self.decrementImageValue)
+        self.ui.mergeButton.clicked.connect (self.mergeImageRange)
 
         self.ui.pushButton_Detector_Open_calibration.clicked.connect (self.openDetectorCalibration)
         self.ui.pushButton_Detector_Save_calibration.clicked.connect (self.saveDetectorCalibration)
@@ -590,6 +592,29 @@ class Atrex (QtGui.QMainWindow):
         self.zoomWidget.repaint()
         self.updatePeakList()
         self.ui.imageWidget.repaint()
+
+    def mergeImageRange (self) :
+        # get the output tif file name....
+        tempimg = myImage ()
+        outname = QtGui.QFileDialog.getSaveFileName (self, "Merge Filename", self.workDirectory, "Image File (*.tif")
+        z = QtCore.QChar ('0')
+
+        nimages = self.maxRange - self.minRange + 1
+        for i in range (self.minRange, self.maxRange+1):
+            newimage = QtCore.QString ("%1%2.tif").arg(self.imageFilePref).arg(i,3,10,z)
+            tempimg.readTiff (newimage)
+            if i == self.minRange :
+                mergeArr = tempimg.imArray.copy().astype(np.float32) /  nimages
+            else :
+                mergeArr = tempimg.imArray/nimages + mergeArr
+        maxval = np.max(mergeArr)
+        #if maxval > 65535 :
+        #    mergeArr = mergeArr / maxval * 655354.
+        mergeArr = mergeArr.astype (np.uint16)
+        # now write to tif file
+        #im = Image.fromarray (mergeArr.astype(np.float32))
+        #im.save (outname.toLatin1().data())
+        imsave (outname.toLatin1().data(), mergeArr)
 
     def SavePeakTable(self):
         print 'write PT'
