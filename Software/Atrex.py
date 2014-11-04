@@ -99,6 +99,10 @@ class Atrex (QtGui.QMainWindow):
         self.ui.saveMaskFileButton.clicked.connect (self.saveMask)
         self.ui.readMaskFileButton.clicked.connect (self.readMask)
 
+        #detector tab buttons
+        self.ui.readTextDetFileButton.clicked.connect (self.readTextDetect)
+        self.ui.writeTextDetFileButton.clicked.connect (self.writeTextDetect)
+
         self.updatePeakNumberLE ()
         self.getHome ()
         self.ui.tabWidget.setCurrentIndex (0)
@@ -528,30 +532,30 @@ class Atrex (QtGui.QMainWindow):
         self.Update_Detector_calibration()
 
     def Display_Detector_calibration(self, det):
-        self.ui.imDirLE_Detector_Distance.setText (str(det.getdist()))
+        self.ui.LE_Detector_Distance.setText (str(det.getdist()))
         XY=det.getbeamXY()
-        self.ui.imDirLE_Detector_Beam_X.setText (str(XY[0]))
-        self.ui.imDirLE_Detector_Beam_Y.setText (str(XY[1]))
+        self.ui.LE_Detector_Beam_X.setText (str(XY[0]))
+        self.ui.LE_Detector_Beam_Y.setText (str(XY[1]))
         PS=det.getpsizeXY()
-        self.ui.imDirLE_Detector_Pixel_size_X.setText (str(PS[0]))
-        self.ui.imDirLE_Detector_Pixel_size_Y.setText (str(PS[1]))
-        self.ui.imDirLE_Detector_Wavelength.setText (str(det.getwavelength()))
-        self.ui.imDirLE_Detector_Rotation.setText (str(det.gettiltch()))
-        self.ui.imDirLE_Detector_Tilt.setText (str(det.gettiltom()))
-        self.ui.imDirLE_Detector_Twist.setText (str(det.gettwist()))
-        self.ui.imDirLE_Detector_2theta.setText (str(det.getttheta()))
+        self.ui.LE_Detector_Pixel_size_X.setText (str(PS[0]))
+        self.ui.LE_Detector_Pixel_size_Y.setText (str(PS[1]))
+        self.ui.LE_Detector_Wavelength.setText (str(det.getwavelength()))
+        self.ui.LE_Detector_Rotation.setText (str(det.gettiltch()))
+        self.ui.LE_Detector_Tilt.setText (str(det.gettiltom()))
+        self.ui.LE_Detector_Twist.setText (str(det.gettwist()))
+        self.ui.LE_Detector_2theta.setText (str(det.getttheta()))
 
     def Update_Detector_calibration(self):
-        self.detector.setdist(float(self.ui.imDirLE_Detector_Distance.text()))
-        self.detector.setwavelength(float(self.ui.imDirLE_Detector_Wavelength.text ()))
-        self.detector.settiltch(float(self.ui.imDirLE_Detector_Rotation.text ()))
-        self.detector.settiltom(float(self.ui.imDirLE_Detector_Tilt.text ()))
-        self.detector.settwist(float(self.ui.imDirLE_Detector_Twist.text ()))
-        self.detector.setttheta(float(self.ui.imDirLE_Detector_2theta.text ()))
-        bx=float(self.ui.imDirLE_Detector_Beam_X.text ())
-        by=float(self.ui.imDirLE_Detector_Beam_Y.text ())
-        px=float(self.ui.imDirLE_Detector_Pixel_size_X.text ())
-        py=float(self.ui.imDirLE_Detector_Pixel_size_Y.text ())
+        self.detector.setdist(float(self.ui.LE_Detector_Distance.text()))
+        self.detector.setwavelength(float(self.ui.LE_Detector_Wavelength.text ()))
+        self.detector.settiltch(float(self.ui.LE_Detector_Rotation.text ()))
+        self.detector.settiltom(float(self.ui.LE_Detector_Tilt.text ()))
+        self.detector.settwist(float(self.ui.LE_Detector_Twist.text ()))
+        self.detector.setttheta(float(self.ui.LE_Detector_2theta.text ()))
+        bx=float(self.ui.LE_Detector_Beam_X.text ())
+        by=float(self.ui.LE_Detector_Beam_Y.text ())
+        px=float(self.ui.LE_Detector_Pixel_size_X.text ())
+        py=float(self.ui.LE_Detector_Pixel_size_Y.text ())
         self.detector.setbeamXY([bx,by])
         self.detector.setpsizeXY([px,py])
 
@@ -592,6 +596,16 @@ class Atrex (QtGui.QMainWindow):
         self.zmCentLoc[0] = 200
         self.zmCentLoc[1] = 300
 
+
+    def readTextDetect (self) :
+        detfile = QtGui.QFileDialog.getOpenFileName (self, 'Open Detector File', self.workDirectory)
+
+        self.detector.read_from_text_file (detfile.toLatin1().data())
+        self.Display_Detector_calibration(self.detector)
+
+    def writeTextDetect (self) :
+        detfile = QtGui.QFileDialog.getSaveFileName (self, 'Open Detector File', self.workDirectory)
+        self.detector.write_to_text_file (detfile.toLatin1().data())
 
 
 

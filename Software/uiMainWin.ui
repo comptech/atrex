@@ -27,14 +27,14 @@
    <widget class="QTabWidget" name="tabWidget">
     <property name="geometry">
      <rect>
-      <x>790</x>
-      <y>10</y>
+      <x>780</x>
+      <y>20</y>
       <width>491</width>
       <height>551</height>
      </rect>
     </property>
     <property name="currentIndex">
-     <number>4</number>
+     <number>2</number>
     </property>
     <widget class="QWidget" name="FileTab">
      <attribute name="title">
@@ -714,7 +714,7 @@
        <string>Beam X</string>
       </property>
      </widget>
-     <widget class="QLineEdit" name="imDirLE_Detector_Beam_X">
+     <widget class="QLineEdit" name="LE_Detector_Beam_X">
       <property name="geometry">
        <rect>
         <x>160</x>
@@ -727,7 +727,7 @@
        <string/>
       </property>
      </widget>
-     <widget class="QLineEdit" name="imDirLE_Detector_Beam_Y">
+     <widget class="QLineEdit" name="LE_Detector_Beam_Y">
       <property name="geometry">
        <rect>
         <x>160</x>
@@ -753,7 +753,7 @@
        <string>Beam Y</string>
       </property>
      </widget>
-     <widget class="QLineEdit" name="imDirLE_Detector_Distance">
+     <widget class="QLineEdit" name="LE_Detector_Distance">
       <property name="geometry">
        <rect>
         <x>160</x>
@@ -779,7 +779,7 @@
        <string>Distance</string>
       </property>
      </widget>
-     <widget class="QLineEdit" name="imDirLE_Detector_Pixel_size_X">
+     <widget class="QLineEdit" name="LE_Detector_Pixel_size_X">
       <property name="geometry">
        <rect>
         <x>160</x>
@@ -805,7 +805,7 @@
        <string>Pixel size X</string>
       </property>
      </widget>
-     <widget class="QLineEdit" name="imDirLE_Detector_Pixel_size_Y">
+     <widget class="QLineEdit" name="LE_Detector_Pixel_size_Y">
       <property name="geometry">
        <rect>
         <x>160</x>
@@ -831,7 +831,7 @@
        <string>Pixel size Y</string>
       </property>
      </widget>
-     <widget class="QLineEdit" name="imDirLE_Detector_Wavelength">
+     <widget class="QLineEdit" name="LE_Detector_Wavelength">
       <property name="geometry">
        <rect>
         <x>160</x>
@@ -857,7 +857,7 @@
        <string>Wavelength</string>
       </property>
      </widget>
-     <widget class="QLineEdit" name="imDirLE_Detector_Rotation">
+     <widget class="QLineEdit" name="LE_Detector_Rotation">
       <property name="geometry">
        <rect>
         <x>160</x>
@@ -883,7 +883,7 @@
        <string>Rotation</string>
       </property>
      </widget>
-     <widget class="QLineEdit" name="imDirLE_Detector_Tilt">
+     <widget class="QLineEdit" name="LE_Detector_Tilt">
       <property name="geometry">
        <rect>
         <x>160</x>
@@ -909,7 +909,7 @@
        <string>Tilt</string>
       </property>
      </widget>
-     <widget class="QLineEdit" name="imDirLE_Detector_Twist">
+     <widget class="QLineEdit" name="LE_Detector_Twist">
       <property name="geometry">
        <rect>
         <x>160</x>
@@ -935,7 +935,7 @@
        <string>Twist</string>
       </property>
      </widget>
-     <widget class="QLineEdit" name="imDirLE_Detector_2theta">
+     <widget class="QLineEdit" name="LE_Detector_2theta">
       <property name="geometry">
        <rect>
         <x>160</x>
@@ -966,7 +966,7 @@
        <rect>
         <x>330</x>
         <y>20</y>
-        <width>121</width>
+        <width>141</width>
         <height>28</height>
        </rect>
       </property>
@@ -979,7 +979,7 @@
        <rect>
         <x>330</x>
         <y>60</y>
-        <width>121</width>
+        <width>141</width>
         <height>28</height>
        </rect>
       </property>
@@ -992,7 +992,7 @@
        <rect>
         <x>330</x>
         <y>100</y>
-        <width>121</width>
+        <width>141</width>
         <height>28</height>
        </rect>
       </property>
@@ -1005,7 +1005,7 @@
        <rect>
         <x>330</x>
         <y>140</y>
-        <width>121</width>
+        <width>141</width>
         <height>28</height>
        </rect>
       </property>
@@ -1018,13 +1018,78 @@
        <rect>
         <x>330</x>
         <y>200</y>
-        <width>121</width>
+        <width>141</width>
         <height>28</height>
        </rect>
       </property>
       <property name="text">
        <string>Refine calibration</string>
       </property>
+     </widget>
+     <widget class="QGroupBox" name="groupBox_6">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>410</y>
+        <width>471</width>
+        <height>111</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>File :</string>
+      </property>
+      <widget class="QPushButton" name="readTextDetFileButton">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>20</y>
+         <width>90</width>
+         <height>27</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Read ASCII</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="pushButton_2">
+       <property name="geometry">
+        <rect>
+         <x>150</x>
+         <y>60</y>
+         <width>90</width>
+         <height>27</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Write Binary</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="pushButton_3">
+       <property name="geometry">
+        <rect>
+         <x>150</x>
+         <y>20</y>
+         <width>90</width>
+         <height>27</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Read Binary</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="writeTextDetFileButton">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>60</y>
+         <width>90</width>
+         <height>27</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Write ASCII</string>
+       </property>
+      </widget>
      </widget>
     </widget>
     <widget class="QWidget" name="tab_4">

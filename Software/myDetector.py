@@ -1,4 +1,5 @@
-
+import os
+import pickle
 
 class myDetector:
 
@@ -90,3 +91,39 @@ class myDetector:
         self.tiltch = a.tiltch
         self.ttheta = a.ttheta
         self.wavelength = a.wavelength
+
+    def read_from_text_file (self, filename) :
+        fil = open (filename, 'r')
+        flist =[]
+        linebreak = '\n'
+        for fline in fil :
+            flist.append (fline.replace(linebreak,""))
+
+        self.psizex = float(flist[0])
+        self.psizey = float(flist[1])
+        self.dist = float(flist[2])
+        self.wavelength = float(flist[3])
+        self.beamx = float (flist[4])
+        self.beamy = float(flist[5])
+        self.twist = float (flist[6])
+        self.tiltom = float (flist[7])
+        self.ttheta = float (flist[8])
+        self.tiltch = float (flist[9])
+        fil.close()
+
+
+    def write_to_text_file (self, filename) :
+        fil = open(filename,'w')
+        fil.write (str(self.psizex)+'\n')
+        fil.write (str(self.psizey)+'\n')
+        fil.write (str(self.dist)+'\n')
+        fil.write (str(self.wavelength)+'\n')
+        fil.write (str(self.beamx)+'\n')
+        fil.write (str(self.beamy)+'\n')
+        fil.write (str(self.twist)+'\n')
+        fil.write (str(self.tiltom)+'\n')
+        fil.write (str(self.ttheta)+'\n')
+        fil.write (str(self.tiltch)+'\n')
+        fil.close ()
+
+
