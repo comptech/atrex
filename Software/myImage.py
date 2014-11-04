@@ -125,6 +125,30 @@ class myImage :
         return [xl,xr, yd,yu, xl+XY[0][0],yd+XY[1][0],m]
 
 
+    def search_for_peaks_arr (self, arr, peaks, thr, max_peak_size, num_of_segments, perc):
+        sxy = arr.shape
+        topX=sxy[1]
+        topY=sxy[0]
+        img1=cgd.congrid(arr, [1000,1000])
+        bg=self.estimate_local_background (img1, 50, 50, 100, 1.0)
+
+        w=np.where(img1-bg > thr)
+        for i in range(len(w[0])):
+            XYs=[w[1][i],w[0][i]]
+            if img1[XYs[1],XYs[0]]-bg[XYs[1],XYs[0]] > thr :
+                XY=[0.0,0.0]
+                aa=self.grow_peak(img1, bg, XYs[1],XYs[0], thr/2., 1000, 1000)
+                if (max([aa[1]-aa[0], aa[3]-aa[2]]) < max_peak_size) and (aa[6] > thr) :
+                    XY[0]=aa[5]*topX/1000
+                    XY[1]=aa[4]*topY/1000
+                    peak=myPeakTable.myPeak()
+                    peak.setDetxy(XY)
+                    #peak.setIntAD=img1[aa[4],aa[5]]
+                    #ref_peak.setgonio=im.sts.gonio
+                    peaks.addPeak(peak)
+                img1[aa[2]:aa[3],aa[0]:aa[1]]=0
+        peaks.find_multiple_peak_copies()
+
     def search_for_peaks (self, peaks, thr, max_peak_size, num_of_segments, perc):
         #thr=self.threshold                       # 100:       raw counts threshold for locating peaks
         #max_peak_size=self.mindist               # 10:        max allowed peak size with pixels above local background + Imin

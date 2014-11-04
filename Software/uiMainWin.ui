@@ -34,7 +34,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>2</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="FileTab">
      <attribute name="title">
@@ -614,8 +614,8 @@
         <rect>
          <x>10</x>
          <y>24</y>
-         <width>162</width>
-         <height>125</height>
+         <width>188</width>
+         <height>129</height>
         </rect>
        </property>
        <layout class="QGridLayout" name="gridLayout">
@@ -690,6 +690,18 @@
           </property>
           <property name="text">
            <string>Save PT</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="0">
+         <widget class="QPushButton" name="seriesSrchButton">
+          <property name="font">
+           <font>
+            <pointsize>9</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>Series Search</string>
           </property>
          </widget>
         </item>

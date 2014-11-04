@@ -61,6 +61,7 @@ class Atrex (QtGui.QMainWindow):
         self.ui.clearAllButton.clicked.connect (self.clearAllPeaks)
         self.ui.mvSelPeaksButton.clicked.connect(self.moveSelPeaks)
         self.ui.delSelPeaksButton.clicked.connect(self.delSelPeaks)
+        self.ui.seriesSrchButton.clicked.connect(self.SearchForPeaksSeries)
         #self.ui.clearAllButton.clicked.connect(self.RemoveAllPeaks)
 
         self.ui.Peaks_Button_Open_PT.clicked.connect(self.OpenPeakTable)
@@ -575,6 +576,20 @@ class Atrex (QtGui.QMainWindow):
         self.ui.imageWidget.repaint()
 
         print 'number of peaks received', self.peaks.getpeakno()
+
+    def SearchForPeaksSeries (self) :
+        self.peaks.remove_all_peaks()
+        z = QtCore.QChar ('0')
+        tempimg = myImage ()
+        for i in range (self.minRange, self.maxRange):
+            newimage = QtCore.QString ("%1%2.tif").arg(self.imageFilePref).arg(i,3,10,z)
+            tempimg.readTiff (newimage)
+            self.myim.search_for_peaks_arr (tempimg.imArray, self.peaks, 100, 10, [50,50],1.0)
+        self.updatePeakNumberLE()
+        self.imageWidget.repaint()
+        self.zoomWidget.repaint()
+        self.updatePeakList()
+        self.ui.imageWidget.repaint()
 
     def SavePeakTable(self):
         print 'write PT'
