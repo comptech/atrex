@@ -16,6 +16,7 @@ class Atrex (QtGui.QMainWindow):
     displayedImage = False
     minRange = 0
     maxRange = 99
+    mergeSumMode = True
     mymask = myMask()
 
     
@@ -596,18 +597,35 @@ class Atrex (QtGui.QMainWindow):
     def mergeImageRange (self) :
         # get the output tif file name....
         tempimg = myImage ()
-        outname = QtGui.QFileDialog.getSaveFileName (self, "Merge Filename", self.workDirectory, "Image File (*.tif")
+        outname = QtGui.QFileDialog.getSaveFileName (self, "Merge Filename", self.workDirectory, "Image File (*.tif)")
         z = QtCore.QChar ('0')
+        self.mergeSumMode = self.ui.sumButton.isChecked()
 
         nimages = self.maxRange - self.minRange + 1
-        for i in range (self.minRange, self.maxRange+1):
-            newimage = QtCore.QString ("%1%2.tif").arg(self.imageFilePref).arg(i,3,10,z)
-            tempimg.readTiff (newimage)
-            if i == self.minRange :
-                mergeArr = tempimg.imArray.copy().astype(np.float32) /  nimages
-            else :
-                mergeArr = tempimg.imArray/nimages + mergeArr
-        maxval = np.max(mergeArr)
+
+        if (self.mergeSumMode == True) :
+            for i in range (self.minRange, self.maxRange+1):
+                newimage = QtCore.QString ("%1%2.tif").arg(self.imageFilePref).arg(i,3,10,z)
+                tempimg.readTiff (newimage)
+                if i == self.minRange :
+                    mergeArr = tempimg.imArray.copy().astype(np.float32)
+                else :
+                    mergeArr = tempimg.imArray + mergeArr
+            maxval = np.max(mergeArr)
+            if (maxval > 65535):
+                scaleval = 65534. / maxval
+                str = QtCore.QString ("Merge exceeds 65535, scaled by %1").arg(scaleval)
+                qinfo = QtGui.QMessageBox.warning (None, "Information", str)
+                mergeArr *= scaleval
+        else :
+            for i in range (self.minRange, self.maxRange+1):
+                newimage = QtCore.QString ("%1%2.tif").arg(self.imageFilePref).arg(i,3,10,z)
+                tempimg.readTiff (newimage)
+                if i == self.minRange :
+                    mergeArr = tempimg.imArray.copy().astype(np.float32)/ nimages
+                else :
+                    mergeArr = tempimg.imArray/nimages + mergeArr
+
         #if maxval > 65535 :
         #    mergeArr = mergeArr / maxval * 655354.
         mergeArr = mergeArr.astype (np.uint16)
