@@ -27,7 +27,10 @@ class MyPlotWidget (QtGui.QWidget) :
         self.setLayout(layout)
         self.axes = self.figure.add_subplot(111)
         self.createSinData ()
-        self.pType = 2
+        self.pType = 1
+        self.tstr = "Atrex Plot"
+        self.xstr = "X Data"
+        self.ystr = "Y Data"
         self.plotData()
 
 
@@ -42,6 +45,9 @@ class MyPlotWidget (QtGui.QWidget) :
     def plotData (self):
         #self.setXYData (xarr, yarr, 2)
         self.axes.cla()
+        self.axes.set_title (self.tstr)
+        self.axes.set_xlabel (self.xstr)
+        self.axes.set_ylabel(self.ystr)
         if self.pType == 1 :
             self.axes.plot (self.xarr, self.yarr, 'gD')
         if self.pType == 2 :
@@ -89,6 +95,11 @@ class MyPlotWidget (QtGui.QWidget) :
         self.pType = type
 
     def setLabels (self, titleString, xString, yString):
-        self.axes.set_title (titleString)
-        self.axes.set_xlabel (xString)
-        self.axes.set_ylabel(yString)
+
+        self.tstr = titleString
+        self.xstr = xString
+        self.ystr = yString
+
+
+    def outputToFile (self, fname) :
+        self.figure.savefig (fname)

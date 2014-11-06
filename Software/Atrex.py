@@ -114,7 +114,7 @@ class Atrex (QtGui.QMainWindow):
 
         #plot tab buttons and signal/slots
         #self.ui.plot_inputXYButton.clicked.connect (self.plotXYFromFile)
-        #self.ui.plot_saveFileButton.clicked.connect (self.savePlotToFile)
+        self.ui.plot_saveFileButton.clicked.connect (self.savePlotToFile)
         self.ui.plot_updateButton.clicked.connect (self.updatePlot)
 
 
@@ -662,12 +662,11 @@ class Atrex (QtGui.QMainWindow):
 
     def readTextDetect (self) :
         detfile = QtGui.QFileDialog.getOpenFileName (self, 'Open Detector File', self.workDirectory)
-
         self.detector.read_from_text_file (detfile.toLatin1().data())
         self.Display_Detector_calibration(self.detector)
 
     def writeTextDetect (self) :
-        detfile = QtGui.QFileDialog.getSaveFileName (self, 'Open Detector File', self.workDirectory)
+        detfile = QtGui.QFileDialog.getSaveFileName (self, 'Output Detector File', self.workDirectory)
         self.detector.write_to_text_file (detfile.toLatin1().data())
 
 
@@ -685,6 +684,11 @@ class Atrex (QtGui.QMainWindow):
         self.myplotWidget.setLabels(tstr, xstr, ystr)
         self.myplotWidget.plotData()
 
+    def savePlotToFile (self) :
+        filename = QtGui.QFileDialog.getSaveFileName(self, 'Output Plot Image', self.workDirectory, "Image File (*.png)")
+        len = filename.length()
+        if (len <1) : return
+        self.myplotWidget.outputToFile (filename.toLatin1().data())
 
 
 app = QtGui.QApplication (sys.argv)
