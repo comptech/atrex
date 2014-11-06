@@ -112,6 +112,11 @@ class Atrex (QtGui.QMainWindow):
         self.ui.tabWidget.setCurrentIndex (0)
         self.ui.zoomTabWidgets.setCurrentIndex(0)
 
+        #plot tab buttons and signal/slots
+        #self.ui.plot_inputXYButton.clicked.connect (self.plotXYFromFile)
+        #self.ui.plot_saveFileButton.clicked.connect (self.savePlotToFile)
+        self.ui.plot_updateButton.clicked.connect (self.updatePlot)
+
 
     def getHome (self) :
         # get the users home directory
@@ -664,6 +669,21 @@ class Atrex (QtGui.QMainWindow):
     def writeTextDetect (self) :
         detfile = QtGui.QFileDialog.getSaveFileName (self, 'Open Detector File', self.workDirectory)
         self.detector.write_to_text_file (detfile.toLatin1().data())
+
+
+    def updatePlot (self) :
+        ptype = 0
+        if (self.ui.symbCB.isChecked()) :
+            ptype = 1
+        if (self.ui.splineCB.isChecked()) :
+            ptype |= 2
+        self.ui.myplotWidget.setpType (ptype)
+        #self.ui.myplotWidget.replot()
+        tstr = self.ui.plot_titleLE.text().toLatin1().data()
+        xstr = self.ui.plot_xLE.text().toLatin1().data()
+        ystr = self.ui.plot_yLE.text().toLatin1().data()
+        self.myplotWidget.setLabels(tstr, xstr, ystr)
+        self.myplotWidget.plotData()
 
 
 
