@@ -89,7 +89,13 @@ class MyPlotWidget (QtGui.QWidget) :
         self.x10 = np.linspace (xarr[0], xarr[-1], npts10)
         sfcn = interpolate.interp1d (xarr, yarr, kind='cubic')
         self.yarrSpline = sfcn(self.x10)
-
+        """
+        ftest = open ("/home/harold/sinxy.txt", 'w')
+        for i in range (npts10) :
+            line = "%f %f\n"%(self.x10[i], self.yarrSpline[i])
+            ftest.write (line)
+        ftest.close()
+        """
 
     def setpType (self, type):
         self.pType = type
