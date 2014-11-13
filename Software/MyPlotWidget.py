@@ -26,12 +26,15 @@ class MyPlotWidget (QtGui.QWidget) :
         layout.addWidget(self.canvas)
         self.setLayout(layout)
         self.axes = self.figure.add_subplot(111)
-        self.createSinData ()
+        #self.createCosData ()
         self.pType = 1
         self.tstr = "Atrex Plot"
         self.xstr = "X Data"
         self.ystr = "Y Data"
+        self.olayFlag = False
+        self.plotDataFlag = False
         self.plotData()
+
 
 
     def sizeHint(self):
@@ -48,13 +51,17 @@ class MyPlotWidget (QtGui.QWidget) :
         self.axes.set_title (self.tstr)
         self.axes.set_xlabel (self.xstr)
         self.axes.set_ylabel(self.ystr)
+        if (self.plotDataFlag==False) :
+            self.canvas.draw()
+            return
         if self.pType == 1 :
             self.axes.plot (self.xarr, self.yarr, 'gD')
         if self.pType == 2 :
-            self.axes.plot (self.x10, self.yarrSpline, 'b-')
+            self.axes.plot (self.x10, self.yarrSpline, 'b+')
         if self.pType == 3 :
             self.axes.plot (self.xarr, self.yarr, 'gD', self.x10, self.yarrSpline,'b-')
-
+        if self.olayFlag :
+            self.axes.plot (self.xarrOlay, self.yarrOlay, 'y^')
         self.canvas.draw()
 
 
@@ -67,35 +74,43 @@ class MyPlotWidget (QtGui.QWidget) :
             2 - spline connect
     """
     def setXYData (self, xarr, yarr) :
+        self.plotDataFlag = True
         self.xarr = xarr
         self.yarr = yarr
 
-        npts10 = len(xarr)
+        npts10 = len(xarr)*10
         #interp by factor of 10
         self.x10 = np.linspace (xarr[0], xarr[-1], npts10)
         sfcn = interpolate.interp1d (xarr, yarr, kind='cubic')
         self.yarrSpline = sfcn(self.x10)
+        self.plotData ()
+
+    def setOverlayXYData (self, xarr, yarr, secFlag) :
+        self.xarrOlay = xarr
+        self.yarrOlay = yarr
+        self.olayFlag = True ;
+        self.plotData ()
 
 
-    def createSinData (self) :
+    def createCosData (self) :
         self.xarr = np.arange (-math.pi, math.pi, math.pi/16.)
         self.yarr = self.xarr.copy()
         for i in range( len(self.xarr)) :
-            self.yarr[i] = math.sin(self.xarr[i])
+            self.yarr[i] = math.cos(self.xarr[i])
         xarr = self.xarr
         yarr = self.yarr
-        npts10 = len(xarr)
+        npts10 = len(xarr)*10
         #interp by factor of 10
         self.x10 = np.linspace (xarr[0], xarr[-1], npts10)
         sfcn = interpolate.interp1d (xarr, yarr, kind='cubic')
         self.yarrSpline = sfcn(self.x10)
-        """
-        ftest = open ("/home/harold/sinxy.txt", 'w')
+
+        ftest = open ("/home/harold/cosxy.txt", 'w')
         for i in range (npts10) :
             line = "%f %f\n"%(self.x10[i], self.yarrSpline[i])
             ftest.write (line)
         ftest.close()
-        """
+
 
     def setpType (self, type):
         self.pType = type

@@ -5,6 +5,7 @@ from myImDisplay import *
 from atrex_utils import *
 from myMask import *
 from myPeaks import *
+from MyOverlayDlg import *
 from scipy import ndimage
 import sys
 import os.path
@@ -19,6 +20,8 @@ class Atrex(QtGui.QMainWindow):
     maxRange = 99
     mergeSumMode = True
     mymask = myMask()
+    olayFile =""
+    olaySecFlag = False
 
 
     def __init__(self):
@@ -117,6 +120,7 @@ class Atrex(QtGui.QMainWindow):
         self.ui.plot_inputXYButton.clicked.connect(self.plotXYFromFile)
         self.ui.plot_saveFileButton.clicked.connect(self.savePlotToFile)
         self.ui.plot_updateButton.clicked.connect(self.updatePlot)
+        self.ui.plot_overlayXY.clicked.connect (self.overlayPlotFromFile)
 
 
     def getHome(self):
@@ -712,6 +716,23 @@ class Atrex(QtGui.QMainWindow):
             xvals.append (float(lineList[0]))
             yvals.append (float(lineList[1]))
         self.myplotWidget.setXYData (xvals, yvals)
+
+    def overlayPlotFromFile (self) :
+        olayDlg = MyOverlayDlg ()
+        olayDlg.setParams (self.olayFile, self.olaySecFlag)
+        olayDlg.exec_()
+        xvals =[]
+        yvals =[]
+        i=0
+
+        file = open (olayDlg.infile, "r")
+        for line in file :
+            i = i+ 1
+            line = line.strip()
+            lineList = line.split(" ")
+            xvals.append (float(lineList[0]))
+            yvals.append (float(lineList[1]))
+        self.myplotWidget.setOverlayXYData (xvals, yvals, False)
 
 app = QtGui.QApplication(sys.argv)
 atrex = Atrex()
