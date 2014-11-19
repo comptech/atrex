@@ -18,7 +18,7 @@ def en_from_tth_and_d( atth, d) :
 def d_from_lp_and_hkl (lp, hkl) :
     #calculates d-spc from lattice parameters and Miller indices
     b=b_from_lp(lp)
-    np
+    hklArr = np.asarray (hkl)
     xyz=hkl * b
     return 1./vlength(xyz)
 
@@ -35,7 +35,18 @@ def b_from_lp (lp):
     ga=lp[5]*DTOR
     
     b = np.zeros ((3,3), dtype=np.float32)
-    
+    """
+    b[0,0]=as0
+    b[0,1]=0.0
+    b[0,2]=0.0
+    b[1,0]=bs*math.cos(ga)
+    b[1,1]=bs*math.sin(ga)
+    b[1,2]=0.0
+    b[2,0]=cs*math.cos(be)
+    b[2,1]=cs*(math.cos(al)-math.cos(be)*math.cos(ga))/math.sin(ga)
+    b[2,2]=cs*sqrt(math.sin(ga)**2-(math.cos(al)**2+math.cos(be)**2-\
+            2.0*math.cos(al)*math.cos(be)*math.cos(ga)))/math.sin(ga)
+    """
     b[0,0]=as0
     b[0,1]=0.0
     b[0,2]=0.0

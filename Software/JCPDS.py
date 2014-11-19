@@ -176,6 +176,31 @@ class JCPDS :
             print outstr
 
 
+    def write_file (self, fname):
+        fil = open (fname, 'w')
+        fil.write ("VERSION : %1\n"%(self.version))
+        for icom in self.comment :
+            fil.write ("COMMENT : %s\n"%(icom))
+        fil.write ("K0: %10.3f\n"%self.k0)
+        fil.write ("K0P: %10.3f\n"%self.k0p)
+        fil.write ("DK0DT: %10.3f\n"%self.dk0dt)
+        fil.write ("DK0DPT: %10.3f\n"%self.dk0pdt)
+        fil.write ("SYMMETRY: %s\n"%self.symmetry)
+        fil.write ("A: %10.4f\n"%self.a)
+        fil.write ("B: %10.4f\n"%self.b)
+        fil.write ("C: %10.4f\n"%self.c)
+        fil.write ("ALPHA: %10.4f\n"%self.alpha0)
+        fil.write ("BETA: %10.4f\n"%self.beta0)
+        fil.write ("GAMMA: %10.4f\n"%self.gamma0)
+        fil.write ("VOLUME: %10.4f\n"%self.v0)
+        fil.write ("ALPHAT: %10.4f\n"%self.alphat)
+        fil.write ("DALPHADT: %10.4f\n"%self.dalphadt)
+        numRefl = len (self.reflectons)
+        for r in self.reflections :
+                str = "DIHKL: %7.4f %3.1f %d %dn"%(r.d0, r.inten, r.h, r.k, r.l)
+                fil.write
+
+        fil.close()
 
 
     def compute_D (self, Press=0, Temp=298) :
