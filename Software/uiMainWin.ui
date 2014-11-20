@@ -29,7 +29,7 @@
      <rect>
       <x>790</x>
       <y>10</y>
-      <width>481</width>
+      <width>491</width>
       <height>551</height>
      </rect>
     </property>
@@ -1678,8 +1678,85 @@
     </widget>
     <widget class="QWidget" name="NextTab">
      <attribute name="title">
-      <string>Page</string>
+      <string>Ref. Sample</string>
      </attribute>
+     <widget class="QPushButton" name="JCPDSReadButton">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>20</y>
+        <width>121</width>
+        <height>27</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Read JCPDS File</string>
+      </property>
+     </widget>
+     <widget class="QTableWidget" name="refSampleTabWidget">
+      <property name="geometry">
+       <rect>
+        <x>180</x>
+        <y>10</y>
+        <width>300</width>
+        <height>501</height>
+       </rect>
+      </property>
+      <property name="rowCount">
+       <number>40</number>
+      </property>
+      <property name="columnCount">
+       <number>2</number>
+      </property>
+      <attribute name="horizontalHeaderDefaultSectionSize">
+       <number>100</number>
+      </attribute>
+      <attribute name="horizontalHeaderDefaultSectionSize">
+       <number>100</number>
+      </attribute>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <column/>
+      <column/>
+     </widget>
     </widget>
    </widget>
    <widget class="QLabel" name="label_16">

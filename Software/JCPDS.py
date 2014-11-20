@@ -184,7 +184,7 @@ class JCPDS :
         fil.write ("K0: %10.3f\n"%self.k0)
         fil.write ("K0P: %10.3f\n"%self.k0p)
         fil.write ("DK0DT: %10.3f\n"%self.dk0dt)
-        fil.write ("DK0DPT: %10.3f\n"%self.dk0pdt)
+        fil.write ("DK0PDT: %10.3f\n"%self.dk0pdt)
         fil.write ("SYMMETRY: %s\n"%self.symmetry)
         fil.write ("A: %10.4f\n"%self.a)
         fil.write ("B: %10.4f\n"%self.b)
@@ -376,12 +376,12 @@ class JCPDS :
         return val
 
 
-    def check for equivalents (self, refs, hkl, N, exti):
+    def check_for_equivalents (self, refs, hkl, N, exti) :
         res = 0
         for j in range (N+1) :
             hk11 = [refs[j].h, refs[j].k, refs[j].l]
             # need equivalent function, imagine it checks to see if identical...
-
+        return (0)
 
     def copy_object1 (self):
         re = JCPDS ()
@@ -508,7 +508,7 @@ class JCPDS :
         self.comment = []
         self.comment.append(str)
 
-    def get_comment (self)
+    def get_comment (self):
         return self.comment
 
     def set_reflections (self, reflec) :
@@ -531,5 +531,67 @@ class JCPDS :
         else :
             return (-1)
 
-jcpds = JCPDS()
-jcpds.read_file ('/home/harold/workdir/jcpds_reader/Examples/cao.jcpds')
+
+    def getParamString (self) :
+        outstring = []
+        outstring.append("VERSION")
+        outstring.append (self.version)
+        for icom in self.comment :
+            outstring.append ("COMMENT")
+            outstring.append (icom)
+        outstring.append ("K0")
+        outstring.append ("%10.3f"%self.k0)
+        outstring.append ("K0P")
+        outstring.append ("%10.3f"%self.k0p)
+        outstring.append ("DK0DT")
+        outstring.append ("%10.3f"%self.dk0dt)
+        outstring.append ("DK0PDT")
+        outstring.append ("%10.3f"%self.dk0pdt)
+        outstring.append ("SYMMETRY")
+        outstring.append (self.symmetry)
+        outstring.append ("A")
+        outstring.append ("%10.4f"%self.a)
+        outstring.append ("B")
+        outstring.append ("%10.4f"%self.b)
+        outstring.append ("C")
+        outstring.append ("%10.4f"%self.c)
+        outstring.append ("ALPHA")
+        outstring.append ("%10.4f"%self.alpha0)
+        outstring.append ("BETA")
+        outstring.append ("%10.4f"%self.beta0)
+        outstring.append ("GAMMA")
+        outstring.append ("%10.4f"%self.gamma0)
+        outstring.append ("VOLUME")
+        outstring.append ("%10.4f"%self.v0)
+        outstring.append ("ALPHAT")
+        outstring.append ("%10.4f"%self.alphat)
+        outstring.append ("DALPHAT")
+        outstring.append ("%10.4f"%self.dalphadt)
+        for r in self.reflections :
+                outstring.append("DIHLK")
+
+                outstring.append("%7.4f %3.1f %d %d %d"%(r.d0, r.inten, r.h, r.k, r.l))
+
+
+        """
+        fil.write ("SYMMETRY: %s\n"%self.symmetry)
+        fil.write ("A: %10.4f\n"%self.a)
+        fil.write ("B: %10.4f\n"%self.b)
+        fil.write ("C: %10.4f\n"%self.c)
+        fil.write ("ALPHA: %10.4f\n"%self.alpha0)
+        fil.write ("BETA: %10.4f\n"%self.beta0)
+        fil.write ("GAMMA: %10.4f\n"%self.gamma0)
+        fil.write ("VOLUME: %10.4f\n"%self.v0)
+        fil.write ("ALPHAT: %10.4f\n"%self.alphat)
+        fil.write ("DALPHADT: %10.4f\n"%self.dalphadt)
+
+        numRefl = len (self.reflectons)
+        for r in self.reflections :
+                str = "DIHKL: %7.4f %3.1f %d %dn"%(r.d0, r.inten, r.h, r.k, r.l)
+                fil.write
+
+        """
+        return outstring
+
+#jcpds = JCPDS()
+#jcpds.read_file ('/home/harold/workdir/jcpds_reader/Examples/cao.jcpds')

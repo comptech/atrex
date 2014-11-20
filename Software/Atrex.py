@@ -6,6 +6,7 @@ from atrex_utils import *
 from myMask import *
 from myPeaks import *
 from MyOverlayDlg import *
+from JCPDS import *
 from scipy import ndimage
 import sys
 import os.path
@@ -27,6 +28,8 @@ class Atrex(QtGui.QMainWindow):
     def __init__(self):
         QtGui.QMainWindow.__init__(self)
         self.ui = uic.loadUi("uiMainWin.ui", self)
+        self.ui.refSampleTabWidget.setColumnWidth (1, 170)
+        self.ui.refSampleTabWidget.setHorizontalHeaderLabels (QtCore.QStringList()<< "Name" << "Value")
         self.ui.openImageButton.clicked.connect(self.openImage)
         self.ui.browseImageDirButton.clicked.connect(self.defImageDir)
         self.ui.browseWorkDirButton.clicked.connect(self.defWorkDir)
@@ -122,6 +125,8 @@ class Atrex(QtGui.QMainWindow):
         self.ui.plot_updateButton.clicked.connect(self.updatePlot)
         self.ui.plot_overlayXY.clicked.connect (self.overlayPlotFromFile)
 
+        #Powder tab
+        self.ui.JCPDSReadButton.clicked.connect (self.readJCPDS)
 
     def getHome(self):
         # get the users home directory
@@ -733,6 +738,32 @@ class Atrex(QtGui.QMainWindow):
             xvals.append (float(lineList[0]))
             yvals.append (float(lineList[1]))
         self.myplotWidget.setOverlayXYData (xvals, yvals, False)
+
+    def readJCPDS (self):
+        table = self.ui.refSampleTabWidget
+        table.clearContents()
+        filename = QtGui.QFileDialog.getOpenFileName(self, "Input .jcpds File")
+        refsamp = JCPDS ()
+        refsamp.read_file (filename)
+        propString = refsamp.getParamString()
+
+        nrows = len (propString) / 2
+        nrowsTable=self.ui.refSampleTabWidget.rowCount()
+        if nrows > nrowsTable :
+            self.ui.refSampleTabWidget.setRowCount (nrows)
+        for i in range(nrows) :
+
+            itemTitle = QtGui.QTableWidgetItem ()
+            itemTitle.setBackgroundColor (QtCore.Qt.yellow)
+            itemValue = QtGui.QTableWidgetItem ()
+            itemTitle.setText (propString[i*2])
+            itemValue.setText (str(propString[i*2+1]).strip())
+            table.setItem (i, 0, itemTitle)
+            table.setItem (i, 1, itemValue)
+
+
+
+
 
 app = QtGui.QApplication(sys.argv)
 atrex = Atrex()
