@@ -28,8 +28,11 @@ class Atrex(QtGui.QMainWindow):
     def __init__(self):
         QtGui.QMainWindow.__init__(self)
         self.ui = uic.loadUi("uiMainWin.ui", self)
-        self.ui.refSampleTabWidget.setColumnWidth (1, 170)
+        self.ui.refSampleTabWidget.setColumnWidth (1, 250)
         self.ui.refSampleTabWidget.setHorizontalHeaderLabels (QtCore.QStringList()<< "Name" << "Value")
+        self.ui.sampleReflectTabWidget.setHorizontalHeaderLabels \
+            (QtCore.QStringList()<< "D-Spacing" << "Intensity" << "H"<<"K"<<"L")
+        #self.ui.refSampleTabWidget.verticalHeader().setRowHeight (8)
         self.ui.openImageButton.clicked.connect(self.openImage)
         self.ui.browseImageDirButton.clicked.connect(self.defImageDir)
         self.ui.browseWorkDirButton.clicked.connect(self.defWorkDir)
@@ -748,9 +751,9 @@ class Atrex(QtGui.QMainWindow):
         propString = refsamp.getParamString()
 
         nrows = len (propString) / 2
-        nrowsTable=self.ui.refSampleTabWidget.rowCount()
-        if nrows > nrowsTable :
-            self.ui.refSampleTabWidget.setRowCount (nrows)
+        #nrowsTable=self.ui.refSampleTabWidget.rowCount()
+        #if nrows > nrowsTable :
+        self.ui.refSampleTabWidget.setRowCount (nrows)
         for i in range(nrows) :
 
             itemTitle = QtGui.QTableWidgetItem ()
@@ -760,6 +763,31 @@ class Atrex(QtGui.QMainWindow):
             itemValue.setText (str(propString[i*2+1]).strip())
             table.setItem (i, 0, itemTitle)
             table.setItem (i, 1, itemValue)
+
+        nrows = len (refsamp.reflections)
+
+        # then load up the reflection table
+        table = self.ui.sampleReflectTabWidget
+        table.clearContents()
+        table.setRowCount (nrows)
+        count = 0
+        for r in refsamp.reflections :
+            itemD = QtGui.QTableWidgetItem ()
+            itemD.setText (str(r.d0))
+            table.setItem (count, 0, itemD)
+            itemIntens = QtGui.QTableWidgetItem ()
+            itemIntens.setText (str(r.inten))
+            table.setItem (count, 1, itemIntens)
+            itemH = QtGui.QTableWidgetItem ()
+            itemH.setText (str(r.h))
+            table.setItem (count, 2, itemH)
+            itemK = QtGui.QTableWidgetItem ()
+            itemK.setText (str(r.k))
+            table.setItem (count, 3, itemK)
+            itemL = QtGui.QTableWidgetItem ()
+            itemL.setText (str(r.l))
+            table.setItem (count, 4, itemL)
+            count += 1
 
 
 

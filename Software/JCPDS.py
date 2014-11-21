@@ -567,10 +567,10 @@ class JCPDS :
         outstring.append ("%10.4f"%self.alphat)
         outstring.append ("DALPHAT")
         outstring.append ("%10.4f"%self.dalphadt)
-        for r in self.reflections :
-                outstring.append("DIHLK")
 
-                outstring.append("%7.4f %3.1f %d %d %d"%(r.d0, r.inten, r.h, r.k, r.l))
+        #for r in self.reflections :
+        #        outstring.append("DIHLK")
+        #        outstring.append("%7.4f %3.1f %d %d %d"%(r.d0, r.inten, r.h, r.k, r.l))
 
 
         """
