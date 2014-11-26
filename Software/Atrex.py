@@ -130,6 +130,7 @@ class Atrex(QtGui.QMainWindow):
 
         #Powder tab
         self.ui.JCPDSReadButton.clicked.connect (self.readJCPDS)
+        self.ui.XPOWReadButton.clicked.connect (self.readXPOW)
 
     def getHome(self):
         # get the users home directory
@@ -741,6 +742,51 @@ class Atrex(QtGui.QMainWindow):
             xvals.append (float(lineList[0]))
             yvals.append (float(lineList[1]))
         self.myplotWidget.setOverlayXYData (xvals, yvals, False)
+
+    def readXPOW (self) :
+        table = self.ui.refSampleTabWidget
+        table.clearContents()
+        filename = QtGui.QFileDialog.getOpenFileName(self, "Input .txt File")
+        refsamp = JCPDS ()
+        refsamp.read_xpow (filename.toLatin1().data())
+        propString = refsamp.getParamString()
+        nrows = len (propString) / 2
+        #nrowsTable=self.ui.refSampleTabWidget.rowCount()
+        #if nrows > nrowsTable :
+        self.ui.refSampleTabWidget.setRowCount (nrows)
+        for i in range(nrows) :
+
+            itemTitle = QtGui.QTableWidgetItem ()
+            itemTitle.setBackgroundColor (QtCore.Qt.yellow)
+            itemValue = QtGui.QTableWidgetItem ()
+            itemTitle.setText (propString[i*2])
+            itemValue.setText (str(propString[i*2+1]).strip())
+            table.setItem (i, 0, itemTitle)
+            table.setItem (i, 1, itemValue)
+
+        # then load up the reflection table
+        table = self.ui.sampleReflectTabWidget
+        table.clearContents()
+        table.setRowCount (nrows)
+        count = 0
+        for r in refsamp.reflections :
+            itemD = QtGui.QTableWidgetItem ()
+            itemD.setText (str(r.d0))
+            table.setItem (count, 0, itemD)
+            itemIntens = QtGui.QTableWidgetItem ()
+            itemIntens.setText (str(r.inten))
+            table.setItem (count, 1, itemIntens)
+            itemH = QtGui.QTableWidgetItem ()
+            itemH.setText (str(r.h))
+            table.setItem (count, 2, itemH)
+            itemK = QtGui.QTableWidgetItem ()
+            itemK.setText (str(r.k))
+            table.setItem (count, 3, itemK)
+            itemL = QtGui.QTableWidgetItem ()
+            itemL.setText (str(r.l))
+            table.setItem (count, 4, itemL)
+            count += 1
+
 
     def readJCPDS (self):
         table = self.ui.refSampleTabWidget

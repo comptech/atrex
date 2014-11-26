@@ -22,6 +22,13 @@ class Reflection :
         self.k = float (tmpstr[3])
         self.l = float (tmpstr[4])
 
+    def parseValsXPOW (self, instr):
+        tmpstr = instr.strip().split()
+        self.d0 = float (tmpstr[2])
+        self.inten = float (tmpstr[1])
+        self.h = float (tmpstr[3])
+        self.k = float (tmpstr[4])
+        self.l = float (tmpstr[5])
 
 
 class JCPDS :
@@ -58,7 +65,6 @@ class JCPDS :
 
     def __init__(self) :
         self.a = 0.
-
 
 
     def read_file (self, filename):
@@ -175,6 +181,69 @@ class JCPDS :
             outstr = 'Reflect %f %f %f %f %f %f\r\n'%(r.inten, r.h, r.k, r.l, r.d, r.d0)
             print outstr
 
+    def read_xpow (self, fname) :
+        self.fname = fname
+
+        lcount = 0
+        self.symmetry = 'CUBIC'
+        fil = open (fname, 'r')
+        for line in fil :
+
+            if lcount == 3 or lcount == 4 :
+                self.comment.append (line.strip())
+                lcount += 1
+                continue
+            if 'CELL' in line :
+                strSplit = line.split (':')
+                newline = strSplit[1].strip().split()
+                self.a0 = float (newline[0])
+                self.b0 = float (newline[1])
+                self.c0 = float (newline[2])
+                self.alpha0 = float (newline[3])
+                self.beta0 = float (newline[4])
+                self.gamma0 = float (newline[5])
+            if '2-THETA' in line :
+                # this will be the last line before the reflection lines....
+                break
+
+        # now read the reflections
+        for line in fil :
+            # check if end of list...
+            if '===' in line : break
+            #otherwise create next reflection
+            refl = Reflection ()
+            refl.parseValsXPOW (line)
+            self.reflections.append (refl)
+
+
+
+        self.compute_v0()
+        self.a = self.a0
+        self.b = self.b0
+        self.c = self.c0
+        self.d = self.d0
+        self.alpha = self.alpha0
+        self.beta = self.beta0
+        self.gamma = self.gamma0
+        self.v = self.v0
+
+        numRefl = len (self.reflections)
+        print 'Number of reflections %d'%(numRefl)
+
+        if numRefl > 0 :
+            self.compute_D ()
+            diff = []
+            count =0
+            for r in self.reflections :
+                diff.append (math.fabs(r.d0 - r.d)/ r.d0)
+            print diff
+
+
+        for i in range (numRefl) :
+            #if diff[i] < .001 : continue
+            r= self.reflections[i]
+            outstr = 'Reflect %f %f %f %f %f %f\r\n'%(r.inten, r.h, r.k, r.l, r.d, r.d0)
+            print outstr
 
     def write_file (self, fname):
         fil = open (fname, 'w')
