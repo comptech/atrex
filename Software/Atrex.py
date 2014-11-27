@@ -768,6 +768,8 @@ class Atrex(QtGui.QMainWindow):
         # then load up the reflection table
         table = self.ui.sampleReflectTabWidget
         table.clearContents()
+        nrows = len (refsamp.reflections)
+
         table.setRowCount (nrows)
         count = 0
         for r in refsamp.reflections :
@@ -845,4 +847,3 @@ atrex = Atrex()
 atrex.show()
 
 sys.exit(app.exec_())
-print 'hello here'

@@ -1778,7 +1778,7 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>40</y>
+        <y>50</y>
         <width>121</width>
         <height>27</height>
        </rect>
@@ -1879,9 +1879,9 @@
      <widget class="QLabel" name="refsampLabel">
       <property name="geometry">
        <rect>
-        <x>140</x>
+        <x>150</x>
         <y>10</y>
-        <width>341</width>
+        <width>331</width>
         <height>20</height>
        </rect>
       </property>
