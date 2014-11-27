@@ -107,6 +107,7 @@ class Atrex(QtGui.QMainWindow):
         self.ui.unselectButton.setStyleSheet("QPushButton {background-color: yellow}")
         self.ui.maskButton.setStyleSheet("QPushButton {background-color: yellow}")
         self.ui.unmaskButton.setStyleSheet("QPushButton {background-color: yellow}")
+        self.ui.refsampLabel.setStyleSheet ("QLabel{background-color:white}")
 
         # mask tab buttons
         self.ui.clearMaskButton.clicked.connect(self.clearMask)
@@ -786,7 +787,7 @@ class Atrex(QtGui.QMainWindow):
             itemL.setText (str(r.l))
             table.setItem (count, 4, itemL)
             count += 1
-
+        self.ui.refsampLabel.setText (filename)
 
     def readJCPDS (self):
         table = self.ui.refSampleTabWidget
@@ -836,7 +837,7 @@ class Atrex(QtGui.QMainWindow):
             count += 1
 
 
-
+        self.ui.refsampLabel.setText (filename)
 
 
 app = QtGui.QApplication(sys.argv)

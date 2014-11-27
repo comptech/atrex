@@ -43,7 +43,8 @@ class JCPDS :
     d0=0.
     comment=[]
     reflections=[]
-    symmetry=''
+    symmetry='CUBIC'
+    filename = ''
     file = ''
     version = 0
     k0=0.
@@ -75,6 +76,7 @@ class JCPDS :
         if (not os.path.isfile(filename)) :
             return
         f = open (filename, 'r')
+        self.filename = filename
         tag=""
         arr=[]
         num=0
@@ -182,7 +184,7 @@ class JCPDS :
             print outstr
 
     def read_xpow (self, fname) :
-        self.fname = fname
+        self.filename = fname
 
         lcount = 0
         self.symmetry = 'CUBIC'

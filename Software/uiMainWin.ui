@@ -1689,7 +1689,7 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>20</y>
+        <y>10</y>
         <width>121</width>
         <height>27</height>
        </rect>
@@ -1702,9 +1702,9 @@
       <property name="geometry">
        <rect>
         <x>140</x>
-        <y>10</y>
+        <y>50</y>
         <width>341</width>
-        <height>291</height>
+        <height>251</height>
        </rect>
       </property>
       <property name="rowCount">
@@ -1778,7 +1778,7 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>60</y>
+        <y>40</y>
         <width>121</width>
         <height>27</height>
        </rect>
@@ -1875,6 +1875,19 @@
        <column/>
        <column/>
       </widget>
+     </widget>
+     <widget class="QLabel" name="refsampLabel">
+      <property name="geometry">
+       <rect>
+        <x>140</x>
+        <y>10</y>
+        <width>341</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Filename:</string>
+      </property>
      </widget>
     </widget>
    </widget>
