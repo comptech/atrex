@@ -40,6 +40,10 @@ class myImage :
         omega0 and omegaR, chi, detector, and exposure time values. These
         are put into the respective members of this class.
     '''
+
+    #def getHisto (self) :
+
+
     def readText (self, infile) :
         status = True 
         tfile = QtCore.QString("%1.txt").arg(infile)
