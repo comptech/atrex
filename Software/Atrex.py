@@ -186,8 +186,10 @@ class Atrex(QtGui.QMainWindow):
         wdir = self.ui.imDirLE.text()
         self.imageFile = QtGui.QFileDialog.getOpenFileName(self, 'Open Tiff Image', wdir)
         # get the path and put it in imDirLE
-        z = QtCore.QDir.separator()
-        wdir = self.imageFile.left(self.imageFile.lastIndexOf(z))
+        # z = QtCore.QDir.separator()
+        fi = QtCore.QFileInfo (self.imageFile)
+        basename = fi.baseName()
+        wdir = self.imageFile.left(self.imageFile.lastIndexOf(basename))
         self.ui.imDirLE.setText(wdir)
         # image file prefix will be used to build new images to display
         prefind = self.imageFile.lastIndexOf(".tif")
