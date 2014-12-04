@@ -29,9 +29,12 @@ class myImage :
         (x,y) = im.size
         print x, y
         self.imArraySize=[x,y]
+        mnval = np.min (im)
+        mxval = np.max (im)
         #img = mpimg.imread(infile.toLatin1().data())
         #plt.imshow(im)
         self.imArray = np.asarray(im.getdata())
+        self.imArray[self.imArray<0]+= 65535
         self.imArray = np.reshape (self.imArray,(y,x))
         self.imArray_orig = self.imArray
         print self.imArray.min(), self.imArray.max()
