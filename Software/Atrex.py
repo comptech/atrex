@@ -213,9 +213,13 @@ class Atrex(QtGui.QMainWindow):
 
     def openImageFile(self, filename):
         self.imageFile = filename
-        z = QtCore.QDir.separator()
-        wdir = self.imageFile.left(self.imageFile.lastIndexOf(z))
+        fi = QtCore.QFileInfo (self.imageFile)
+        basename = fi.baseName()
+        wdir = self.imageFile.left(self.imageFile.lastIndexOf(basename))
         self.ui.imDirLE.setText(wdir)
+        # z = QtCore.QDir.separator()
+        # wdir = self.imageFile.left(self.imageFile.lastIndexOf(z))
+        # self.ui.imDirLE.setText(wdir)
         # image file prefix will be used to build new images to display
 
         prefind = self.imageFile.lastIndexOf(".tif")
