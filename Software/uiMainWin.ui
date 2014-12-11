@@ -39,7 +39,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>6</number>
+     <number>2</number>
     </property>
     <widget class="QWidget" name="FileTab">
      <attribute name="title">
@@ -1082,7 +1082,7 @@
       <property name="geometry">
        <rect>
         <x>330</x>
-        <y>200</y>
+        <y>180</y>
         <width>141</width>
         <height>28</height>
        </rect>
@@ -1155,6 +1155,19 @@
         <string>Write ASCII</string>
        </property>
       </widget>
+     </widget>
+     <widget class="QPushButton" name="testCalcButton">
+      <property name="geometry">
+       <rect>
+        <x>310</x>
+        <y>230</y>
+        <width>90</width>
+        <height>27</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>TestCalc</string>
+      </property>
      </widget>
     </widget>
     <widget class="QWidget" name="tab_4">

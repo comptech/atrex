@@ -117,6 +117,7 @@ class Atrex(QtGui.QMainWindow):
         #detector tab buttons
         self.ui.readTextDetFileButton.clicked.connect(self.readTextDetect)
         self.ui.writeTextDetFileButton.clicked.connect(self.writeTextDetect)
+        self.ui.testCalcButton.clicked.connect (self.testCalc)
 
         self.updatePeakNumberLE()
         self.getHome()
@@ -846,6 +847,10 @@ class Atrex(QtGui.QMainWindow):
 
 
         self.ui.refsampLabel.setText (filename)
+
+    def testCalc (self) :
+        self.detector.create_ttheta_array (self.myim.imArraySize)
+        self.detector.testStuff()
 
 
 app = QtGui.QApplication(sys.argv)

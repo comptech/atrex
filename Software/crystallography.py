@@ -133,20 +133,18 @@ def b_from_lp (lp):
     b[2,1]=cs*(math.cos(al)-math.cos(be)*math.cos(ga))/math.sin(ga)
     b[2,2]=cs* math.sqrt(math.sin(ga)**2-(math.cos(al)**2+math.cos(be)**2-\
             2.0*math.cos(al)*math.cos(be)*math.cos(ga)))/math.sin(ga)
-    binv = np.invert (b)
+    binv = np.linalg.inv (b)
     bs = np.transpose (binv)
     return bs
 
 
 def dotprod (v, w):
-    l = len (v)
-    tot=0.
-    for i in range (l):
-        tot += v[i] * w[i]
-    return tot
+    return np.vdot(v,w)
+
 
 def vlength (v):
-    val = dotprod (v, v)
+    vecv = np.asarray(v)
+    val = np.vdot (vecv,vecv)
     return math.sqrt(val)
 
 def ang (v,w) :
@@ -159,7 +157,7 @@ def lp_from_ub (ub) :
     #calculates lattice paramters from ub matrix
     ub = np.asmatrix(ub)
     gs = np.transpose (ub)
-    g = np.invert (gs)
+    g = np.linalg.inv (gs)
     lp=np.zeros (6,dtype=np.float32)
     lp[0]=math.sqrt(g[0,0])
     lp[1]=math.sqrt(g[1,1])
@@ -179,7 +177,7 @@ def V_from_lp (lp) :
 def V_from_ub (ub):
     ub = np.asmatrix (ub, dtype=np.float32)
     gs =  np.transpose (ub) * ub
-    g = np.invert (gs)
+    g = np.linalg.inv (gs)
     return math.sqrt (np.linalg.det(g))
 
 
@@ -188,12 +186,12 @@ def U_from_ub (ub):
     ub= np.asmatrix(ub)
     lp = lp_from_ub(ub)
     B = b_from_lp(lp)
-    Binv = np.invert (B)
+    Binv = np.linalg.inv (B)
     return ub * Binv
 
 def hkl_from_ub_and_xyz (ub, xyz) :
     #calculates miller indices (floating point) from ub matrix and xyz coordinates
-    iUB=np.invert(np.asmatrix(ub))
+    iUB=np.linalg.inv(np.asmatrix(ub))
 
     hkl=iUB ## np.asmatrix(xyz)
     return hkl
