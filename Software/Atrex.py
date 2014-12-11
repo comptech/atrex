@@ -849,7 +849,7 @@ class Atrex(QtGui.QMainWindow):
         self.ui.refsampLabel.setText (filename)
 
     def testCalc (self) :
-        self.detector.create_ttheta_array (self.myim.imArraySize)
+        #self.detector.create_ttheta_array (self.myim.imArraySize)
         self.detector.testStuff()
 
 

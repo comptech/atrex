@@ -2,11 +2,16 @@ import os
 import pickle
 from crystallography import *
 from vector_math import *
+from threading import Thread
+from PyQt4 import QtCore
 
 
-class myDetector:
+class myDetector (QtCore.QObject):
+
+    tDone = QtCore.pyqtSignal (int)
 
     def __init__(self):
+        QtCore.QObject.__init__(self)
         self.dist = 0.0
         self.beamx = 0.0
         self.beamy = 0.0
@@ -20,6 +25,9 @@ class myDetector:
         self.ttheta = 0.0
         self.wavelength = 0.0
         self.gonio = [0., 0., 0.]
+        self.tthetaArr = np.zeros((2048,2048), dtype=np.float32)
+        self.threadDone = [False, False, False, False, False, False, False, False]
+        self.tDone.connect (self.threadDoneSlot)
 
     def getdist(self):
         return self.dist
@@ -161,7 +169,31 @@ class myDetector:
 
         return vec3
 
+    def calculate_sd_from_pixels_arr(self, pix, gonio):
+        xpix = pix[0]
+        ypix = pix[1]
 
+
+        # calculate relative coordinates
+        xrel = -1. * (xpix - self.beamx) * self.psizex
+        yrel = (ypix - self.beamy) * self.psizey
+
+        # sd at 2theta 0
+        vec1a = np.array([0.,xrel, yrel])
+
+        #vec1a = np.asmatrix(vec1a)
+        vec2 = np.dot(vec1a,self.tiltmtx)
+
+
+        #vec2a = [self.dist, 0., 0.]
+        #vec3 = vec2 + np.asmatrix(vec2a)
+        vec2[0] += self.dist
+        #tth = generate_rot_mat (3, -gonio[1])
+        vec3 = np.dot(vec2,self.tth)
+        #vec3 = np.asarray(vec3)
+        #sd0 = vec3 / vlength(vec3)
+
+        return vec3
 
 
     def tilt_mtx (self) :
@@ -175,12 +207,28 @@ class myDetector:
         omt = generate_rot_mat (3, self.tiltch)
         cht = generate_rot_mat (1, self.tiltom)
         icht = np.linalg.inv (cht)
-        self.tiltmtx = cht * omt * icht
-        self.tth = generate_rot_mat (3, -self.gonio[1])
+        self.tiltmtx = np.asarray(cht * omt * icht)
+        self.tth = np.asarray(generate_rot_mat (3, -self.gonio[1]))
 
 
 
     def testStuff (self) :
+        self.genTiltMtx ()
+        for i in range (8) :
+            self.threadDone[i] = False
+        t= Thread (target=self.create_ttheta_array_sub, args=(2048,2048,0,0, 0))
+        t= Thread (target=self.create_ttheta_array_sub, args=(2048,2048,0,512, 1))
+        t= Thread (target=self.create_ttheta_array_sub, args=(2048,2048,0,1024, 2))
+        t= Thread (target=self.create_ttheta_array_sub, args=(2048,2048,0,1536, 3))
+        t1= Thread (target=self.create_ttheta_array_sub, args=(2048,2048,1024,0, 4))
+        t2= Thread (target=self.create_ttheta_array_sub, args=(2048,2048,1024,512,5))
+        t3= Thread (target=self.create_ttheta_array_sub, args=(2048,2048,1024, 1024,6))
+        t3= Thread (target=self.create_ttheta_array_sub, args=(2048,2048,1024, 1536,7))
+        t.start()
+        t1.start()
+        t2.start()
+        t3.start()
+
         tth0 = self.calculate_tth_from_pixels ([0, 1024], [0,0,0])
         tth1 = self.calculate_tth_from_pixels ([2047, 1024], [0,0,0])
         tth2 = self.calculate_tth_from_pixels ([1024, 0], [0,0,0])
@@ -196,15 +244,79 @@ class myDetector:
         sd0 = [1, 0, 0]
         outdist = y2
         npix = long(xysize[0]) * xysize[1]
-        for isamp in range (npix) :
-            i = isamp / xysize[1]
-            j = isamp - long(i) * xysize[1]
-            dist = sqrt(float ((i-y2)**2+(j-x2)**2))
-            if (dist>outdist) :
-                continue
+        for i in range (xysize[0]) :
+            if i %50 == 0 :
+                print "Working on line %d"%i
+            for j in range(xysize[1]) :
+                dist = sqrt(float ((i-y2)**2+(j-x2)**2))
+                if (dist>outdist) :
+                    continue
                 #self.tthetaArr [i, j] = self.calculate_tth_from_pixels ([j, i], self.gonio)
-            sd = self.calculate_sd_from_pixels([j,i], self.gonio)
-            self.tthetaArr[i,j] = ang_between_vecs (sd, sd0)
+                #sd = self.calculate_sd_from_pixels_arr([j,i], self.gonio)
+                xrel = -1. * (j - self.beamx) * self.psizex
+                yrel = (i - self.beamy) * self.psizey
+                vec1a = np.array([0.,xrel, yrel])
+
+                #vec1a = np.asmatrix(vec1a)
+                vec2 = np.dot(vec1a,self.tiltmtx)
+
+
+                #vec2a = [self.dist, 0., 0.]
+                #vec3 = vec2 + np.asmatrix(vec2a)
+                vec2[0] += self.dist
+                #tth = generate_rot_mat (3, -gonio[1])
+                vec3 = np.dot(vec2,self.tth)
+
+                self.tthetaArr[i,j] = ang (vec3, sd0)
+
         f = open ("/home/harold/ttheta", 'w')
         self.tthetaArr.tofile (f)
         f.close()
+
+    def create_ttheta_array_sub (self, xsize, ysize, startx, starty, tnum) :
+        self.genTiltMtx ()
+
+        xysize = [ysize,xsize]
+        x2 = xysize[1] / 2
+        y2 = xysize[0] / 2
+        sd0 = [1, 0, 0]
+        outdist = y2
+        npix = long(xysize[0]) * xysize[1]
+        for i in range (starty, starty+1024) :
+            if i %50 == 0 :
+                print "Working on line %d"%i
+            for j in range (startx, startx+512) :
+                dist = sqrt(float ((i-y2)**2+(j-x2)**2))
+                if (dist>outdist) :
+                    continue
+                #self.tthetaArr [i, j] = self.calculate_tth_from_pixels ([j, i], self.gonio)
+                #sd = self.calculate_sd_from_pixels_arr([j,i], self.gonio)
+                xrel = -1. * (j - self.beamx) * self.psizex
+                yrel = (i - self.beamy) * self.psizey
+                vec1a = np.array([0.,xrel, yrel])
+
+                #vec1a = np.asmatrix(vec1a)
+                vec2 = np.dot(vec1a,self.tiltmtx)
+
+                #vec2a = [self.dist, 0., 0.]
+                #vec3 = vec2 + np.asmatrix(vec2a)
+                vec2[0] += self.dist
+                #tth = generate_rot_mat (3, -gonio[1])
+                vec3 = np.dot(vec2,self.tth)
+
+                self.tthetaArr[i,j] = ang (vec3, sd0)
+
+        self.threadDone[tnum] = True
+        self.tDone.emit (tnum)
+
+    def threadDoneSlot (self, tnum) :
+        for i in range (8) :
+            if self.threadDone[i] == False :
+                done = False
+                return
+
+        print "TTheta calculation complete - writing output file"
+        f = open ("/home/harold/ttheta", 'w')
+        self.tthetaArr.tofile (f)
+        f.close()
+# def thetaCalcThread (det, starts, stops):

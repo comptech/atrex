@@ -43,6 +43,7 @@ def generate_rot_mat (axis, angle) :
     return Mtx
 
 def ang_between_vecs (vec1, vec2) :
-    a=dotprod(vec1, vec2)/(vlength(vec1)*vlength(vec2))
+    a = np.dot(vec1, vec2)
+    a=np.dot(vec1, vec2)/(vlength(vec1)*vlength(vec2))
     a=abs(acos(a)*180.0/pi)
     return a
