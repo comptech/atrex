@@ -54,6 +54,8 @@ class MyPlotWidget (QtGui.QWidget) :
         if (self.plotDataFlag==False) :
             self.canvas.draw()
             return
+        if self.pType==0 :
+            self.axes.plot (self.xarr, self.yarr)
         if self.pType == 1 :
             self.axes.plot (self.xarr, self.yarr, 'gD')
         if self.pType == 2 :
@@ -90,6 +92,16 @@ class MyPlotWidget (QtGui.QWidget) :
         self.yarrOlay = yarr
         self.olayFlag = True ;
         self.plotData ()
+
+    def setXYData_Integrate (self,xarr, yarr) :
+        self.tstr =  "Image Integration"
+        self.xstr = "2 Theta"
+        self.ystr = "Average Intensity"
+        self.xarr = xarr
+        self.yarr = yarr
+        self.pType = 0
+        self.plotDataFlag = True
+        self.plotData()
 
 
     def createCosData (self) :

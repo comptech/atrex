@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1287</width>
+    <width>1371</width>
     <height>955</height>
    </rect>
   </property>
@@ -34,12 +34,12 @@
      <rect>
       <x>790</x>
       <y>10</y>
-      <width>491</width>
+      <width>561</width>
       <height>551</height>
      </rect>
     </property>
     <property name="currentIndex">
-     <number>2</number>
+     <number>3</number>
     </property>
     <widget class="QWidget" name="FileTab">
      <attribute name="title">
@@ -1170,6 +1170,34 @@
       </property>
      </widget>
     </widget>
+    <widget class="QWidget" name="integrateTab">
+     <attribute name="title">
+      <string>Integrate</string>
+     </attribute>
+     <widget class="MyPlotWidget" name="integratePlotWidget" native="true">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>170</y>
+        <width>541</width>
+        <height>341</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="integrateCurrentButton">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>20</y>
+        <width>191</width>
+        <height>27</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Integrate Current Image</string>
+      </property>
+     </widget>
+    </widget>
     <widget class="QWidget" name="tab_4">
      <attribute name="title">
       <string>Scan</string>
@@ -2155,7 +2183,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1287</width>
+     <width>1371</width>
      <height>27</height>
     </rect>
    </property>

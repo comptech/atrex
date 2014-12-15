@@ -36,7 +36,7 @@ class myImage :
         self.imArray = np.asarray(im.getdata())
         self.imArray[self.imArray<0]+= 65535
         self.imArray = np.reshape (self.imArray,(y,x))
-        self.imArray_orig = self.imArray
+        self.imArray_orig = self.imArray [:,:]
         print self.imArray.min(), self.imArray.max()
 
     ''' readText reads the image's associated text file extracting the
@@ -201,3 +201,23 @@ class myImage :
     def applyMask (self, arr):
         self.imArray = self.imArray_orig * arr
     
+
+    def integrate (self, tthetaArr) :
+
+
+        mintth = 0.
+        maxtth = 25.
+        nbins = 100
+        deltth = (maxtth - mintth) / nbins
+        self.avg2tth = np.zeros (nbins, dtype=np.float32)
+        self.tthetabin = np.zeros (nbins, dtype=np.float32)
+
+        for i in range (nbins) :
+            minR = mintth + i * deltth
+            maxR = minR + deltth
+            self.tthetabin[i] = (maxR+minR) /2.
+            subs = np.where((tthetaArr >= minR) & (tthetaArr < maxR))
+            n = len (subs[0])
+            if n > 0 :
+                self.avg2tth[i] = np.sum (self.imArray_orig[subs])/n
+        print 'integrate complete '

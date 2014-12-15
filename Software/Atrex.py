@@ -24,6 +24,7 @@ class Atrex(QtGui.QMainWindow):
     olayFile =""
     olaySecFlag = False
 
+    imsize = (0,0)
 
     def __init__(self):
         QtGui.QMainWindow.__init__(self)
@@ -90,6 +91,7 @@ class Atrex(QtGui.QMainWindow):
         self.workDirectory = QtCore.QString('')
         self.imageDirectory = QtCore.QString('')
         self.imageFile = QtCore.QString('')
+        self.detectFile = QtCore.QString('')
         self.myim = myImage()
         self.zmCentLoc = [500, 500]
         self.activeList = 0
@@ -118,6 +120,9 @@ class Atrex(QtGui.QMainWindow):
         self.ui.readTextDetFileButton.clicked.connect(self.readTextDetect)
         self.ui.writeTextDetFileButton.clicked.connect(self.writeTextDetect)
         self.ui.testCalcButton.clicked.connect (self.testCalc)
+
+        #integrate tab buttons
+        self.ui.integrateCurrentButton.clicked.connect(self.intCurrent)
 
         self.updatePeakNumberLE()
         self.getHome()
@@ -157,6 +162,11 @@ class Atrex(QtGui.QMainWindow):
             str = qts.readLine()
             if (str.length() > 2):
                 self.ui.outDirLE.setText(str)
+            str = qts.readLine()
+            if (str.length() > 2):
+                self.detectFile = str
+                self.detector.read_from_text_file(str.toLatin1().data())
+                self.Display_Detector_calibration(self.detector)
 
 
     def closeEvent(self, event):
@@ -176,7 +186,10 @@ class Atrex(QtGui.QMainWindow):
             qts << self.workDirectory << "\r\n"
         else:
             qts << "\r\n"
-
+        if (self.detectFile.size()>1) :
+            qts << self.detectFile << "\r\n"
+        else:
+            qts << "\r\n"
         qf.close()
 
 
@@ -365,6 +378,8 @@ class Atrex(QtGui.QMainWindow):
             qf.close()
         self.myim.readTiff(filename)
         status = self.myim.readText(filename)
+        self.imsize = self.myim.imArraySize
+
         if not self.displayedImage:
             self.mymask.createMask(self.myim.imArraySize[0], self.myim.imArraySize[1])
             self.displayedImage = True
@@ -645,7 +660,7 @@ class Atrex(QtGui.QMainWindow):
             if (maxval > 65535):
                 scaleval = 65534. / maxval
                 str = QtCore.QString("Merge exceeds 65535, scaled by %1").arg(scaleval)
-                qinfo = QtGui.QMessageBox.warning(None, "Information", str)
+                # qinfo = QtGui.QMessageBox.warning(None, "Information", str)
                 mergeArr *= scaleval
         else:
             for i in range(self.minRange, self.maxRange + 1):
@@ -663,6 +678,7 @@ class Atrex(QtGui.QMainWindow):
         #im = Image.fromarray (mergeArr.astype(np.float32))
         #im.save (outname.toLatin1().data())
         imsave(outname.toLatin1().data(), mergeArr)
+        self.openImageFile (outname)
 
     def SavePeakTable(self):
         print 'write PT'
@@ -687,6 +703,7 @@ class Atrex(QtGui.QMainWindow):
 
     def readTextDetect(self):
         detfile = QtGui.QFileDialog.getOpenFileName(self, 'Open Detector File', self.workDirectory)
+        self.detectFile = detfile
         self.detector.read_from_text_file(detfile.toLatin1().data())
         self.Display_Detector_calibration(self.detector)
 
@@ -847,6 +864,18 @@ class Atrex(QtGui.QMainWindow):
 
 
         self.ui.refsampLabel.setText (filename)
+
+    """ Callback from integrateCurrentButton click
+    """
+    def intCurrent (self):
+        # need to put a check in here to make sure that the ttheta image exists
+        tthetaArr = np.zeros (self.imsize, dtype=np.float32)
+        f = open ('/home/harold/ttheta', 'r')
+        tthetaArr = np.fromfile (f,dtype=np.float32).reshape(self.imsize)
+        f.close()
+        self.myim.integrate (tthetaArr)
+        self.integratePlotWidget.setXYData_Integrate (self.myim.tthetabin, self.myim.avg2tth)
+
 
     def testCalc (self) :
         #self.detector.create_ttheta_array (self.myim.imArraySize)
