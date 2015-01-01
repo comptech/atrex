@@ -4,7 +4,9 @@ from crystallography import *
 from vector_math import *
 from threading import Thread
 from PyQt4 import QtCore
-
+from ctypes import *
+from numpy.ctypeslib import ndpointer
+from platform import *
 
 class myDetector (QtCore.QObject):
 
@@ -27,7 +29,23 @@ class myDetector (QtCore.QObject):
         self.gonio = [0., 0., 0.]
         self.tthetaArr = np.zeros((2048,2048), dtype=np.float32)
         self.threadDone = [False, False, False, False, False, False, False, False]
+        osname = system()
+
+        if "Win" in osname :
+            self.CalcTheta = CDLL ("./ctheta.dll")
+        else :
+            self.CalcTheta = CDLL ('./ctheta.so')
+
         self.tDone.connect (self.threadDoneSlot)
+
+        self.CalcTheta.testPyth.argtypes= [ndpointer(np.int32), c_int]
+        self.CalcTheta.create_theta_array.argtypes = [ndpointer(np.int32), c_float, \
+            ndpointer(np.float32), ndpointer(np.float32), ndpointer(np.float32), \
+            ndpointer(np.float32), ndpointer(np.float32), ndpointer(np.float32)]
+        testarrs = np.zeros(2, dtype=np.int32)
+        testarrs[0]= 32
+        testarrs[1]= 48
+        self.CalcTheta.testPyth (testarrs, 2)
 
     def getdist(self):
         return self.dist
@@ -214,6 +232,9 @@ class myDetector (QtCore.QObject):
 
     def testStuff (self) :
         self.genTiltMtx ()
+        self.calcTthDLL ()
+        return
+
         for i in range (8) :
             self.threadDone[i] = False
         t0= Thread (target=self.create_ttheta_array_sub, args=(2048,2048,0,0, 0))
@@ -225,13 +246,14 @@ class myDetector (QtCore.QObject):
         t6= Thread (target=self.create_ttheta_array_sub, args=(2048,2048,1024, 1024,6))
         t7= Thread (target=self.create_ttheta_array_sub, args=(2048,2048,1024, 1536,7))
         t0.start()
-        t1.start()
-        t2.start()
-        t3.start()
-        t4.start()
-        t5.start()
-        t6.start()
-        t7.start()
+        #t1.start()
+        #t2.start()
+        #t3.start()
+        #t4.start()
+        #t5.start()
+        #t6.start()
+        #t7.start()
+
 
         tth0 = self.calculate_tth_from_pixels ([0, 1024], [0,0,0])
         tth1 = self.calculate_tth_from_pixels ([2047, 1024], [0,0,0])
@@ -313,6 +335,25 @@ class myDetector (QtCore.QObject):
         self.threadDone[tnum] = True
         self.tDone.emit (tnum)
 
+    def calcTthDLL (self) :
+        psz = np.zeros (2, dtype=np.float32)
+        imsz = np.zeros (2, dtype=np.int32)
+        beamsz = np.zeros (2, dtype=np.float32)
+        psz[0]=self.psizex
+        psz[1]=self.psizey
+
+
+        imsz[0]=2048
+        imsz[1]=2048
+        beamsz[0] = self.beamx
+        beamsz[1] = self.beamy
+        self.genTiltMtx()
+        self.CalcTheta.create_theta_array (imsz, self.dist, beamsz, psz, self.tiltmtx.reshape(9).astype(np.float32), self.tth.reshape(9).astype(np.float32),\
+            np.asarray(self.gonio).astype(np.float32), self.tthetaArr)
+        f = open ("/home/harold/ttheta", 'w')
+        self.tthetaArr.tofile (f)
+        f.close()
+
     def threadDoneSlot (self, tnum) :
         for i in range (8) :
             if self.threadDone[i] == False :
@@ -320,7 +361,5 @@ class myDetector (QtCore.QObject):
                 return
 
         print "TTheta calculation complete - writing output file"
-        f = open ("/home/harold/ttheta", 'w')
-        self.tthetaArr.tofile (f)
-        f.close()
+
 # def thetaCalcThread (det, starts, stops):
