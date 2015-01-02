@@ -3,17 +3,24 @@
 
 #ifdef __linux__
 #define PI M_PI
-#else
-#define PI  3.14149265359
-#endif
-
-
-
 extern "C" {
 void testPyth (int *, int) ;
 int create_theta_array (int *sizeArr, float detDist, float *beam, float *psize, 
 	float *tiltmtx, float *tth, float *gonio,  float *outTheta) ; 
 }
+
+#else
+#define PI  3.14149265359
+extern "C" {
+void testPyth (int *, int) ;
+__declspec(dllexport) int create_theta_array (int *sizeArr, float detDist, float *beam, float *psize, 
+	float *tiltmtx, float *tth, float *gonio,  float *outTheta) ; 
+}
+
+#endif
+
+
+
 
 
 int main (int argc, char *argv[]) {
