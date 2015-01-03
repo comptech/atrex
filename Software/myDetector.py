@@ -3,7 +3,7 @@ import pickle
 from crystallography import *
 from vector_math import *
 from threading import Thread
-from PyQt4 import QtCore
+from PyQt4 import QtCore, QtGui
 from ctypes import *
 from numpy.ctypeslib import ndpointer
 from platform import *
@@ -11,6 +11,7 @@ from platform import *
 class myDetector (QtCore.QObject):
 
     tDone = QtCore.pyqtSignal (int)
+    tDoneAll = QtCore.pyqtSignal ()
 
     def __init__(self):
         QtCore.QObject.__init__(self)
@@ -228,6 +229,18 @@ class myDetector (QtCore.QObject):
         self.tiltmtx = np.asarray(cht * omt * icht)
         self.tth = np.asarray(generate_rot_mat (3, -self.gonio[1]))
 
+    """ Go through the array of image size calculating the 2theta based upon detector parameters
+    """
+    def calc2theta (self, saveFlag) :
+
+        self.genTiltMtx()
+        self.calcTthDLL ()
+        # get the file name if we are saving 2theta to array
+        if saveFlag :
+            outFile = QtGui.QFileDialog.getSaveFileName ()
+            outfl = outFile.toLatin1().data()
+            self.tthetaArr.tofile (outfl)
+        self.tDoneAll.emit()
 
 
     def testStuff (self) :

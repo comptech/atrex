@@ -12,7 +12,7 @@ int create_theta_array (int *sizeArr, float detDist, float *beam, float *psize,
 #else
 #define PI  3.14149265359
 extern "C" {
-void testPyth (int *, int) ;
+__declspec(dllexport) void testPyth (int *, int) ;
 __declspec(dllexport) int create_theta_array (int *sizeArr, float detDist, float *beam, float *psize, 
 	float *tiltmtx, float *tth, float *gonio,  float *outTheta) ; 
 }
@@ -116,6 +116,7 @@ int create_theta_array (int *sizeArr, float detDist, float *beam, float *psize, 
 
 		 
 	}
+	return 1 ;
 }
 
 

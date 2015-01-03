@@ -123,6 +123,9 @@ class Atrex(QtGui.QMainWindow):
 
         #integrate tab buttons
         self.ui.integrateCurrentButton.clicked.connect(self.intCurrent)
+        self.ui.calc2ThetaButton.clicked.connect (self.calc2theta)
+        self.detector.tDoneAll.connect (self.done2theta)
+        self.ui.integrateCurrentButton.setEnabled (False)
 
         self.updatePeakNumberLE()
         self.getHome()
@@ -881,6 +884,12 @@ class Atrex(QtGui.QMainWindow):
         #self.detector.create_ttheta_array (self.myim.imArraySize)
         self.detector.testStuff()
 
+    def calc2theta (self) :
+        saveFlag = self.ui.save2ThetaCB.isChecked()
+        self.detector.calc2theta(saveFlag)
+
+    def done2theta (self) :
+        self.ui.integrateCurrentButton.setEnabled(True)
 
 app = QtGui.QApplication(sys.argv)
 atrex = Atrex()

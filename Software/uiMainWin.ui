@@ -667,7 +667,7 @@
         <rect>
          <x>10</x>
          <y>24</y>
-         <width>188</width>
+         <width>192</width>
          <height>129</height>
         </rect>
        </property>
@@ -1188,13 +1188,39 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>20</y>
-        <width>191</width>
+        <y>50</y>
+        <width>181</width>
         <height>27</height>
        </rect>
       </property>
       <property name="text">
        <string>Integrate Current Image</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="calc2ThetaButton">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>10</y>
+        <width>181</width>
+        <height>27</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Calculate 2-theta Array</string>
+      </property>
+     </widget>
+     <widget class="QCheckBox" name="save2ThetaCB">
+      <property name="geometry">
+       <rect>
+        <x>210</x>
+        <y>10</y>
+        <width>111</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Save To File</string>
       </property>
      </widget>
     </widget>
@@ -2184,7 +2210,7 @@
      <x>0</x>
      <y>0</y>
      <width>1371</width>
-     <height>27</height>
+     <height>25</height>
     </rect>
    </property>
   </widget>
