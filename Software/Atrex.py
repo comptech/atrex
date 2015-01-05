@@ -873,10 +873,10 @@ class Atrex(QtGui.QMainWindow):
     def intCurrent (self):
         # need to put a check in here to make sure that the ttheta image exists
         tthetaArr = np.zeros (self.imsize, dtype=np.float32)
-        f = open ('/home/harold/ttheta', 'r')
-        tthetaArr = np.fromfile (f,dtype=np.float32).reshape(self.imsize)
-        f.close()
-        self.myim.integrate (tthetaArr)
+        #f = open ('/home/harold/ttheta', 'r')
+        #tthetaArr = np.fromfile (f,dtype=np.float32).reshape(self.imsize)
+        #f.close()
+        self.myim.integrate (self.detector.tthetaArr)
         self.integratePlotWidget.setXYData_Integrate (self.myim.tthetabin, self.myim.avg2tth)
 
 
