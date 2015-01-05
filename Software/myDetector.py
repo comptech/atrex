@@ -1,5 +1,6 @@
 import os
 import pickle
+import tifffile
 from crystallography import *
 from vector_math import *
 from threading import Thread
@@ -7,6 +8,7 @@ from PyQt4 import QtCore, QtGui
 from ctypes import *
 from numpy.ctypeslib import ndpointer
 from platform import *
+
 
 class myDetector (QtCore.QObject):
 
@@ -237,9 +239,10 @@ class myDetector (QtCore.QObject):
         self.calcTthDLL ()
         # get the file name if we are saving 2theta to array
         if saveFlag :
-            outFile = QtGui.QFileDialog.getSaveFileName ()
+            outFile = QtGui.QFileDialog.getSaveFileName (None, "Output to Tiff", "",'Tiff File (*.tif)')
             outfl = outFile.toLatin1().data()
-            self.tthetaArr.tofile (outfl)
+            tifffile.imsave (outfl, self.tthetaArr)
+            #self.tthetaArr.tofile (outfl)
         self.tDoneAll.emit()
 
 
