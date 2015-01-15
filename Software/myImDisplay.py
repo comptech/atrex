@@ -27,6 +27,7 @@ class myImDisplay (QtGui.QWidget) :
     unmaskFlag = False
     dragFlag = False
     applyMaskFlag = False
+    rgb_lut = np.zeros ((3,256), dtype=np.uint8)
 
 
 
@@ -36,6 +37,8 @@ class myImDisplay (QtGui.QWidget) :
         QtGui.QWidget.__init__(self, parent)
         self.setContextMenuPolicy (QtCore.Qt.CustomContextMenu)
         self.customContextMenuRequested.connect (self.contextMenuKickoff)
+        for i in range (256) :
+            self.rgb_lut[:,i] = i
 
     def contextMenuKickoff (self, point) :
         gPos = self.mapToGlobal (point)
@@ -202,12 +205,44 @@ class myImDisplay (QtGui.QWidget) :
         # generate the lut
         
         for index in range(256) :
-            self.qimage.setColor (index, QtGui.qRgb (index, index, index))
-            
+        #    self.qimage.setColor (index, QtGui.qRgb (index, index, index))
+            self.qimage.setColor (index, QtGui.qRgb(self.rgb_lut[0,index], self.rgb_lut[1,index], self.rgb_lut[2,index]))
         #self.qimage.ndarray = a
         self.loadImage = 1
         self.repaint()
         #self.peakFind()
+
+
+    def setLUT (self, ind) :
+        self.rgb_lut = np.zeros ((3,256), dtype=np.uint8)
+        if ind == 0 :
+            for i in range (256) :
+                self.rgb_lut[:,i] = i
+        if ind == 1 :
+            for i in range (256) :
+                self.rgb_lut[:,i] = 255 - i
+        if ind == 2 :
+            f = open ("Data/Rainbow_Bands.lut", "rb")
+            self.rgb_lut = np.fromfile (f, dtype=np.uint8).reshape (3,256)
+        if ind == 3 :
+            f = open ("Data/Redhot.lut", "rb")
+            self.rgb_lut = np.fromfile (f, dtype=np.uint8).reshape (3,256)
+        if ind == 4 :
+            f = open ("Data/ICA.lut", "rb")
+            self.rgb_lut = np.fromfile (f, dtype=np.uint8).reshape (3,256)
+        if ind == 5 :
+            f = open ("Data/thermal.lut", "rb")
+            self.rgb_lut = np.fromfile (f, dtype=np.uint8).reshape (3,256)
+        # Not being used
+        if ind == 6 :
+            f = open ("Data/haze.lut", "rb")
+            self.rgb_lut = np.fromfile (f, dtype=np.uint8).reshape (3,256)
+            #self.rgb_lut = temparr.reshape (3,256)
+            #self.rgb_lut = temparr.reshape (3,256)
+        for i in range(256) :
+        #    self.qimage.setColor (index, QtGui.qRgb (index, index, index))
+            self.qimage.setColor (i, QtGui.qRgb(self.rgb_lut[ 0,i], self.rgb_lut[ 1,i], self.rgb_lut[ 2,i]))
+        self.repaint()
 
 
     #############################################################

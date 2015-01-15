@@ -42,6 +42,7 @@ class Atrex(QtGui.QMainWindow):
         self.ui.incrementImageButton.clicked.connect(self.incrementImageValue)
         self.ui.decrementImageButton.clicked.connect(self.decrementImageValue)
         self.ui.mergeButton.clicked.connect(self.mergeImageRange)
+        self.ui.lutCB.currentIndexChanged.connect (self.lutChanged)
 
         self.ui.pushButton_Detector_Open_calibration.clicked.connect(self.openDetectorCalibration)
         self.ui.pushButton_Detector_Save_calibration.clicked.connect(self.saveDetectorCalibration)
@@ -349,6 +350,8 @@ class Atrex(QtGui.QMainWindow):
     def minSliderUpdate(self, newval):
         self.ui.imageMinLE.setText(QtCore.QString.number(newval))
 
+    def lutChanged (self, index) :
+        self.imageWidget.setLUT (index)
 
     def defImageDir(self):
         self.imageDirectory = QtGui.QFileDialog.getExistingDirectory(self, 'Define Image Directory',
@@ -570,6 +573,9 @@ class Atrex(QtGui.QMainWindow):
 
     """ Update of the line edit to display # of list 1 and list 2 peaks
     """
+
+
+
 
     def updatePeakNumberLE(self):
         pn = self.peaks.getpeakno()
