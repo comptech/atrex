@@ -34,7 +34,7 @@
      <rect>
       <x>790</x>
       <y>10</y>
-      <width>561</width>
+      <width>571</width>
       <height>551</height>
      </rect>
     </property>
@@ -50,9 +50,15 @@
        <rect>
         <x>0</x>
         <y>10</y>
-        <width>481</width>
+        <width>561</width>
         <height>511</height>
        </rect>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
       </property>
       <property name="title">
        <string/>
@@ -422,7 +428,7 @@
        <widget class="QLabel" name="label_7">
         <property name="geometry">
          <rect>
-          <x>390</x>
+          <x>400</x>
           <y>70</y>
           <width>51</width>
           <height>17</height>
@@ -532,9 +538,9 @@
        <property name="geometry">
         <rect>
          <x>10</x>
-         <y>420</y>
-         <width>511</width>
-         <height>80</height>
+         <y>409</y>
+         <width>551</width>
+         <height>91</height>
         </rect>
        </property>
        <property name="title">
@@ -543,10 +549,10 @@
        <widget class="QWidget" name="">
         <property name="geometry">
          <rect>
-          <x>22</x>
-          <y>32</y>
-          <width>441</width>
-          <height>42</height>
+          <x>2</x>
+          <y>31</y>
+          <width>541</width>
+          <height>51</height>
          </rect>
         </property>
         <layout class="QGridLayout" name="gridLayout_2">
@@ -554,8 +560,14 @@
           <widget class="QLabel" name="label_8">
            <property name="minimumSize">
             <size>
-             <width>80</width>
+             <width>60</width>
              <height>0</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>60</width>
+             <height>16777215</height>
             </size>
            </property>
            <property name="text">
@@ -567,7 +579,7 @@
           <widget class="QLabel" name="omega0Lab">
            <property name="minimumSize">
             <size>
-             <width>80</width>
+             <width>0</width>
              <height>0</height>
             </size>
            </property>
@@ -582,6 +594,12 @@
             <size>
              <width>80</width>
              <height>0</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>80</width>
+             <height>16777215</height>
             </size>
            </property>
            <property name="text">
@@ -606,8 +624,14 @@
           <widget class="QLabel" name="label_9">
            <property name="minimumSize">
             <size>
-             <width>80</width>
+             <width>60</width>
              <height>0</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>60</width>
+             <height>16777215</height>
             </size>
            </property>
            <property name="text">
@@ -630,6 +654,18 @@
          </item>
          <item row="1" column="2">
           <widget class="QLabel" name="label_11">
+           <property name="minimumSize">
+            <size>
+             <width>80</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>80</width>
+             <height>16777215</height>
+            </size>
+           </property>
            <property name="text">
             <string>Detector :</string>
            </property>

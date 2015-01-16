@@ -21,11 +21,18 @@ class myZmDisplay (QtGui.QWidget) :
     addPeakSignal = QtCore.pyqtSignal (QtCore.QPoint)
     setButtonModeSignal = QtCore.pyqtSignal (int)
     zmRectSignal = QtCore.pyqtSignal(QtCore.QRect)
-    
+    rgb_lut = np.zeros ((3,256), dtype=np.uint8)
+    for i in range (256):
+        rgb_lut[:,i] = i
+
     def __init__(self, parent) :
         QtGui.QWidget.__init__(self, parent)
         self.setContextMenuPolicy (QtCore.Qt.CustomContextMenu)
         self.customContextMenuRequested.connect (self.contextMenuKickoff)
+
+    def setLUT (self, arr):
+        self.rgb_lut[:,:] = arr[:,:]
+        self.writeQImage_update()
 
     def contextMenuKickoff (self, point) :
         gPos = self.mapToGlobal (point)
@@ -135,7 +142,7 @@ class myZmDisplay (QtGui.QWidget) :
         # generate the lut
         
         for index in range(256) :
-            self.qimage.setColor (index, QtGui.qRgb (index, index, index))
+            self.qimage.setColor (index, QtGui.qRgb (self.rgb_lut[0,index], self.rgb_lut[1,index], self.rgb_lut[2,index]))
             
         self.qimage.ndarray = a
         self.loadImage = 1
@@ -214,8 +221,10 @@ class myZmDisplay (QtGui.QWidget) :
 
         # generate the lut
 
+        #for index in range(256) :
+        #   self.qimage.setColor (index, QtGui.qRgb (index, index, index))
         for index in range(256) :
-            self.qimage.setColor (index, QtGui.qRgb (index, index, index))
+            self.qimage.setColor (index, QtGui.qRgb (self.rgb_lut[0,index], self.rgb_lut[1,index], self.rgb_lut[2,index]))
 
         self.qimage.ndarray = a
         self.loadImage = 1

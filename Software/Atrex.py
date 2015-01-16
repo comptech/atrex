@@ -352,6 +352,8 @@ class Atrex(QtGui.QMainWindow):
 
     def lutChanged (self, index) :
         self.imageWidget.setLUT (index)
+        self.zoomWidget.setLUT (self.imageWidget.rgb_lut)
+
 
     def defImageDir(self):
         self.imageDirectory = QtGui.QFileDialog.getExistingDirectory(self, 'Define Image Directory',
