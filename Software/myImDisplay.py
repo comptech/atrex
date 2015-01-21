@@ -128,9 +128,9 @@ class myImDisplay (QtGui.QWidget) :
         for i in range (len(a)) :
             cuma[i] = totalPct + float(a[i]) / float(npts)
             totalPct = cuma[i]
-            if cuma[i] <= 0.05 :
+            if cuma[i] <= 0.018 :
                 self.ind_5 = b[i]
-            if cuma[i] <= 0.95 :
+            if cuma[i] <= 0.982 :
                 self.ind_95 = b[i]
         self.dispMax = self.ind_95
         self.dispMin = self.ind_5
