@@ -118,6 +118,24 @@ class myImDisplay (QtGui.QWidget) :
         self.zmSize = bottomRight - topLeft
         self.repaint()
 
+    def calcHisto (self, fulldata) :
+        histo = np.histogram (fulldata, 65535, (1,65534))
+        a = histo [0]
+        b = histo [1]
+        npts = np.sum(a)
+        cuma = np.zeros((len(a)), dtype=np.float64)
+        totalPct = 0.
+        for i in range (len(a)) :
+            cuma[i] = totalPct + float(a[i]) / float(npts)
+            totalPct = cuma[i]
+            if cuma[i] <= 0.05 :
+                self.ind_5 = b[i]
+            if cuma[i] <= 0.95 :
+                self.ind_95 = b[i]
+        self.dispMax = self.ind_95
+        self.dispMin = self.ind_5
+
+
     # this is for the creating of the 32BPP QImage, currently using the lut version
     def writeQImage (self, fulldata) :
         self.xsize = self.width()

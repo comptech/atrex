@@ -23,6 +23,7 @@ class Atrex(QtGui.QMainWindow):
     mymask = myMask()
     olayFile =""
     olaySecFlag = False
+    firstDisplay = True
 
     imsize = (0,0)
 
@@ -225,6 +226,7 @@ class Atrex(QtGui.QMainWindow):
         self.ui.rangeSlider.setValue(mnmx[2])
         self.minRange = mnmx[0]
         self.maxRange = mnmx[1]
+        self.firstDisplay = True
 
     """ Method to open the selected image
     """
@@ -388,6 +390,15 @@ class Atrex(QtGui.QMainWindow):
         status = self.myim.readText(filename)
         self.imsize = self.myim.imArraySize
 
+        if self.firstDisplay :
+            self.firstDisplay = False
+            self.ui.imageWidget.calcHisto (self.myim.imArray)
+            mn = self.ui.imageWidget.dispMin
+            mx = self.ui.imageWidget.dispMax
+            self.ui.minDNSlider.setValue (mn)
+            self.ui.maxDNSlider.setValue (mx)
+
+
         if not self.displayedImage:
             self.mymask.createMask(self.myim.imArraySize[0], self.myim.imArraySize[1])
             self.displayedImage = True
@@ -399,7 +410,9 @@ class Atrex(QtGui.QMainWindow):
             self.ui.expLab.setText(self.myim.exposureT)
             self.ui.detectorLab.setText(self.myim.detector)
         # self.ui.imageWidget.writeQImage (self.myim.imArray)
+
         self.ui.imageWidget.writeQImage_lut(self.myim.imArray)
+        #
         self.ui.zoomWidget.writeQImage_lut(self.myim.imArray, self.zmCentLoc)
         self.ui.displayFileLabel.setText(filename)
         return (True)
