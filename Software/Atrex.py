@@ -392,9 +392,10 @@ class Atrex(QtGui.QMainWindow):
 
         if self.firstDisplay :
             self.firstDisplay = False
-            self.ui.imageWidget.calcHisto (self.myim.imArray)
-            mn = self.ui.imageWidget.dispMin
-            mx = self.ui.imageWidget.dispMax
+            self.imageWidget.calcHisto (self.myim.imArray)
+            mn = self.imageWidget.dispMin
+            mx = self.imageWidget.dispMax
+            self.zoomWidget.setMinMax (mn, mx)
             self.ui.minDNSlider.setValue (mn)
             self.ui.maxDNSlider.setValue (mx)
 

@@ -32,7 +32,11 @@ class myZmDisplay (QtGui.QWidget) :
 
     def setLUT (self, arr):
         self.rgb_lut[:,:] = arr[:,:]
-        self.writeQImage_update()
+        for i in range(256) :
+        #    self.qimage.setColor (index, QtGui.qRgb (index, index, index))
+            self.qimage.setColor (i, QtGui.qRgb(self.rgb_lut[ 0,i], self.rgb_lut[ 1,i], self.rgb_lut[ 2,i]))
+        self.repaint()
+        #self.writeQImage_update()
 
     def contextMenuKickoff (self, point) :
         gPos = self.mapToGlobal (point)

@@ -109,7 +109,7 @@ class myImDisplay (QtGui.QWidget) :
     def setMinMax (self, min, max) :
         self.dispMin = min
         self.dispMax = max
-        print "(min max ) are :", min, max
+        #print "(min max ) are :", min, max
 
     def setZmRect (self,rect) :
         topLeft = rect.topLeft()
