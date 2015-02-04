@@ -733,6 +733,7 @@ class Atrex(QtGui.QMainWindow):
         self.Display_Detector_calibration(self.detector)
 
     def writeTextDetect(self):
+        self.Update_Detector_calibration()
         detfile = QtGui.QFileDialog.getSaveFileName(self, 'Output Detector File', self.workDirectory)
         self.detector.write_to_text_file(detfile.toLatin1().data())
 
@@ -907,6 +908,7 @@ class Atrex(QtGui.QMainWindow):
         self.detector.testStuff()
 
     def calc2theta (self) :
+        self.Update_Detector_calibration()
         saveFlag = self.ui.save2ThetaCB.isChecked()
         self.detector.calc2theta(saveFlag)
 

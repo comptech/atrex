@@ -6,7 +6,9 @@
 extern "C" {
 void testPyth (int *, int) ;
 int create_theta_array (int *sizeArr, float detDist, float *beam, float *psize, 
-	float *tiltmtx, float *tth, float *gonio,  float *outTheta) ; 
+	float *tiltmtx, float *tth, float *gonio,  float *outTheta, float minBin, float binsize,
+	unsigned short *outThetaBin) ;
+void integrate (int *sizeArr, unsigned short *inarr, float *tthetaArr, float *histo, float *histoParams) ;
 }
 
 #else
@@ -14,7 +16,9 @@ int create_theta_array (int *sizeArr, float detDist, float *beam, float *psize,
 extern "C" {
 __declspec(dllexport) void testPyth (int *, int) ;
 __declspec(dllexport) int create_theta_array (int *sizeArr, float detDist, float *beam, float *psize, 
-	float *tiltmtx, float *tth, float *gonio,  float *outTheta) ; 
+	float *tiltmtx, float *tth, float *gonio,  float *outTheta, float minBin, float binsize,
+	unsigned short *outThetaBin) ;
+__declspec(dllexport) void integrate (int *sizeArr, unsigned short *inarr, float *tthetaArr, float *histo, float *histoParams) ;
 }
 
 #endif
@@ -33,17 +37,25 @@ int main (int argc, char *argv[]) {
 	float psizeXY[] = {.079, .079} ;
 
 	float *outTheta = new float [2048*2048] ;
-	create_theta_array (sizeArr, 207., beamXY, psizeXY, tiltmtx, tth, gonio, outTheta) ;
+	unsigned short *outBin = new unsigned short [2048 * 2048] ;
+	create_theta_array (sizeArr, 207., beamXY, psizeXY, tiltmtx, tth, gonio, outTheta, 0., .1, outBin) ;
 
 	FILE *fout = fopen ("testtth","w") ;
 	fwrite ((char *)outTheta, 4, 2048 * 2048, fout) ;
 	fclose (fout) ;
 
+	delete [] outBin ;
+	delete [] outTheta ;
+
 }
 
 
-int create_theta_array (int *sizeArr, float detDist, float *beam, float *psize, float *tiltmtx, float *tth, float *gonio,  float *outTheta) {
 
+int create_theta_array (int *sizeArr, float detDist, float *beam, float *psize, float *tiltmtx, float *tth, float *gonio,
+    float *outTheta, float minBin, float binsize, unsigned short *outThetaBin) {
+
+
+    int binval ;
 	int i, j, is, js, xsize, ysize, x2, y2 ;
 	float fval, beamX, beamY, psizeX, psizeY, xdist2, ydist2, dist, xrel, yrel, sum;
 	float sd0[] = {1., 0., 0.} ;
@@ -74,6 +86,7 @@ int create_theta_array (int *sizeArr, float detDist, float *beam, float *psize, 
 			ydist2 = ((i-beamY)*(i-beamY)) ;
 		for (j=0; j<ysize; j++) {
 			outTheta[i*xsize+j] = 0. ;
+			outThetaBin[i*xsize+j]=0 ;
 			xdist2 = ((j-beamX)*(j-beamX)) ;
 			dist = sqrt (xdist2 + ydist2) ;
 			if (dist > y2) continue ;
@@ -111,6 +124,10 @@ int create_theta_array (int *sizeArr, float detDist, float *beam, float *psize, 
 			len0 = sqrt(len0) * sqrt(len1) ;
 			fval = fabs (acos(dotsum/len0)) * 180. / PI ;
 			outTheta[i*xsize+j] = fval ;
+			binval = (int)((fval - minBin) / binsize) ;
+			if (binval < 0) binval = 0 ;
+			outThetaBin[i*xsize+j] = (unsigned short) binval ;
+
 		}
 
 
@@ -118,6 +135,53 @@ int create_theta_array (int *sizeArr, float detDist, float *beam, float *psize, 
 	}
 	return 1 ;
 }
+
+
+void integrate (int *sizeArr, unsigned short *inarr, float *tthetaArr, float *histo, float *histoParams) {
+
+	int i, j, ns, nl, ns2, npix, bin, nbins ;
+	ns = sizeArr[0] ;
+	nl = sizeArr[1] ;
+	ns2 = ns / 2 ;
+
+	float minval, maxval, binsize ;
+	float xdist, ydist, dist, fval ;
+
+	
+
+	minval = histoParams[0] ;
+	maxval = histoParams[1] ;
+	binsize = histoParams[2] ;
+	nbins = histoParams[3] ;
+
+	int *bincnt = new int [nbins] ;
+
+	for (i=0; i<nbins; i++) {
+		histo[i] = 0. ;
+		bincnt[i] = 0 ;
+	}
+
+	for (i=0; i< nl; i++) {
+		ydist = i - ns2 ;
+		for (j=0; j<ns; j++) {
+			xdist = j - ns2 ;
+			dist = sqrt (xdist * xdist + ydist * ydist) ;
+			if (dist > ns2) continue ;
+			fval = tthetaArr[i * ns+j] ;
+			bin = (int)((fval - minval) / binsize) ;
+			if (bin < 0) bin = 0 ;
+			if (bin > nbins) bin=nbins-1 ;
+			histo[bin] += inarr[i*ns+j] ;
+			bincnt[bin]++ ;
+		}
+	}
+
+	for (i=0; i<nbins; i++) histo[i] /= bincnt[i] ;
+
+	delete [] bincnt ;
+}
+
+
 
 
 extern "C" void testPyth(int *arrs, int num) {

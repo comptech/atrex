@@ -9,6 +9,9 @@ from math import *
 import os.path
 import congrid as cgd
 import myPeakTable
+from ctypes import *
+from numpy.ctypeslib import ndpointer
+from platform import *
 
 
 class myImage :
@@ -21,6 +24,22 @@ class myImage :
     imArraySize =[0,0]
     
     imFileName =''
+
+    def __init__(self) :
+        osname = system()
+        if "Win" in osname :
+            self.CalcTheta = CDLL ("./ctheta.dll")
+        else :
+            self.CalcTheta = CDLL ('./ctheta.so')
+
+        self.CalcTheta.integrate.argtypes = [ndpointer(np.int32), ndpointer(np.uint16), \
+            ndpointer(np.float32), ndpointer(np.float32), ndpointer(np.float32)]
+
+        self.CalcTheta.create_theta_array.argtypes = [ndpointer(np.int32), c_float, \
+            ndpointer(np.float32), ndpointer(np.float32), ndpointer(np.float32), \
+            ndpointer(np.float32), ndpointer(np.float32), ndpointer(np.float32), c_float, c_float,\
+            ndpointer(np.uint16)]
+
 
     def readTiff (self, infile) :
         self.imFileName = infile
@@ -200,17 +219,36 @@ class myImage :
     # applies the mask to imgArray, mask must be same shape as imgArray
     def applyMask (self, arr):
         self.imArray = self.imArray_orig * arr
-    
+
 
     def integrate (self, tthetaArr) :
 
 
+        imsize = tthetaArr.shape
+
+
         mintth = 0.
-        maxtth = 25.
-        nbins = 100
+        maxtth = 40.
+        nbins = 400
+
         deltth = (maxtth - mintth) / nbins
-        self.avg2tth = np.zeros (nbins, dtype=np.float32)
+
+        histoParams = np.zeros (4, dtype=np.float32)
+        histoParams[0]= mintth
+        histoParams[1]= maxtth
+        histoParams[2] = 0.1
+        histoParams[3] = (maxtth - mintth) / histoParams[2] + 1
+        self.avg2tth = np.zeros (nbins, np.float32)
         self.tthetabin = np.zeros (nbins, dtype=np.float32)
+        count=0
+        for i in range(self.tthetabin.size):
+            self.tthetabin[i] = (i + 0.5) * histoParams[2]
+
+
+        self.CalcTheta.integrate (np.array(imsize, dtype=np.int32), self.imArray_orig.astype(np.uint16), tthetaArr, self.avg2tth, histoParams )
+        return
+        self.avg2tth = np.zeros (nbins, dtype=np.float32)
+
 
         for i in range (nbins) :
             minR = mintth + i * deltth
@@ -221,3 +259,4 @@ class myImage :
             if n > 0 :
                 self.avg2tth[i] = np.sum (self.imArray_orig[subs])/n
         print 'integrate complete '
+

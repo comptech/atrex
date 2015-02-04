@@ -31,6 +31,7 @@ class myDetector (QtCore.QObject):
         self.wavelength = 0.0
         self.gonio = [0., 0., 0.]
         self.tthetaArr = np.zeros((2048,2048), dtype=np.float32)
+        self.tthetaBin = np.zeros ((2048,2048), dtype=np.uint16)
         self.threadDone = [False, False, False, False, False, False, False, False]
         osname = system()
 
@@ -44,7 +45,8 @@ class myDetector (QtCore.QObject):
         self.CalcTheta.testPyth.argtypes= [ndpointer(np.int32), c_int]
         self.CalcTheta.create_theta_array.argtypes = [ndpointer(np.int32), c_float, \
             ndpointer(np.float32), ndpointer(np.float32), ndpointer(np.float32), \
-            ndpointer(np.float32), ndpointer(np.float32), ndpointer(np.float32)]
+            ndpointer(np.float32), ndpointer(np.float32), ndpointer(np.float32), c_float, c_float,\
+            ndpointer(np.uint16)]
         testarrs = np.zeros(2, dtype=np.int32)
         testarrs[0]= 32
         testarrs[1]= 48
@@ -234,7 +236,8 @@ class myDetector (QtCore.QObject):
     """ Go through the array of image size calculating the 2theta based upon detector parameters
     """
     def calc2theta (self, saveFlag) :
-
+        #self.tiltch = -30
+        self.tiltom = 40.
         self.genTiltMtx()
         self.calcTthDLL ()
         # get the file name if we are saving 2theta to array
@@ -365,10 +368,10 @@ class myDetector (QtCore.QObject):
         beamsz[1] = self.beamy
         self.genTiltMtx()
         self.CalcTheta.create_theta_array (imsz, self.dist, beamsz, psz, self.tiltmtx.reshape(9).astype(np.float32), self.tth.reshape(9).astype(np.float32),\
-            np.asarray(self.gonio).astype(np.float32), self.tthetaArr)
-        f = open ("/home/harold/ttheta", 'w')
-        self.tthetaArr.tofile (f)
-        f.close()
+            np.asarray(self.gonio).astype(np.float32), self.tthetaArr, 0., 0., self.tthetaBin)
+        #f = open ("/home/harold/ttheta", 'w')
+        #self.tthetaArr.tofile (f)
+        #f.close()
 
     def threadDoneSlot (self, tnum) :
         for i in range (8) :
