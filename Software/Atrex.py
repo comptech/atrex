@@ -377,7 +377,7 @@ class Atrex(QtGui.QMainWindow):
         pixvals=[vals[0], vals[1]]
         self.detector.genTiltMtx ()
         tthval = self.detector.calculate_tth_from_pixels(pixvals, self.detector.gonio)
-        outstr = QtCore.QString ("X: %1   Y: %2   Val:  %3     2-Theta : %4").arg (vals[0]).arg(vals[1]).arg( vals[2]).arg(tthval)
+        outstr = QtCore.QString ("X: %1   Y: %2   Val:  %3      2-Theta : %4").arg (vals[0]).arg(vals[1]).arg( vals[2]).arg(tthval)
         self.ui.statusBox.setText (outstr)
 
     def displayImage(self, filename):
