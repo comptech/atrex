@@ -306,7 +306,7 @@ class myImDisplay (QtGui.QWidget) :
         # would like to get the image raw values for this point....
         val = self.fulldata [yloc, xloc]
         xyzvals [2] = val
-        imcoordsSelectSignal.emit (xyzvals)
+        self.imcoordsSelectSignal.emit (xyzvals)
 
         # if the select button has been triggered, need to first
         # put down an anchor point or left point for qrect

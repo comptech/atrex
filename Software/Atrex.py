@@ -59,6 +59,7 @@ class Atrex(QtGui.QMainWindow):
         self.ui.imageWidget.selectRectSignal.connect(self.selectRect)
         self.ui.imageWidget.maskRectSignal.connect(self.maskRect)
         self.ui.imageWidget.setButtonModeSignal.connect(self.setButtons)
+        self.ui.imageWidget.imcoordsSelectSignal.connect (self.imageMouseClicked)
         self.ui.zoomWidget.addPeakSignal.connect(self.newPeak)
         self.ui.zoomWidget.setButtonModeSignal.connect(self.setButtons)
         self.ui.zoomButton.clicked.connect(self.zoomMode)
@@ -371,6 +372,13 @@ class Atrex(QtGui.QMainWindow):
         # print self.imageDirectory
         self.ui.outDirLE.setText(self.workDirectory)
 
+    def imageMouseClicked (self, vals) :
+        # get the 2-theta
+        pixvals=[vals[0], vals[1]]
+        self.detector.genTiltMtx ()
+        tthval = self.detector.calculate_tth_from_pixels(pixvals, self.detector.gonio)
+        outstr = QtCore.QString ("X: %1   Y: %2   Val:  %3     2-Theta : %4").arg (vals[0]).arg(vals[1]).arg( vals[2]).arg(tthval)
+        self.ui.statusBox.setText (outstr)
 
     def displayImage(self, filename):
 

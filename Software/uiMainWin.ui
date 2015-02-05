@@ -39,7 +39,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>3</number>
     </property>
     <widget class="QWidget" name="FileTab">
      <attribute name="title">
@@ -546,7 +546,7 @@
        <property name="title">
         <string>Parameters</string>
        </property>
-       <widget class="QWidget" name="">
+       <widget class="QWidget" name="layoutWidget">
         <property name="geometry">
          <rect>
           <x>2</x>
@@ -1331,6 +1331,19 @@
        <string>Save To File</string>
       </property>
      </widget>
+     <widget class="QPushButton" name="pushButton">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>90</y>
+        <width>181</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Cake</string>
+      </property>
+     </widget>
     </widget>
     <widget class="QWidget" name="tab_4">
      <attribute name="title">
@@ -2108,9 +2121,9 @@
    <widget class="QLineEdit" name="statusBox">
     <property name="geometry">
      <rect>
-      <x>70</x>
+      <x>60</x>
       <y>870</y>
-      <width>231</width>
+      <width>351</width>
       <height>23</height>
      </rect>
     </property>
@@ -2118,9 +2131,9 @@
    <widget class="QLabel" name="label_17">
     <property name="geometry">
      <rect>
-      <x>330</x>
+      <x>430</x>
       <y>870</y>
-      <width>131</width>
+      <width>91</width>
       <height>17</height>
      </rect>
     </property>
@@ -2170,9 +2183,9 @@
    <widget class="QLineEdit" name="numPeaksLE">
     <property name="geometry">
      <rect>
-      <x>470</x>
+      <x>530</x>
       <y>870</y>
-      <width>311</width>
+      <width>251</width>
       <height>23</height>
      </rect>
     </property>
@@ -2318,7 +2331,7 @@
      <x>0</x>
      <y>0</y>
      <width>1371</width>
-     <height>25</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>
