@@ -18,6 +18,7 @@ class myImDisplay (QtGui.QWidget) :
     selectRectSignal = QtCore.pyqtSignal (QtCore.QRect, bool)
     maskRectSignal = QtCore.pyqtSignal (QtCore.QRect, bool)
     setButtonModeSignal = QtCore.pyqtSignal (int)
+    imcoordsSelectSignal = QtCore.pyqtSignal (list)
     dragZm = False
     zoomToggle = True
     peakToggle = False
@@ -287,7 +288,9 @@ class myImDisplay (QtGui.QWidget) :
             
         
     def mousePressEvent (self, event) :
+        xyzvals = [0.,0.,0.]
         # if right button, let context menu handlers work
+
         if (event.button() == QtCore.Qt.RightButton) :
             return
 
@@ -297,6 +300,13 @@ class myImDisplay (QtGui.QWidget) :
         # display coords
         xwin = event.x()
         ywin = event.y()
+        xyzvals [0] = xloc
+        xyzvals [1] = yloc
+
+        # would like to get the image raw values for this point....
+        val = self.fulldata [yloc, xloc]
+        xyzvals [2] = val
+        imcoordsSelectSignal.emit (xyzvals)
 
         # if the select button has been triggered, need to first
         # put down an anchor point or left point for qrect
