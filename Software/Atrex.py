@@ -380,6 +380,7 @@ class Atrex(QtGui.QMainWindow):
         outstr = QtCore.QString ("X: %1   Y: %2   Val:  %3      2-Theta : %4").arg (vals[0]).arg(vals[1]).arg( vals[2]).arg(tthval)
         self.ui.statusBox.setText (outstr)
 
+
     def displayImage(self, filename):
 
         mn = self.ui.imageMinLE.text().toInt()

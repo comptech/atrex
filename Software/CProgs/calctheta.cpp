@@ -182,6 +182,54 @@ void integrate (int *sizeArr, unsigned short *inarr, float *tthetaArr, float *hi
 }
 
 
+void integrate_cake (int *sizeArr, unsigned short *inarr, float *tthetaArr, float *cakeArr) {
+
+	int i, j, ns, nl, ns2, npix, bin, nbins ;
+	ns = sizeArr[0] ;
+	nl = sizeArr[1] ;
+	ns2 = ns / 2 ;
+
+	float minval, maxval, binsize ;
+	float xdist, ydist, dist, fval ;
+
+
+
+	minval = histoParams[0] ;
+	maxval = histoParams[1] ;
+	binsize = histoParams[2] ;
+	nbins = histoParams[3] ;
+
+	int *bincnt = new int [nbins] ;
+
+	for (i=0; i<nbins; i++) {
+		histo[i] = 0. ;
+		bincnt[i] = 0 ;
+	}
+
+	for (i=0; i< nl; i++) {
+		ydist = i - ns2 ;
+		for (j=0; j<ns; j++) {
+			xdist = j - ns2 ;
+			dist = sqrt (xdist * xdist + ydist * ydist) ;
+			if (dist > ns2) continue ;
+			fval = tthetaArr[i * ns+j] ;
+			bin = (int)((fval - minval) / binsize) ;
+			if (bin < 0) bin = 0 ;
+			if (bin > nbins) bin=nbins-1 ;
+			histo[bin] += inarr[i*ns+j] ;
+			bincnt[bin]++ ;
+		}
+	}
+
+	for (i=0; i<nbins; i++) histo[i] /= bincnt[i] ;
+
+	delete [] bincnt ;
+}
+
+
+
+
+
 
 
 extern "C" void testPyth(int *arrs, int num) {

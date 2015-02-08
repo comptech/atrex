@@ -1331,7 +1331,7 @@
        <string>Save To File</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="pushButton">
+     <widget class="QPushButton" name="cakeButton">
       <property name="geometry">
        <rect>
         <x>10</x>
@@ -1342,6 +1342,9 @@
       </property>
       <property name="text">
        <string>Cake</string>
+      </property>
+      <property name="checkable">
+       <bool>false</bool>
       </property>
      </widget>
     </widget>
