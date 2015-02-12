@@ -33,13 +33,15 @@ class myImage :
             self.CalcTheta = CDLL ('./ctheta.so')
 
         self.CalcTheta.integrate.argtypes = [ndpointer(np.int32), ndpointer(np.uint16), \
-            ndpointer(np.float32), ndpointer(np.float32), ndpointer(np.float32)]
+            ndpointer(np.float32), ndpointer(np.float32), ndpointer(np.float32), ndpointer(np.float32)]
 
         self.CalcTheta.create_theta_array.argtypes = [ndpointer(np.int32), c_float, \
             ndpointer(np.float32), ndpointer(np.float32), ndpointer(np.float32), \
             ndpointer(np.float32), ndpointer(np.float32), ndpointer(np.float32), c_float, c_float,\
             ndpointer(np.uint16)]
 
+        self.CalcTheta.integrate_cake.argtypes= [ndpointer(np.int32), ndpointer(np.float32), ndpointer(np.uint16), \
+            ndpointer (np.float32), ndpointer(np.float32), ndpointer(np.float32)]
 
     def readTiff (self, infile) :
         self.imFileName = infile
@@ -221,7 +223,7 @@ class myImage :
         self.imArray = self.imArray_orig * arr
 
 
-    def integrate (self, tthetaArr) :
+    def integrate (self, beam, tthetaArr) :
 
 
         imsize = tthetaArr.shape
@@ -245,18 +247,37 @@ class myImage :
             self.tthetabin[i] = (i + 0.5) * histoParams[2]
 
 
-        self.CalcTheta.integrate (np.array(imsize, dtype=np.int32), self.imArray_orig.astype(np.uint16), tthetaArr, self.avg2tth, histoParams )
+        self.CalcTheta.integrate (np.array(imsize, dtype=np.int32), self.imArray_orig.astype(np.uint16), tthetaArr, self.avg2tth, histoParams, np.array(beam, dtype=np.float32))
         return
-        self.avg2tth = np.zeros (nbins, dtype=np.float32)
 
 
-        for i in range (nbins) :
-            minR = mintth + i * deltth
-            maxR = minR + deltth
-            self.tthetabin[i] = (maxR+minR) /2.
-            subs = np.where((tthetaArr >= minR) & (tthetaArr < maxR))
-            n = len (subs[0])
-            if n > 0 :
-                self.avg2tth[i] = np.sum (self.imArray_orig[subs])/n
-        print 'integrate complete '
+    def cake (self, beam, tthetaArr) :
 
+
+        imsize = tthetaArr.shape
+
+
+        mintth = 0.
+        maxtth = 40.
+        nbins = 800
+        self.nbinsAz = 800
+        self.nbinsTth = nbins
+
+        deltth = (maxtth - mintth) / nbins
+
+        histoParams = np.zeros (5, dtype=np.float32)
+        histoParams[0]= mintth
+        histoParams[1]= maxtth
+        histoParams[2] = (maxtth - mintth) / self.nbinsTth
+        histoParams[3] = (int)((maxtth - mintth) / histoParams[2] + 1.)
+        # azimuth bins
+        histoParams[4] = self.nbinsAz
+
+        self.avg2tthCake = np.zeros (nbins, np.float32)
+        self.cakeArr = np.zeros ((self.nbinsTth, self.nbinsAz), dtype=np.float32)
+        count=0
+        #for i in range(self.tthetabin.size):
+        #    self.tthetabin[i] = (i + 0.5) * histoParams[2]
+
+
+        self.CalcTheta.integrate_cake (np.array(imsize, dtype=np.int32), np.array(beam,dtype=np.float32),  self.imArray_orig.astype(np.uint16), tthetaArr, self.cakeArr, histoParams)

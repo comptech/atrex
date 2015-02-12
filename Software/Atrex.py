@@ -126,9 +126,11 @@ class Atrex(QtGui.QMainWindow):
 
         #integrate tab buttons
         self.ui.integrateCurrentButton.clicked.connect(self.intCurrent)
+        self.ui.cakeButton.clicked.connect(self.cakeCurrent)
         self.ui.calc2ThetaButton.clicked.connect (self.calc2theta)
         self.detector.tDoneAll.connect (self.done2theta)
         self.ui.integrateCurrentButton.setEnabled (False)
+        self.ui.cakeButton.setEnabled (False)
 
         self.updatePeakNumberLE()
         self.getHome()
@@ -908,8 +910,27 @@ class Atrex(QtGui.QMainWindow):
         #f = open ('/home/harold/ttheta', 'r')
         #tthetaArr = np.fromfile (f,dtype=np.float32).reshape(self.imsize)
         #f.close()
-        self.myim.integrate (self.detector.tthetaArr)
+        self.myim.integrate (self.detector.getbeamXY(), self.detector.tthetaArr)
         self.integratePlotWidget.setXYData_Integrate (self.myim.tthetabin, self.myim.avg2tth)
+
+
+    def cakeCurrent (self):
+        saveFlag = False
+
+        # check to see if the user would like to save the cake Array to file
+        if (self.ui.saveCakeCB.isChecked()) :
+            saveFlag = True
+            outfile = QtGui.QFileDialog.getSaveFileName (None, "Cake OutputFile", self.workDirectory, "Tiff file (*.tif)")
+        self.myim.cake (self.detector.getbeamXY(),self.detector.tthetaArr)
+        #self.integratePlotWidget.setXYData_Integrate (self.myim.tthetabin, self.myim.avg2tth)
+
+
+
+        if saveFlag :
+            imsave (outfile.toLatin1().data(), self.myim.cakeArr)
+            #self.myim.cakeArr.tofile (outfile.toLatin1().data())
+
+
 
 
     def testCalc (self) :
@@ -923,6 +944,8 @@ class Atrex(QtGui.QMainWindow):
 
     def done2theta (self) :
         self.ui.integrateCurrentButton.setEnabled(True)
+        self.ui.cakeButton.setEnabled(True)
+
 
 app = QtGui.QApplication(sys.argv)
 atrex = Atrex()

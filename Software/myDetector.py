@@ -373,6 +373,23 @@ class myDetector (QtCore.QObject):
         #self.tthetaArr.tofile (f)
         #f.close()
 
+    def calcTthDLL (self) :
+        psz = np.zeros (2, dtype=np.float32)
+        imsz = np.zeros (2, dtype=np.int32)
+        beamsz = np.zeros (2, dtype=np.float32)
+        psz[0]=self.psizex
+        psz[1]=self.psizey
+
+
+        imsz[0]=2048
+        imsz[1]=2048
+        beamsz[0] = self.beamx
+        beamsz[1] = self.beamy
+        self.genTiltMtx()
+        self.CalcTheta.create_theta_array (imsz, self.dist, beamsz, psz, self.tiltmtx.reshape(9).astype(np.float32), self.tth.reshape(9).astype(np.float32),\
+            np.asarray(self.gonio).astype(np.float32), self.tthetaArr, 0., 0., self.tthetaBin)
+
+
     def threadDoneSlot (self, tnum) :
         for i in range (8) :
             if self.threadDone[i] == False :

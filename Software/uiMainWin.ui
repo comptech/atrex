@@ -776,7 +776,7 @@
          <x>10</x>
          <y>24</y>
          <width>192</width>
-         <height>129</height>
+         <height>132</height>
         </rect>
        </property>
        <layout class="QGridLayout" name="gridLayout">
@@ -1321,7 +1321,7 @@
      <widget class="QCheckBox" name="save2ThetaCB">
       <property name="geometry">
        <rect>
-        <x>210</x>
+        <x>200</x>
         <y>10</y>
         <width>111</width>
         <height>22</height>
@@ -1345,6 +1345,19 @@
       </property>
       <property name="checkable">
        <bool>false</bool>
+      </property>
+     </widget>
+     <widget class="QCheckBox" name="saveCakeCB">
+      <property name="geometry">
+       <rect>
+        <x>200</x>
+        <y>90</y>
+        <width>111</width>
+        <height>26</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Save To File</string>
       </property>
      </widget>
     </widget>
@@ -1913,15 +1926,6 @@
       <attribute name="verticalHeaderDefaultSectionSize">
        <number>25</number>
       </attribute>
-      <attribute name="verticalHeaderVisible">
-       <bool>false</bool>
-      </attribute>
-      <attribute name="verticalHeaderDefaultSectionSize">
-       <number>25</number>
-      </attribute>
-      <attribute name="horizontalHeaderDefaultSectionSize">
-       <number>100</number>
-      </attribute>
       <row/>
       <row/>
       <row/>
@@ -2019,21 +2023,6 @@
        </attribute>
        <attribute name="verticalHeaderMinimumSectionSize">
         <number>0</number>
-       </attribute>
-       <attribute name="verticalHeaderVisible">
-        <bool>false</bool>
-       </attribute>
-       <attribute name="verticalHeaderDefaultSectionSize">
-        <number>21</number>
-       </attribute>
-       <attribute name="verticalHeaderMinimumSectionSize">
-        <number>0</number>
-       </attribute>
-       <attribute name="verticalHeaderHighlightSections">
-        <bool>false</bool>
-       </attribute>
-       <attribute name="horizontalHeaderDefaultSectionSize">
-        <number>90</number>
        </attribute>
        <row/>
        <row/>
@@ -2334,7 +2323,7 @@
      <x>0</x>
      <y>0</y>
      <width>1371</width>
-     <height>21</height>
+     <height>29</height>
     </rect>
    </property>
   </widget>

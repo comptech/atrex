@@ -288,7 +288,7 @@ class myImDisplay (QtGui.QWidget) :
             
         
     def mousePressEvent (self, event) :
-        xyzvals = [0.,0.,0.]
+        xyzvals = [0.,0.,0]
         # if right button, let context menu handlers work
 
         if (event.button() == QtCore.Qt.RightButton) :

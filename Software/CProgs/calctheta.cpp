@@ -8,7 +8,8 @@ void testPyth (int *, int) ;
 int create_theta_array (int *sizeArr, float detDist, float *beam, float *psize, 
 	float *tiltmtx, float *tth, float *gonio,  float *outTheta, float minBin, float binsize,
 	unsigned short *outThetaBin) ;
-void integrate (int *sizeArr, unsigned short *inarr, float *tthetaArr, float *histo, float *histoParams) ;
+    void integrate (int *sizeArr, unsigned short *inarr, float *tthetaArr, float *histo, float *histoParams, float *beam) ;
+    void integrate_cake (int *sizeArr, float *beam, unsigned short *inarr, float *tthetaArr,float *cakeArr, float *histoParams) ;
 }
 
 #else
@@ -18,14 +19,15 @@ __declspec(dllexport) void testPyth (int *, int) ;
 __declspec(dllexport) int create_theta_array (int *sizeArr, float detDist, float *beam, float *psize, 
 	float *tiltmtx, float *tth, float *gonio,  float *outTheta, float minBin, float binsize,
 	unsigned short *outThetaBin) ;
-__declspec(dllexport) void integrate (int *sizeArr, unsigned short *inarr, float *tthetaArr, float *histo, float *histoParams) ;
+__declspec(dllexport) void integrate (int *sizeArr, unsigned short *inarr, float *tthetaArr, float *histo, float *histoParams, float *beam) ;
+__declspec(dllexport) void integrate_cake (int *sizeArr, float *beam, unsigned short *inarr, float *tthetaArr,float *cakeArr, float *histoParams) ;
 }
 
 #endif
+#define rad2deg 180./PI
 
 
-
-
+/* for debugging tests
 
 int main (int argc, char *argv[]) {
 	float tiltmtx[] = {.993, .035, .000071, -.03, 
@@ -38,6 +40,8 @@ int main (int argc, char *argv[]) {
 
 	float *outTheta = new float [2048*2048] ;
 	unsigned short *outBin = new unsigned short [2048 * 2048] ;
+
+
 	create_theta_array (sizeArr, 207., beamXY, psizeXY, tiltmtx, tth, gonio, outTheta, 0., .1, outBin) ;
 
 	FILE *fout = fopen ("testtth","w") ;
@@ -48,7 +52,7 @@ int main (int argc, char *argv[]) {
 	delete [] outTheta ;
 
 }
-
+*/
 
 
 int create_theta_array (int *sizeArr, float detDist, float *beam, float *psize, float *tiltmtx, float *tth, float *gonio,
@@ -137,7 +141,7 @@ int create_theta_array (int *sizeArr, float detDist, float *beam, float *psize, 
 }
 
 
-void integrate (int *sizeArr, unsigned short *inarr, float *tthetaArr, float *histo, float *histoParams) {
+void integrate (int *sizeArr, unsigned short *inarr, float *tthetaArr, float *histo, float *histoParams, float *beam) {
 
 	int i, j, ns, nl, ns2, npix, bin, nbins ;
 	ns = sizeArr[0] ;
@@ -152,7 +156,12 @@ void integrate (int *sizeArr, unsigned short *inarr, float *tthetaArr, float *hi
 	minval = histoParams[0] ;
 	maxval = histoParams[1] ;
 	binsize = histoParams[2] ;
+
+
 	nbins = histoParams[3] ;
+
+    printf ("Integrating min max bin %f  %f %f",  minval, maxval, binsize) ;
+
 
 	int *bincnt = new int [nbins] ;
 
@@ -162,9 +171,9 @@ void integrate (int *sizeArr, unsigned short *inarr, float *tthetaArr, float *hi
 	}
 
 	for (i=0; i< nl; i++) {
-		ydist = i - ns2 ;
+		ydist = i - beam[1] ;
 		for (j=0; j<ns; j++) {
-			xdist = j - ns2 ;
+			xdist = j - beam[0]  ;
 			dist = sqrt (xdist * xdist + ydist * ydist) ;
 			if (dist > ns2) continue ;
 			fval = tthetaArr[i * ns+j] ;
@@ -182,46 +191,75 @@ void integrate (int *sizeArr, unsigned short *inarr, float *tthetaArr, float *hi
 }
 
 
-void integrate_cake (int *sizeArr, unsigned short *inarr, float *tthetaArr, float *cakeArr) {
+void integrate_cake (int *sizeArr, float *beam,  unsigned short *inarr, float *tthetaArr, float *cakeArr, float *histoParams) {
 
-	int i, j, ns, nl, ns2, npix, bin, nbins ;
+	int i, j, ns, nl, ns2, npix, bin, nbinsTth, nbinsAz, nbinsTot ;
+	int azbin, tthbin, pixnum ;
 	ns = sizeArr[0] ;
 	nl = sizeArr[1] ;
 	ns2 = ns / 2 ;
 
-	float minval, maxval, binsize ;
-	float xdist, ydist, dist, fval ;
+	// 2-theta min, max, spacing and binsize
+	float minvalTth, maxvalTth, binsizeTth, binsizeAz ;
+	// azimuth runs -180. to 180., we are given the number of azimuth bins
+
+	float xdist, ydist, dist, tthval, azval ;
 
 
 
-	minval = histoParams[0] ;
-	maxval = histoParams[1] ;
-	binsize = histoParams[2] ;
-	nbins = histoParams[3] ;
+	minvalTth = histoParams[0] ;
+	maxvalTth = histoParams[1] ;
+	binsizeTth = histoParams[2] ;
+	nbinsTth = histoParams[3] ;
+    nbinsAz = (int) histoParams[4] ;
+    binsizeAz = 360. / nbinsAz ;
+	nbinsTot = (int) (nbinsAz * nbinsTth) ;
 
-	int *bincnt = new int [nbins] ;
+	int *bincnt = new int [nbinsTot] ;
 
-	for (i=0; i<nbins; i++) {
-		histo[i] = 0. ;
+    // initialize arrays to 0
+	for (i=0; i<nbinsTot; i++) {
+		cakeArr[i] = 0. ;
 		bincnt[i] = 0 ;
 	}
 
 	for (i=0; i< nl; i++) {
-		ydist = i - ns2 ;
+		ydist = beam[1] - i;
 		for (j=0; j<ns; j++) {
-			xdist = j - ns2 ;
+			xdist = j - beam[0] ;
 			dist = sqrt (xdist * xdist + ydist * ydist) ;
 			if (dist > ns2) continue ;
-			fval = tthetaArr[i * ns+j] ;
-			bin = (int)((fval - minval) / binsize) ;
-			if (bin < 0) bin = 0 ;
-			if (bin > nbins) bin=nbins-1 ;
-			histo[bin] += inarr[i*ns+j] ;
-			bincnt[bin]++ ;
+			tthval = tthetaArr[i * ns+j] ;
+			tthbin = (int)((tthval - minvalTth) / binsizeTth) ;
+			azval = atan2 (xdist, ydist) * rad2deg ;
+			azbin = (int)((azval + 180) / binsizeAz) ;
+			if (tthbin < 0) tthbin = 0 ;
+			if (tthbin > nbinsTth) tthbin=nbinsTth-1 ;
+			if (azbin < 0) azbin = 0 ;
+			if (azbin > nbinsAz) azbin=nbinsAz-1 ;
+
+			pixnum = azbin * nbinsTth + tthbin ;
+			bincnt[pixnum]++ ;
+			cakeArr [pixnum] += inarr [ i * ns + j] ;
+			if (i==500 && j==500){
+			    printf ("%d  %d  : %f %f %d %d\r\n", i, j, tthval, azval, tthbin, azbin) ;
+			}
+			if (i==1500 && j==500){
+			    printf ("%d  %d  : %f %f %d %d\r\n", i, j, tthval, azval, tthbin, azbin) ;
+			}
+			if (i==500 && j==1500){
+			    printf ("%d  %d  : %f %f %d %d\r\n", i, j, tthval, azval, tthbin, azbin) ;
+			}
+			if (i==1500 && j==1500){
+			    printf ("%d  %d  : %f %f %d %d\r\n", i, j, tthval, azval, tthbin, azbin) ;
+			}
 		}
 	}
 
-	for (i=0; i<nbins; i++) histo[i] /= bincnt[i] ;
+	for (i=0; i<nbinsTot; i++) {
+	    if (bincnt[i]<1) continue ;
+	    cakeArr[i] /= bincnt[i] ;
+	}
 
 	delete [] bincnt ;
 }
