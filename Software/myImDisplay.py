@@ -350,7 +350,20 @@ class myImDisplay (QtGui.QWidget) :
             y1 = self.selectPointLR.y() / self.zmFac
             x0 = self.selectPointUL.x() / self.zmFac
             y0 = self.selectPointUL.y() / self.zmFac
-            newRect = QtCore.QRect (x0, y0, x1-x0, y1-y0)
+
+            if (x1 < x0) :
+                up_left = x1
+                wid = x0 - x1
+            else :
+                up_left = x0
+                wid = x1 - x0
+            if (y0 < y1) :
+                up_top = y0
+                ht = y1 - y0
+            else :
+                up_top = y1
+                ht = y0 - y1
+            newRect = QtCore.QRect (up_left, up_top, wid, ht)
             smode = True
             if (self.unmaskFlag) :
                 smode = False
