@@ -928,6 +928,27 @@ class Atrex(QtGui.QMainWindow):
 
         if saveFlag :
             imsave (outfile.toLatin1().data(), self.myim.cakeArr)
+            txtstr = QtCore.QString("%1.txt").arg(outfile)
+            tfile = file (txtstr.toLatin1().data(), 'w')
+            str = "Cake Image (y: azimuth x: 2d-theta)\n"
+            tfile.writelines(str)
+            str = "Source File : %s\n"%(self.myim.imFileName)
+            tfile.writelines (str)
+            str = "Top Azimuth : -180."
+            str1 = "Bot Azimuth : 180."
+            str2 = "Az Spacing : %.3f"%(self.myim.cakeParams[5])
+            outstr = "%s\n%s\n%s\n"%(str, str1, str2)
+            tfile.writelines (outstr)
+            str= "Min 2-theta : %.1f"%(self.myim.cakeParams[0])
+            str1= "Max 2-theta : %.1f"%(self.myim.cakeParams[1])
+            str2 = "2-theta Spacing : %.3f"%(self.myim.cakeParams[2])
+            outstr = "%s\n%s\n%s\n"%(str, str1, str2)
+            tfile.writelines (outstr)
+
+            tfile.close()
+
+
+
             #self.myim.cakeArr.tofile (outfile.toLatin1().data())
 
 

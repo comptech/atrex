@@ -273,7 +273,7 @@ class myImage :
         # azimuth bins
         histoParams[4] = self.nbinsAz
 
-        self.avg2tthCake = np.zeros (nbins, np.float32)
+        #self.avg2tthCake = np.zeros (nbins, np.float32)
         self.cakeArr = np.zeros ((self.nbinsTth, self.nbinsAz), dtype=np.float32)
         count=0
         #for i in range(self.tthetabin.size):
@@ -281,3 +281,4 @@ class myImage :
 
 
         self.CalcTheta.integrate_cake (np.array(imsize, dtype=np.int32), np.array(beam,dtype=np.float32),  self.imArray_orig.astype(np.uint16), tthetaArr, self.cakeArr, histoParams)
+        self.cakeParams = [mintth, maxtth, histoParams[2],-180., 180., 360./self.nbinsAz]
