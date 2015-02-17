@@ -29,6 +29,7 @@ class myImDisplay (QtGui.QWidget) :
     dragFlag = False
     applyMaskFlag = False
     rgb_lut = np.zeros ((3,256), dtype=np.uint8)
+    cakeImageFlag = False
 
 
 
@@ -40,6 +41,9 @@ class myImDisplay (QtGui.QWidget) :
         self.customContextMenuRequested.connect (self.contextMenuKickoff)
         for i in range (256) :
             self.rgb_lut[:,i] = i
+
+    def setCakeImage (self) :
+        self.cakeImageFlag = True
 
     def contextMenuKickoff (self, point) :
         gPos = self.mapToGlobal (point)
@@ -447,6 +451,8 @@ class myImDisplay (QtGui.QWidget) :
         painter = QtGui.QPainter (self)
         if (self.loadImage ==1) :
                 painter.drawImage (0, 0, self.qimage, 0., 0., dim, dim)
+                if (self.cakeImageFlag) :
+                    return
                 topLeft = self.zmRect.topLeft() * self.zmFac
                 botRight = self.zmRect.bottomRight() * self.zmFac
                 painter.setPen (QtGui.QPen (QtCore.Qt.red))

@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1371</width>
+    <width>1380</width>
     <height>955</height>
    </rect>
   </property>
@@ -35,7 +35,7 @@
       <x>790</x>
       <y>10</y>
       <width>571</width>
-      <height>551</height>
+      <height>901</height>
      </rect>
     </property>
     <property name="currentIndex">
@@ -51,7 +51,7 @@
         <x>0</x>
         <y>10</y>
         <width>561</width>
-        <height>511</height>
+        <height>561</height>
        </rect>
       </property>
       <property name="sizePolicy">
@@ -320,7 +320,7 @@
        <property name="geometry">
         <rect>
          <x>10</x>
-         <y>250</y>
+         <y>270</y>
          <width>471</width>
          <height>161</height>
         </rect>
@@ -538,7 +538,7 @@
        <property name="geometry">
         <rect>
          <x>10</x>
-         <y>409</y>
+         <y>440</y>
          <width>551</width>
          <height>91</height>
         </rect>
@@ -688,6 +688,61 @@
        </widget>
       </widget>
      </widget>
+     <widget class="myZmDisplay" name="zoomWidget" native="true">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>610</y>
+        <width>288</width>
+        <height>288</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_19">
+      <property name="geometry">
+       <rect>
+        <x>330</x>
+        <y>620</y>
+        <width>91</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Zoom Factor </string>
+      </property>
+     </widget>
+     <widget class="QSpinBox" name="zoomFacBox">
+      <property name="geometry">
+       <rect>
+        <x>430</x>
+        <y>620</y>
+        <width>41</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="minimum">
+       <number>1</number>
+      </property>
+      <property name="maximum">
+       <number>8</number>
+      </property>
+      <property name="value">
+       <number>4</number>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_41">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>590</y>
+        <width>91</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Zoom Display </string>
+      </property>
+     </widget>
     </widget>
     <widget class="QWidget" name="peakTab">
      <attribute name="title">
@@ -775,7 +830,7 @@
         <rect>
          <x>10</x>
          <y>24</y>
-         <width>192</width>
+         <width>204</width>
          <height>132</height>
         </rect>
        </property>
@@ -868,6 +923,36 @@
         </item>
        </layout>
       </widget>
+     </widget>
+     <widget class="myZmPeakDisplay" name="peakZoomWidget" native="true">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>530</y>
+        <width>150</width>
+        <height>150</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="myZmPeakDisplay" name="peakZoomCalcWidget" native="true">
+      <property name="geometry">
+       <rect>
+        <x>180</x>
+        <y>530</y>
+        <width>150</width>
+        <height>150</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="myZmPeakDisplay" name="peakZoomResidsWidget" native="true">
+      <property name="geometry">
+       <rect>
+        <x>340</x>
+        <y>530</y>
+        <width>150</width>
+        <height>150</height>
+       </rect>
+      </property>
      </widget>
     </widget>
     <widget class="QWidget" name="tab_3">
@@ -1286,9 +1371,9 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>170</y>
+        <y>140</y>
         <width>541</width>
-        <height>341</height>
+        <height>251</height>
        </rect>
       </property>
      </widget>
@@ -1358,6 +1443,16 @@
       </property>
       <property name="text">
        <string>Save To File</string>
+      </property>
+     </widget>
+     <widget class="myImDisplay" name="intImageDisplay" native="true">
+      <property name="geometry">
+       <rect>
+        <x>150</x>
+        <y>430</y>
+        <width>400</width>
+        <height>400</height>
+       </rect>
       </property>
      </widget>
     </widget>
@@ -2195,101 +2290,6 @@
      <string>Unselect Peaks</string>
     </property>
    </widget>
-   <widget class="QTabWidget" name="zoomTabWidgets">
-    <property name="geometry">
-     <rect>
-      <x>790</x>
-      <y>570</y>
-      <width>491</width>
-      <height>331</height>
-     </rect>
-    </property>
-    <property name="currentIndex">
-     <number>0</number>
-    </property>
-    <widget class="QWidget" name="zoomTab">
-     <attribute name="title">
-      <string>Zoom</string>
-     </attribute>
-     <widget class="QSpinBox" name="zoomFacBox">
-      <property name="geometry">
-       <rect>
-        <x>380</x>
-        <y>40</y>
-        <width>61</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="minimum">
-       <number>1</number>
-      </property>
-      <property name="maximum">
-       <number>8</number>
-      </property>
-      <property name="value">
-       <number>4</number>
-      </property>
-     </widget>
-     <widget class="QLabel" name="label_19">
-      <property name="geometry">
-       <rect>
-        <x>380</x>
-        <y>10</y>
-        <width>101</width>
-        <height>17</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Zoom Factor </string>
-      </property>
-     </widget>
-     <widget class="myZmDisplay" name="zoomWidget" native="true">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>10</y>
-        <width>288</width>
-        <height>288</height>
-       </rect>
-      </property>
-     </widget>
-    </widget>
-    <widget class="QWidget" name="peakDispTab">
-     <attribute name="title">
-      <string>Peak Zoom</string>
-     </attribute>
-     <widget class="myZmPeakDisplay" name="peakZoomWidget" native="true">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>10</y>
-        <width>150</width>
-        <height>150</height>
-       </rect>
-      </property>
-     </widget>
-     <widget class="myZmPeakDisplay" name="peakZoomCalcWidget" native="true">
-      <property name="geometry">
-       <rect>
-        <x>170</x>
-        <y>10</y>
-        <width>150</width>
-        <height>150</height>
-       </rect>
-      </property>
-     </widget>
-     <widget class="myZmPeakDisplay" name="peakZoomResidsWidget" native="true">
-      <property name="geometry">
-       <rect>
-        <x>330</x>
-        <y>10</y>
-        <width>150</width>
-        <height>150</height>
-       </rect>
-      </property>
-     </widget>
-    </widget>
-   </widget>
    <widget class="QPushButton" name="maskButton">
     <property name="geometry">
      <rect>
@@ -2322,8 +2322,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1371</width>
-     <height>29</height>
+     <width>1380</width>
+     <height>21</height>
     </rect>
    </property>
   </widget>
