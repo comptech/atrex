@@ -232,7 +232,11 @@ void integrate_cake (int *sizeArr, float *beam,  unsigned short *inarr, float *t
 			tthval = tthetaArr[i * ns+j] ;
 			tthbin = (int)((tthval - minvalTth) / binsizeTth) ;
 			azval = atan2 (xdist, ydist) * rad2deg ;
-			azbin = (int)((azval + 180) / binsizeAz) ;
+
+		    if (azval > 0)
+		    	azbin = (int)((azval) / binsizeAz) ;
+		    else
+		        azbin = (int)((azval+360.) / binsizeAz) ;
 			if (tthbin < 0) tthbin = 0 ;
 			if (tthbin > nbinsTth) tthbin=nbinsTth-1 ;
 			if (azbin < 0) azbin = 0 ;
@@ -241,6 +245,7 @@ void integrate_cake (int *sizeArr, float *beam,  unsigned short *inarr, float *t
 			pixnum = azbin * nbinsTth + tthbin ;
 			bincnt[pixnum]++ ;
 			cakeArr [pixnum] += inarr [ i * ns + j] ;
+
 			if (i==500 && j==500){
 			    printf ("%d  %d  : %f %f %d %d\r\n", i, j, tthval, azval, tthbin, azbin) ;
 			}
