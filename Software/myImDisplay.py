@@ -337,6 +337,7 @@ class myImDisplay (QtGui.QWidget) :
             y1 = self.selectPointLR.y() / self.zmFac
             x0 = self.selectPointUL.x() / self.zmFac
             y0 = self.selectPointUL.y() / self.zmFac
+            # insert logic here to determine upper left and lower right.... that will then be ul, lr
             newRect = QtCore.QRect (x0, y0, x1-x0, y1-y0)
             smode = True
             if (self.unselectFlag) :
