@@ -258,9 +258,9 @@ class myImage :
 
 
         mintth = 0.
-        maxtth = 40.
-        nbins = 800
-        self.nbinsAz = 800
+        maxtth = np.max(tthetaArr)
+        nbins = 768
+        self.nbinsAz = 768
         self.nbinsTth = nbins
 
         deltth = (maxtth - mintth) / nbins

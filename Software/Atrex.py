@@ -24,6 +24,7 @@ class Atrex(QtGui.QMainWindow):
     olayFile =""
     olaySecFlag = False
     firstDisplay = True
+    imtypeFlag = 0
 
     imsize = (0,0)
 
@@ -147,6 +148,10 @@ class Atrex(QtGui.QMainWindow):
         #Powder tab
         self.ui.JCPDSReadButton.clicked.connect (self.readJCPDS)
         self.ui.XPOWReadButton.clicked.connect (self.readXPOW)
+
+        #Image Type combo box
+        self.ui.imtypeCB.setItemData (1, 0, QtCore.Qt.UserRole -1)
+        self.ui.imtypeCB.currentIndexChanged.connect (self.imtypeChanged)
 
     def getHome(self):
         # get the users home directory
@@ -302,6 +307,17 @@ class Atrex(QtGui.QMainWindow):
         if (status):
             self.ui.imfileLE.setText(newimage)
             self.imageFile = newimage
+        self.imtypeFlag = 0
+
+
+    def imtypeChanged (self, index) :
+        if index==0 :
+            self.updateImage()
+            self.imtypeFlag = 0
+        else :
+            self.displayCakeImage()
+            self.imtypeFlag = 1
+
 
     def newSliderValue(self, newval):
         # val = self.ui.rangeSlider.value()
@@ -379,14 +395,25 @@ class Atrex(QtGui.QMainWindow):
         # get the 2-theta
         pixvals=[vals[0], vals[1]]
         self.detector.genTiltMtx ()
-        tthval = self.detector.calculate_tth_from_pixels(pixvals, self.detector.gonio)
-        outstr = QtCore.QString ("X: %1   Y: %2   Val:  %3      2-Theta : %4").arg (vals[0]).arg(vals[1]).arg( vals[2]).arg(tthval)
-        self.ui.statusBox.setText (outstr)
 
+        if self.imtypeFlag == 0 :
+            tthval = self.detector.calculate_tth_from_pixels(pixvals, self.detector.gonio)
+            outstr = QtCore.QString ("X: %1   Y: %2   Val:  %3      2-Theta : %4").arg (vals[0]).arg(vals[1]).arg( vals[2]).arg(tthval)
+            self.ui.statusBox.setText (outstr)
+        if self.imtypeFlag ==1 :
+            print 'hello'
+            azim = -180. + 360. * (vals[1]/ 768.)
+            tth = vals[0]/768. * self.myim.cakeParams[1]
+            intens = self.myim.cakeArr [vals[1], vals[0]]
+            outstr = QtCore.QString ("2-Theta: %1  Azim: %2  Val: %3").arg (tth).arg(azim).arg(intens)
+            self.ui.statusBox.setText (outstr)
 
     def displayCakeImage (self) :
+        self.imtypeFlag = 1
         self.ui.intImageDisplay.calcHisto (self.myim.cakeArr)
         self.ui.intImageDisplay.writeQImage_lut (self.myim.cakeArr)
+        self.ui.imageWidget.calcHisto (self.myim.cakeArr)
+        self.ui.imageWidget.writeQImage_lut (self.myim.cakeArr)
 
 
 
@@ -933,6 +960,12 @@ class Atrex(QtGui.QMainWindow):
         #self.integratePlotWidget.setXYData_Integrate (self.myim.tthetabin, self.myim.avg2tth)
 
         self.displayCakeImage()
+        str = QtCore.QString ("%1").arg(int(self.myim.cakeParams[1]))
+
+        self.ui.maxTTHLab.setText (str)
+        #Image Type combo box
+        self.ui.imtypeCB.setItemData (1, 33, QtCore.Qt.UserRole -1)
+        self.ui.imtypeCB.setCurrentIndex (1)
 
 
 
