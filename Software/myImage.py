@@ -269,7 +269,7 @@ class myImage :
         histoParams[0]= mintth
         histoParams[1]= maxtth
         histoParams[2] = (maxtth - mintth) / self.nbinsTth
-        histoParams[3] = (int)((maxtth - mintth) / histoParams[2] + 1.)
+        histoParams[3] = self.nbinsTth
         # azimuth bins
         histoParams[4] = self.nbinsAz
 
