@@ -25,7 +25,7 @@ class Atrex(QtGui.QMainWindow):
     olaySecFlag = False
     firstDisplay = True
     imtypeFlag = 0
-
+    selectPeakXY =[0.,0.]
     imsize = (0,0)
 
     def __init__(self):
@@ -152,6 +152,10 @@ class Atrex(QtGui.QMainWindow):
         #Image Type combo box
         self.ui.imtypeCB.setItemData (1, 0, QtCore.Qt.UserRole -1)
         self.ui.imtypeCB.currentIndexChanged.connect (self.imtypeChanged)
+
+        #peakSave to File
+        self.ui.peakSaveButton.clicked.connect (self.peakSaveToFile)
+        self.ui.peakFileBrowseButton.clicked.connect (self.peakFileBrowse)
 
     def getHome(self):
         # get the users home directory
@@ -508,6 +512,7 @@ class Atrex(QtGui.QMainWindow):
         self.ui.peakZoomCalcWidget.arrayToQImage(filtered)
         resids = subdat - filtered
         self.ui.peakZoomResidsWidget.arrayToQImage(resids)
+        self.selectPeakXY  = xy
 
 
     def listButtonChanged(self, event):
@@ -1009,6 +1014,36 @@ class Atrex(QtGui.QMainWindow):
     def done2theta (self) :
         self.ui.integrateCurrentButton.setEnabled(True)
         self.ui.cakeButton.setEnabled(True)
+
+
+    def peakFileBrowse (self) :
+        str = QtGui.QFileDialog.getSaveFileName (None, "Save to Peak Filename", self.workDirectory, "Any file (*.*);;Tiff file (*.tif)" )
+        self.ui.peakSaveFilenameLE.setText(str)
+
+    def peakSaveToFile (self) :
+        startULeft = [0,0]
+        bsize = self.ui.peakSaveBoxsizeLE.text().toInt()
+        bsize = bsize[0]
+        startULeft[0] = self.selectPeakXY[0]- bsize/2
+        startULeft[1] = self.selectPeakXY[1]- bsize/2
+        if startULeft[0] < 0 :
+            startULeft[0] = 0
+        if startULeft[1] < 0 :
+            startULeft[1] = 0
+        outArr = self.myim.imArray_orig [startULeft[1]:startULeft[1]+bsize,startULeft[0]:startULeft[0]+bsize]
+        outArrInt = outArr.astype (dtype=np.uint16)
+        #check if flat or tiff
+        flatFlag = self.ui.peakSaveFileTypeRB.isChecked()
+
+        #get file name
+        outfile = self.ui.peakSaveFilenameLE.text()
+
+        #then save to flat file
+        if flatFlag :
+            outArrInt.tofile (outfile.toLatin1().data())
+        #or tiff file
+        else :
+            imsave (outfile, outArrInt)
 
 
 app = QtGui.QApplication(sys.argv)
