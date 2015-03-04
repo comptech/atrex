@@ -314,9 +314,9 @@ class myDetector (QtCore.QObject):
 
                 self.tthetaArr[i,j] = ang (vec3, sd0)
 
-        f = open ("/home/harold/ttheta", 'w')
-        self.tthetaArr.tofile (f)
-        f.close()
+        #f = open ("/home/harold/ttheta", 'w')
+        #self.tthetaArr.tofile (f)
+        #f.close()
 
     def create_ttheta_array_sub (self, ysize, xsize, starty, startx, tnum) :
         self.genTiltMtx ()

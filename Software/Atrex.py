@@ -1041,9 +1041,21 @@ class Atrex(QtGui.QMainWindow):
         #then save to flat file
         if flatFlag :
             outArrInt.tofile (outfile.toLatin1().data())
+            outfile_hdr = "%s.txt"% outfile.toLatin1().data()
+            f = open (outfile_hdr, 'wb')
+            str = "Peak File - raw data\r\n"
+            f.write(str)
+            str = "nlines : %d\r\n"%bsize
+            f.write(str)
+            str = "nsamps : %d\r\n"%bsize
+            f.write(str)
+            str = "dtype : uint16\r\n"
+            f.write(str)
+            f.close()
         #or tiff file
         else :
             imsave (outfile, outArrInt)
+
 
 
 app = QtGui.QApplication(sys.argv)
