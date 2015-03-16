@@ -13,6 +13,7 @@ import os.path
 import time
 import myPeakTable
 import myDetector
+from peakFit import *
 
 
 class Atrex(QtGui.QMainWindow):
@@ -27,6 +28,7 @@ class Atrex(QtGui.QMainWindow):
     imtypeFlag = 0
     selectPeakXY =[0.,0.]
     imsize = (0,0)
+    peakBoxSize = 33
 
     def __init__(self):
         QtGui.QMainWindow.__init__(self)
@@ -45,6 +47,7 @@ class Atrex(QtGui.QMainWindow):
         self.ui.decrementImageButton.clicked.connect(self.decrementImageValue)
         self.ui.mergeButton.clicked.connect(self.mergeImageRange)
         self.ui.lutCB.currentIndexChanged.connect (self.lutChanged)
+
 
         self.ui.pushButton_Detector_Open_calibration.clicked.connect(self.openDetectorCalibration)
         self.ui.pushButton_Detector_Save_calibration.clicked.connect(self.saveDetectorCalibration)
@@ -81,6 +84,7 @@ class Atrex(QtGui.QMainWindow):
         self.ui.mvSelPeaksButton.clicked.connect(self.moveSelPeaks)
         self.ui.delSelPeaksButton.clicked.connect(self.delSelPeaks)
         self.ui.seriesSrchButton.clicked.connect(self.SearchForPeaksSeries)
+        self.ui.peakSaveBoxsizeLE.returnPressed.connect (self.peakBoxSizeSet)
         # self.ui.clearAllButton.clicked.connect(self.RemoveAllPeaks)
 
         self.ui.Peaks_Button_Open_PT.clicked.connect(self.OpenPeakTable)
@@ -275,6 +279,11 @@ class Atrex(QtGui.QMainWindow):
 
 
         #self.ui.rangeSlider.set
+
+    def peakBoxSizeSet (self) :
+        val = self.ui.peakSaveBoxsizeLE.text().toInt()[0]
+        self.ui.imageWidget.setPeakBoxSize (val)
+        self.ui.imageWidget.repaint()
 
     def zoomFacUpdate(self, value):
         self.ui.zoomWidget.setZmFac(value)
@@ -502,17 +511,31 @@ class Atrex(QtGui.QMainWindow):
     def peakListClicked(self, event):
         itemNumber = self.ui.peakListWidget.currentRow()
         xy = self.peaks.peaks[itemNumber].DetXY
+        bsize = self.ui.peakSaveBoxsizeLE.text().toInt()[0]
+        bsize2 = bsize / 2
 
         # self.ui.zoomWidget.writeQImage_lut (self.myim.imArray, xy)
-        self.ui.peakZoomWidget.writeQImage_lut(self.myim.imArray, xy)
+
 
         #for demo only
-        subdat = self.myim.imArray[xy[1] - 10:xy[1] + 10, xy[0] - 10:xy[0] + 10]
-        filtered = ndimage.gaussian_filter(subdat, 1)
-        self.ui.peakZoomCalcWidget.arrayToQImage(filtered)
-        resids = subdat - filtered
-        self.ui.peakZoomResidsWidget.arrayToQImage(resids)
+        subdat = self.myim.imArray[xy[1] - bsize2:xy[1] + bsize2+1, xy[0] - bsize2:xy[0] + bsize2+1]
+        #self.ui.peakZoomWidget.writeQImage_lut(self.myim.imArray, xy)
+        self.ui.peakZoomWidget.arrayToQImage (subdat)
+        #filtered = ndimage.gaussian_filter(subdat, 1)
+
+        #resids = subdat - filtered
+        #self.ui.peakZoomResidsWidget.arrayToQImage(resids)
         self.selectPeakXY  = xy
+        pf = peakFit (subdat)
+        pf.fitArr()
+        fitarr = pf.returnFit ()
+        resids = subdat - fitarr
+        self.ui.peakZoomCalcWidget.arrayToQImage(fitarr)
+        self.ui.peakZoomResidsWidget.arrayToQImage(resids)
+
+
+
+        self.loadFitParams (pf.fitpars)
 
 
     def listButtonChanged(self, event):
@@ -528,6 +551,23 @@ class Atrex(QtGui.QMainWindow):
 
     """ zoomMode turns the cursor in the image and zoom widgets to zoom select
     """
+
+    def loadFitParams (self, fitParams):
+        s='%6.1f'%(fitParams[0])
+        self.ui.pf_backLE.setText (s)
+        s='%7.1f'%(fitParams[1])
+        self.ui.pf_peakLE.setText (s)
+        s='%7.1f'%(fitParams[2])
+        self.ui.pf_peakLocXLE.setText (s)
+        s='%7.1f'%(fitParams[3])
+        self.ui.pf_peakLocYLE.setText (s)
+        s='%7.1f'%(fitParams[4])
+        self.ui.pf_XWidthLE.setText (s)
+        s='%7.1f'%(fitParams[5])
+        self.ui.pf_YWidthLE.setText (s)
+        s='%7.1f'%(fitParams[6])
+        self.ui.pf_rotationLE.setText (s)
+
 
     def zoomMode(self):
         self.ui.imageWidget.zoomOn()

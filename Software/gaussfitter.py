@@ -21,6 +21,7 @@ to be fixed.  As far as I can tell, leastsq does not have that capability.
 The version of mpfit I use can be found here:
     http://code.google.com/p/agpy/source/browse/trunk/mpfit
 
+
 .. todo::
     -turn into a class instead of a collection of objects
     -implement WCS-based gaussian fitting with correct coordinates

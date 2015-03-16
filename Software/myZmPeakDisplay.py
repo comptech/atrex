@@ -39,7 +39,7 @@ class myZmPeakDisplay (QtGui.QWidget) :
         self.zmFac = zmfac
 
          # DN scaling
-        maxval = np.max (arr)/50.
+        maxval = np.max (arr)
         minval = np.min (arr)
         self.dispMin = minval
         self.dispMax = maxval
@@ -61,7 +61,7 @@ class myZmPeakDisplay (QtGui.QWidget) :
         xsize = newarr.shape[0] / 4 * 4
 
         a = np.zeros ((xsize, ysize), dtype=np.uint8)
-        a[:,:]=255-newarr[0:ysize,0:xsize]
+        a[:,:]=newarr[0:ysize,0:xsize]
         self.newx = a.shape[0]
         self.newy = a.shape[1]
         self.qimage = QtGui.QImage (a.data, a.shape[1], a.shape[0],
@@ -134,7 +134,7 @@ class myZmPeakDisplay (QtGui.QWidget) :
         xsize = newarr.shape[0] / 4 * 4
 
         a = np.zeros ((xsize, ysize), dtype=np.uint8)
-        a[:,:]=255-newarr[0:ysize,0:xsize]
+        a[:,:]=newarr[0:ysize,0:xsize]
         self.newx = a.shape[0]
         self.newy = a.shape[1]
         self.qimage = QtGui.QImage (a.data, a.shape[1], a.shape[0],

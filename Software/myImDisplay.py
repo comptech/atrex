@@ -30,6 +30,7 @@ class myImDisplay (QtGui.QWidget) :
     applyMaskFlag = False
     rgb_lut = np.zeros ((3,256), dtype=np.uint8)
     cakeImageFlag = False
+    peakBoxSize = 33
 
 
 
@@ -41,6 +42,9 @@ class myImDisplay (QtGui.QWidget) :
         self.customContextMenuRequested.connect (self.contextMenuKickoff)
         for i in range (256) :
             self.rgb_lut[:,i] = i
+
+    def setPeakBoxSize (self,val) :
+        self.peakBoxSize = val
 
     def setCakeImage (self) :
         self.cakeImageFlag = True
@@ -448,6 +452,7 @@ class myImDisplay (QtGui.QWidget) :
         dim = w
         if (dim >h):
             dim = h
+        bsize2 = self.peakBoxSize / 2 * self.zmFac
         
         painter = QtGui.QPainter (self)
         if (self.loadImage ==1) :
@@ -463,8 +468,8 @@ class myImDisplay (QtGui.QWidget) :
                 for i in range (peakcount) :
                     xloc = self.peaks.peaks[i].DetXY[0]*self.zmFac
                     yloc = self.peaks.peaks[i].DetXY[1]*self.zmFac
-                    upLeft = QtCore.QPoint (xloc-10.,yloc-10.)
-                    lowRight = QtCore.QPoint (xloc+10, yloc+10)
+                    upLeft = QtCore.QPoint (xloc-bsize2,yloc-bsize2)
+                    lowRight = QtCore.QPoint (xloc+bsize2+1, yloc+bsize2+1)
                     newRect = QtCore.QRect (upLeft, lowRight)
                     if self.peaks.peaks[i].selected[0] :
                         painter.setPen (QtGui.QPen (QtCore.Qt.magenta))
