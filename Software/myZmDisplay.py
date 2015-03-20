@@ -21,7 +21,10 @@ class myZmDisplay (QtGui.QWidget) :
     addPeakSignal = QtCore.pyqtSignal (QtCore.QPoint)
     setButtonModeSignal = QtCore.pyqtSignal (int)
     zmRectSignal = QtCore.pyqtSignal(QtCore.QRect)
+    imcoordsSelectSignal = QtCore.pyqtSignal (list)
+
     rgb_lut = np.zeros ((3,256), dtype=np.uint8)
+
     for i in range (256):
         rgb_lut[:,i] = i
 
@@ -77,6 +80,9 @@ class myZmDisplay (QtGui.QWidget) :
         build in several other options for color mapping DN.
         centloc[0] is x coord of center, centloc[1] is y coord
     """
+
+
+
     def writeQImage_lut (self, fulldata, centloc) :
         # for input square image,  simply resize image to smallest dimension
         im_w = self.width()
@@ -237,11 +243,20 @@ class myZmDisplay (QtGui.QWidget) :
 
 
     def mousePressEvent (self, event) :
+        xyzvals = [0.,0.,0.]
         startPt = self.zoomRect.topLeft()
         xloc = event.x() / self.zmFac + startPt.x()
         yloc = event.y() / self.zmFac + startPt.y()
         if (self.peakToggle) :
             self.addPeakSignal.emit (QtCore.QPoint(xloc,yloc))
+
+        xyzvals [0] = xloc
+        xyzvals [1] = yloc
+
+        # would like to get the image raw values for this point....
+        val = self.fulldata [yloc, xloc]
+        xyzvals [2] = val
+        self.imcoordsSelectSignal.emit (xyzvals)
 
     def paintEvent (self, event) :
         w = self.width()

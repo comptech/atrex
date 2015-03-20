@@ -66,6 +66,7 @@ class Atrex(QtGui.QMainWindow):
         self.ui.imageWidget.imcoordsSelectSignal.connect (self.imageMouseClicked)
         self.ui.zoomWidget.addPeakSignal.connect(self.newPeak)
         self.ui.zoomWidget.setButtonModeSignal.connect(self.setButtons)
+        self.ui.zoomWidget.imcoordsSelectSignal.connect (self.imageMouseClicked)
         self.ui.intImageDisplay.setCakeImage ()
         self.ui.zoomButton.clicked.connect(self.zoomMode)
         self.ui.addPeakButton.clicked.connect(self.addPeakMode)
