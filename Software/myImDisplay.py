@@ -471,10 +471,11 @@ class myImDisplay (QtGui.QWidget) :
                     upLeft = QtCore.QPoint (xloc-bsize2,yloc-bsize2)
                     lowRight = QtCore.QPoint (xloc+bsize2+1, yloc+bsize2+1)
                     newRect = QtCore.QRect (upLeft, lowRight)
+                    painter.setPen (QtGui.QPen (QtCore.Qt.green))
                     if self.peaks.peaks[i].selected[0] :
                         painter.setPen (QtGui.QPen (QtCore.Qt.magenta))
-                    else :
-                        painter.setPen (QtGui.QPen (QtCore.Qt.green))
+                    if self.peaks.peaks[i].clickSelected :
+                        painter.setPen (QtGui.QPen (QtCore.Qt.yellow))
                     painter.drawRect (newRect)
                 if (self.selectFlag and self.dragFlag) :
                     pen = QtGui.QPen (QtCore.Qt.magenta)

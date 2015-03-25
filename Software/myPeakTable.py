@@ -24,6 +24,7 @@ class myPeak:
         self.position = np.zeros(3,dtype=np.float)   # Intensity from area detector with e.s.d
         self.IntSSD   = np.zeros(2,dtype=np.float)   # Will now be used to store individualized peak fitting box size
         self.Adp      = myDetector.myDetector()                 # Area detector parameters
+        self.clickSelected = False
 
     def setDetxy(self, XY):
         self.DetXY=XY

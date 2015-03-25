@@ -18,8 +18,8 @@ class peakFit :
 
     def fitArr (self) :
 
-
-        self.fitpars = gaussfit (self.inarr)
+        usemom=[True, True, True, True, True, True, True, True]
+        self.fitpars = gaussfit (self.inarr, usemoment=usemom)
         c='\t'
         print '***************Parameters **************'
         print '\tActual\tFitted'

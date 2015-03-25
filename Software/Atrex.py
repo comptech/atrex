@@ -29,6 +29,7 @@ class Atrex(QtGui.QMainWindow):
     selectPeakXY =[0.,0.]
     imsize = (0,0)
     peakBoxSize = 33
+    oldSelected = -1
 
     def __init__(self):
         QtGui.QMainWindow.__init__(self)
@@ -512,6 +513,14 @@ class Atrex(QtGui.QMainWindow):
     def peakListClicked(self, event):
         itemNumber = self.ui.peakListWidget.currentRow()
         xy = self.peaks.peaks[itemNumber].DetXY
+        if (self.oldSelected >= 0) :
+            self.peaks.peaks[self.oldSelected].clickSelected = False
+        self.peaks.peaks[itemNumber].clickSelected = True
+
+
+        self.oldSelected = itemNumber
+
+        self.imageWidget.repaint()
         bsize = self.ui.peakSaveBoxsizeLE.text().toInt()[0]
         bsize2 = bsize / 2
 
