@@ -67,6 +67,13 @@ class MyPlotWidget (QtGui.QWidget) :
         self.canvas.draw()
 
 
+    def plotDataXY2 (self, xarr, yarr, yarrFit):
+        self.axes.cla()
+        self.axes.set_title (self.tstr)
+        self.axes.set_xlabel (self.xstr)
+        self.axes.set_ylabel(self.ystr)
+        self.axes.plot(xarr, yarr, 'g-', xarr, yarrFit,'b-')
+        self.canvas.draw()
 
 
     """ MyPlotWidget.setXYData (xarr, yarr, int type)

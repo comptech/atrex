@@ -803,13 +803,13 @@
        <string>      X             Y</string>
       </property>
      </widget>
-     <widget class="QWidget" name="peakDisplayWidget" native="true">
+     <widget class="MyPlotWidget" name="peakProfWidget" native="true">
       <property name="geometry">
        <rect>
-        <x>350</x>
-        <y>289</y>
-        <width>200</width>
-        <height>191</height>
+        <x>209</x>
+        <y>279</y>
+        <width>341</width>
+        <height>261</height>
        </rect>
       </property>
      </widget>
@@ -928,7 +928,7 @@
       <property name="geometry">
        <rect>
         <x>20</x>
-        <y>530</y>
+        <y>610</y>
         <width>150</width>
         <height>150</height>
        </rect>
@@ -938,7 +938,7 @@
       <property name="geometry">
        <rect>
         <x>180</x>
-        <y>530</y>
+        <y>610</y>
         <width>150</width>
         <height>150</height>
        </rect>
@@ -948,7 +948,7 @@
       <property name="geometry">
        <rect>
         <x>340</x>
-        <y>530</y>
+        <y>610</y>
         <width>150</width>
         <height>150</height>
        </rect>
@@ -958,7 +958,7 @@
       <property name="geometry">
        <rect>
         <x>20</x>
-        <y>689</y>
+        <y>770</y>
         <width>531</width>
         <height>91</height>
        </rect>
@@ -1076,20 +1076,20 @@
        <rect>
         <x>10</x>
         <y>280</y>
-        <width>321</width>
-        <height>221</height>
+        <width>191</width>
+        <height>291</height>
        </rect>
       </property>
       <property name="title">
        <string> 2 D Gaussian Fit Parameters </string>
       </property>
-      <widget class="QWidget" name="">
+      <widget class="QWidget" name="layoutWidget">
        <property name="geometry">
         <rect>
-         <x>21</x>
+         <x>11</x>
          <y>31</y>
          <width>161</width>
-         <height>187</height>
+         <height>241</height>
         </rect>
        </property>
        <layout class="QGridLayout" name="gridLayout_3">
@@ -1174,7 +1174,7 @@
       <property name="geometry">
        <rect>
         <x>30</x>
-        <y>510</y>
+        <y>590</y>
         <width>59</width>
         <height>15</height>
        </rect>
@@ -1187,7 +1187,7 @@
       <property name="geometry">
        <rect>
         <x>180</x>
-        <y>510</y>
+        <y>590</y>
         <width>111</width>
         <height>16</height>
        </rect>
@@ -1200,7 +1200,7 @@
       <property name="geometry">
        <rect>
         <x>340</x>
-        <y>510</y>
+        <y>590</y>
         <width>71</width>
         <height>16</height>
        </rect>
@@ -1208,6 +1208,26 @@
       <property name="text">
        <string>Residual :</string>
       </property>
+     </widget>
+     <widget class="QComboBox" name="peakProfOrientCB">
+      <property name="geometry">
+       <rect>
+        <x>210</x>
+        <y>550</y>
+        <width>171</width>
+        <height>24</height>
+       </rect>
+      </property>
+      <item>
+       <property name="text">
+        <string>Vertical Profile</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Horiz. Profile</string>
+       </property>
+      </item>
      </widget>
     </widget>
     <widget class="QWidget" name="tab_3">

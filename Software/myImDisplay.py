@@ -11,6 +11,7 @@ class myImDisplay (QtGui.QWidget) :
     loadImage = 0
     dispMax = 65535
     dispMin = 0
+    ind_5 = 0
     zmFac = 3
     zmRect = QtCore.QRect ()
     centPt = QtCore.pyqtSignal(QtCore.QPoint)
