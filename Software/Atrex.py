@@ -22,7 +22,7 @@ from peakFit import *
 
 class Atrex(QtGui.QMainWindow):
     displayedImage = False
-    minRange = 0
+    minRange = 1
     maxRange = 99
     mergeSumMode = True
     mymask = myMask()
