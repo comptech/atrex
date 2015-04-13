@@ -1077,7 +1077,7 @@
         <x>10</x>
         <y>280</y>
         <width>191</width>
-        <height>291</height>
+        <height>261</height>
        </rect>
       </property>
       <property name="title">
@@ -1212,7 +1212,7 @@
      <widget class="QComboBox" name="peakProfOrientCB">
       <property name="geometry">
        <rect>
-        <x>210</x>
+        <x>380</x>
         <y>550</y>
         <width>171</width>
         <height>24</height>
@@ -1228,6 +1228,19 @@
         <string>Horiz. Profile</string>
        </property>
       </item>
+     </widget>
+     <widget class="QPushButton" name="adjustPeakDisplaysButton">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>560</y>
+        <width>121</width>
+        <height>24</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Adjust Displays :</string>
+      </property>
      </widget>
     </widget>
     <widget class="QWidget" name="tab_3">

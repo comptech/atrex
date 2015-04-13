@@ -14,6 +14,7 @@ import time
 import myPeakTable
 import myDetector
 from peakFit import *
+from myPeakAdjustDlg import *
 
 ##
 # @class Atrex
@@ -99,6 +100,7 @@ class Atrex(QtGui.QMainWindow):
         self.ui.seriesSrchButton.clicked.connect(self.SearchForPeaksSeries)
         self.ui.peakSaveBoxsizeLE.returnPressed.connect (self.peakBoxSizeSet)
         self.ui.peakProfOrientCB.currentIndexChanged.connect (self.peakProfOrientationSet)
+        self.ui.adjustPeakDisplaysButton.clicked.connect(self.adjustPeakDisplays)
 
         # self.ui.clearAllButton.clicked.connect(self.RemoveAllPeaks)
 
@@ -570,6 +572,14 @@ class Atrex(QtGui.QMainWindow):
 
         self.loadFitParams (pf.fitpars)
         self.plotPeakProf (startx, starty, bsize, self.vertProfFlag)
+
+    def adjustPeakDisplays (self):
+        peakAdjDlg = myPeakAdjustDlg ()
+        peakAdjDlg.setPeakDisplay (0, self.ui.peakZoomWidget)
+        peakAdjDlg.setPeakDisplay (1, self.ui.peakZoomCalcWidget)
+        peakAdjDlg.setPeakDisplay (2, self.ui.peakZoomResidsWidget)
+        peakAdjDlg.updateLEFields ()
+        peakAdjDlg.show()
 
     def listButtonChanged(self, event):
         status = self.list1Button.isChecked()

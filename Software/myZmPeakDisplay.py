@@ -24,7 +24,7 @@ class myZmPeakDisplay (QtGui.QWidget) :
     startx = 0
     starty = 0
     slideBarSignal = QtCore.pyqtSignal (int, int, int)
-
+    rawArr = None
 
     def __init__(self, parent) :
         QtGui.QWidget.__init__(self, parent)
@@ -49,12 +49,49 @@ class myZmPeakDisplay (QtGui.QWidget) :
         self.dispMax = self.ind_95
         self.dispMin = self.ind_5
 
+    def setMinMax (self, min, max) :
+        self.dispMin = min
+        self.dispMax = max
+
+        range255 = self.dispMax - self.dispMin
+        self.scale = 255. / range255
+        #print '(im_w im_h disp_width disp_height)', w, h, self.xsize, self.ysize
+        #print 'scale is :', self.scalefac
+        uarr = (self.scale * (self.rawArr- self.dispMin)).astype(np.float)
+        uarr [uarr>255.] = 255.
+        uarr [uarr<0.] = 0.
+        uarr = uarr.astype(np.uint8)
+
+        # zoom up the array by the zmFac
+        newarr = zoom (uarr, self.zmFac, order=3)
+        ysize = newarr.shape[1] / 4 * 4
+        xsize = newarr.shape[0] / 4 * 4
+
+        a = np.zeros ((xsize, ysize), dtype=np.uint8)
+        a[:,:]=newarr[0:ysize,0:xsize]
+        self.newx = a.shape[0]
+        self.newy = a.shape[1]
+        self.qimage = QtGui.QImage (a.data, a.shape[1], a.shape[0],
+                                    QtGui.QImage.Format_Indexed8)
+
+        # generate the lut
+
+        for index in range(256) :
+            self.qimage.setColor (index, QtGui.qRgb (index, index, index))
+
+        self.qimage.ndarray = a
+        self.loadImage = 1
+        self.repaint()
+
+
+
 
     def arrayToQImage (self, arr, x0, y0) :
         input_xy = arr.shape
         self.startx = x0
         self.starty = y0
 
+        self.rawArr = arr
         # for input square image,  simply resize image to smallest dimension
         im_w = self.width()
         im_h = self.height()
@@ -150,6 +187,7 @@ class myZmPeakDisplay (QtGui.QWidget) :
             endy = h
 
         tempdata = self.fulldata [starty:endy,startx:endx]
+        self.rawArr = tempdata
         zmRect = QtCore.QRect (QtCore.QPoint(startx, starty),QtCore.QPoint(endx,endy))
 
         self.zoomRect = zmRect
