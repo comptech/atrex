@@ -38,6 +38,9 @@ class Atrex(QtGui.QMainWindow):
     vertProfFlag = True
     peakStartx = 0
     peakStarty = 0
+    mergeArr = None
+    mergeFileName = None
+    mergeDisplayFlag = False
 
 
     def __init__(self):
@@ -173,6 +176,7 @@ class Atrex(QtGui.QMainWindow):
 
         #Image Type combo box
         self.ui.imtypeCB.setItemData (1, 0, QtCore.Qt.UserRole -1)
+        self.ui.imtypeCB.setItemData (2, 0, QtCore.Qt.UserRole -1)
         self.ui.imtypeCB.currentIndexChanged.connect (self.imtypeChanged)
 
         #peakSave to File
@@ -240,6 +244,8 @@ class Atrex(QtGui.QMainWindow):
     """
 
     def openImage(self):
+        self.mergeDisplayFlag = False
+        self.imtypeCB.setCurrentIndex(0)
         wdir = self.ui.imDirLE.text()
         self.imageFile = QtGui.QFileDialog.getOpenFileName(self, 'Open Tiff Image', wdir)
         # get the path and put it in imDirLE
@@ -329,7 +335,15 @@ class Atrex(QtGui.QMainWindow):
         calculate the new image name. Final step is then to display that image.
     """
 
+
+
+
     def updateImage(self):
+        if self.mergeDisplayFlag :
+            self.firstDisplay = False
+            self.displayImage (self.mergeFileName)
+            return
+
         # get the image num and convert to float
         z = QtCore.QChar('0')
         tmpstr = self.ui.selectedImageLE.text()
@@ -345,12 +359,20 @@ class Atrex(QtGui.QMainWindow):
 
 
     def imtypeChanged (self, index) :
+        self.firstDisplay = True
         if index==0 :
+            self.mergeDisplayFlag = False
             self.updateImage()
             self.imtypeFlag = 0
-        else :
+            return
+        if index==1 :
+            self.mergeDisplayFlag = False
             self.displayCakeImage()
             self.imtypeFlag = 1
+        if index==2 :
+            self.mergeDisplayFlag = True
+            self.displayImage (self.mergeFileName)
+            self.imtypeFlag==2
 
 
     def newSliderValue(self, newval):
@@ -379,6 +401,8 @@ class Atrex(QtGui.QMainWindow):
     """
 
     def newImageValue(self):
+        self.mergeDisplayFlag = False
+        self.ui.imtypeCB.setCurrentIndex (0)
         newval = self.ui.rangeSlider.value()
         QtGui.QApplication.setOverrideCursor(QtGui.QCursor(QtCore.Qt.BusyCursor))
         # self.ui.selectedImageLE.setText (QtCore.QString.number(newval))
@@ -390,6 +414,7 @@ class Atrex(QtGui.QMainWindow):
             self.ui.imfileLE.setText(newimage)
             self.imageFile = newimage
         QtGui.QApplication.restoreOverrideCursor()
+
 
 
     """ maxSliderUpdate is called by the DN max slider and updates the text line
@@ -456,6 +481,7 @@ class Atrex(QtGui.QMainWindow):
 
         mn = self.ui.imageMinLE.text().toInt()
         mx = self.ui.imageMaxLE.text().toInt()
+
 
         self.imageWidget.setMinMax(mn[0], mx[0])
         self.zoomWidget.setMinMax(mn[0], mx[0])
@@ -802,6 +828,7 @@ class Atrex(QtGui.QMainWindow):
         # get the output tif file name....
         tempimg = myImage()
         outname = QtGui.QFileDialog.getSaveFileName(self, "Merge Filename", self.workDirectory, "Image File (*.tif)")
+
         z = QtCore.QChar('0')
         self.mergeSumMode = self.ui.sumButton.isChecked()
 
@@ -812,32 +839,38 @@ class Atrex(QtGui.QMainWindow):
                 newimage = QtCore.QString("%1%2.tif").arg(self.imageFilePref).arg(i, 3, 10, z)
                 tempimg.readTiff(newimage)
                 if i == self.minRange:
-                    mergeArr = tempimg.imArray.copy().astype(np.float32)
+                    self.mergeArr = tempimg.imArray.copy().astype(np.float32)
                 else:
-                    mergeArr = tempimg.imArray + mergeArr
-            maxval = np.max(mergeArr)
+                    self.mergeArr = tempimg.imArray + self.mergeArr
+            maxval = np.max(self.mergeArr)
             if (maxval > 65535):
                 scaleval = 65534. / maxval
                 str = QtCore.QString("Merge exceeds 65535, scaled by %1").arg(scaleval)
                 # qinfo = QtGui.QMessageBox.warning(None, "Information", str)
-                mergeArr *= scaleval
+                self.mergeArr *= scaleval
         else:
             for i in range(self.minRange, self.maxRange + 1):
                 newimage = QtCore.QString("%1%2.tif").arg(self.imageFilePref).arg(i, 3, 10, z)
                 tempimg.readTiff(newimage)
                 if i == self.minRange:
-                    mergeArr = tempimg.imArray.copy().astype(np.float32) / nimages
+                    self.mergeArr = tempimg.imArray.copy().astype(np.float32) / nimages
                 else:
-                    mergeArr = tempimg.imArray / nimages + mergeArr
+                    self.mergeArr = tempimg.imArray / nimages + self.mergeArr
 
         # if maxval > 65535 :
         #    mergeArr = mergeArr / maxval * 655354.
-        mergeArr = mergeArr.astype(np.uint16)
+        self.mergeArr = self.mergeArr.astype(np.uint16)
         # now write to tif file
         #im = Image.fromarray (mergeArr.astype(np.float32))
         #im.save (outname.toLatin1().data())
-        imsave(outname.toLatin1().data(), mergeArr)
-        self.openImageFile (outname)
+        imsave(outname.toLatin1().data(), self.mergeArr)
+        #self.openImageFile (outname)
+        self.mergeDisplayFlag = True
+        self.firstDisplay = True
+        self.displayImage (outname)
+        self.mergeFileName = outname
+        self.ui.imtypeCB.setItemData (2, 33, QtCore.Qt.UserRole -1)
+        self.ui.imtypeCB.setCurrentIndex (2)
 
     def SavePeakTable(self):
         print 'write PT'

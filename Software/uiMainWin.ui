@@ -39,7 +39,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="FileTab">
      <attribute name="title">
@@ -2724,6 +2724,11 @@
     <item>
      <property name="text">
       <string>Cake Image</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Merged image</string>
      </property>
     </item>
    </widget>
