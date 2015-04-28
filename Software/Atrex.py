@@ -59,6 +59,7 @@ class Atrex(QtGui.QMainWindow):
         self.ui.incrementImageButton.clicked.connect(self.incrementImageValue)
         self.ui.decrementImageButton.clicked.connect(self.decrementImageValue)
         self.ui.mergeButton.clicked.connect(self.mergeImageRange)
+        self.ui.mergeCancelButton.clicked.connect (self.mergeCancel)
         self.ui.lutCB.currentIndexChanged.connect (self.lutChanged)
         self.ui.mergeProgressBar.setValue (0)
 
@@ -829,20 +830,32 @@ class Atrex(QtGui.QMainWindow):
         self.updatePeakList()
         self.ui.imageWidget.repaint()
 
+    def mergeCancel (self) :
+        self.cancelMerge = True
+
     def mergeImageRange(self):
         # get the output tif file name....
         tempimg = myImage()
         outname = QtGui.QFileDialog.getSaveFileName(self, "Merge Filename", self.workDirectory, "Image File (*.tif)")
-
+        self.cancelMerge = False
         z = QtCore.QChar('0')
         self.mergeSumMode = self.ui.sumButton.isChecked()
         self.ui.mergeProgressBar.setValue (0) ;
 
+        self.ui.mergeCancelButton.setEnabled (True)
         nimages = self.maxRange - self.minRange + 1
 
         if (self.mergeSumMode == True):
 
             for i in range(self.minRange, self.maxRange + 1):
+                QtCore.QCoreApplication.processEvents()
+                if self.cancelMerge :
+                    msgBox = QtGui.QMessageBox ()
+                    msgBox.setText ("Merge cancelled, returning...")
+                    msgBox.exec_()
+                    self.ui.mergeCancelButton.setEnabled (False)
+                    self.ui.mergeProgressBar.setValue (0)
+                    return
                 percentDone = float(i-self.minRange) / nimages * 100.
                 self.ui.mergeProgressBar.setValue (percentDone)
                 newimage = QtCore.QString("%1%2.tif").arg(self.imageFilePref).arg(i, 3, 10, z)
@@ -885,6 +898,7 @@ class Atrex(QtGui.QMainWindow):
         self.mergeFileName = outname
         self.ui.imtypeCB.setItemData (2, 33, QtCore.Qt.UserRole -1)
         self.ui.imtypeCB.setCurrentIndex (2)
+        self.ui.mergeCancelButton.setEnabled (False)
 
     def SavePeakTable(self):
         print 'write PT'

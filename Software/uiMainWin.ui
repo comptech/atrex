@@ -189,62 +189,20 @@
        <property name="title">
         <string>Range of Images</string>
        </property>
-       <widget class="QSlider" name="rangeSlider">
-        <property name="geometry">
-         <rect>
-          <x>80</x>
-          <y>20</y>
-          <width>321</width>
-          <height>20</height>
-         </rect>
-        </property>
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-       </widget>
        <widget class="QLineEdit" name="selectedImageLE">
         <property name="geometry">
          <rect>
-          <x>220</x>
+          <x>200</x>
           <y>40</y>
           <width>61</width>
           <height>23</height>
          </rect>
         </property>
        </widget>
-       <widget class="QLabel" name="minRangeLabel">
-        <property name="geometry">
-         <rect>
-          <x>10</x>
-          <y>20</y>
-          <width>51</width>
-          <height>20</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>000</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-        </property>
-       </widget>
-       <widget class="QLabel" name="maxRangeLabel">
-        <property name="geometry">
-         <rect>
-          <x>410</x>
-          <y>20</y>
-          <width>51</width>
-          <height>17</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>099</string>
-        </property>
-       </widget>
        <widget class="QPushButton" name="decrementImageButton">
         <property name="geometry">
          <rect>
-          <x>130</x>
+          <x>110</x>
           <y>40</y>
           <width>71</width>
           <height>27</height>
@@ -257,7 +215,7 @@
        <widget class="QPushButton" name="incrementImageButton">
         <property name="geometry">
          <rect>
-          <x>290</x>
+          <x>270</x>
           <y>40</y>
           <width>71</width>
           <height>27</height>
@@ -267,60 +225,12 @@
          <string>&gt;</string>
         </property>
        </widget>
-       <widget class="QPushButton" name="mergeButton">
-        <property name="geometry">
-         <rect>
-          <x>22</x>
-          <y>108</y>
-          <width>151</width>
-          <height>27</height>
-         </rect>
-        </property>
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>27</height>
-         </size>
-        </property>
-        <property name="text">
-         <string>Merge</string>
-        </property>
-       </widget>
-       <widget class="QRadioButton" name="sumButton">
-        <property name="geometry">
-         <rect>
-          <x>180</x>
-          <y>110</y>
-          <width>100</width>
-          <height>23</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Summation</string>
-        </property>
-        <property name="checked">
-         <bool>true</bool>
-        </property>
-       </widget>
-       <widget class="QRadioButton" name="averageButton">
-        <property name="geometry">
-         <rect>
-          <x>290</x>
-          <y>110</y>
-          <width>79</width>
-          <height>23</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Average</string>
-        </property>
-       </widget>
        <widget class="QWidget" name="">
         <property name="geometry">
          <rect>
-          <x>20</x>
+          <x>10</x>
           <y>70</y>
-          <width>431</width>
+          <width>441</width>
           <height>25</height>
          </rect>
         </property>
@@ -350,6 +260,94 @@
           <widget class="QLabel" name="mergeEndLabel">
            <property name="text">
             <string>100</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>108</y>
+          <width>441</width>
+          <height>29</height>
+         </rect>
+        </property>
+        <layout class="QHBoxLayout" name="horizontalLayout_3">
+         <item>
+          <widget class="QPushButton" name="mergeButton">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>27</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Merge</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QRadioButton" name="sumButton">
+           <property name="text">
+            <string>Summation</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QRadioButton" name="averageButton">
+           <property name="text">
+            <string>Average</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="mergeCancelButton">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="text">
+            <string>Cancel</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>20</y>
+          <width>441</width>
+          <height>25</height>
+         </rect>
+        </property>
+        <layout class="QHBoxLayout" name="horizontalLayout_4">
+         <item>
+          <widget class="QLabel" name="minRangeLabel">
+           <property name="text">
+            <string>000</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QSlider" name="rangeSlider">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="maxRangeLabel">
+           <property name="text">
+            <string>099</string>
            </property>
           </widget>
          </item>
