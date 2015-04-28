@@ -60,6 +60,7 @@ class Atrex(QtGui.QMainWindow):
         self.ui.decrementImageButton.clicked.connect(self.decrementImageValue)
         self.ui.mergeButton.clicked.connect(self.mergeImageRange)
         self.ui.lutCB.currentIndexChanged.connect (self.lutChanged)
+        self.ui.mergeProgressBar.setValue (0)
 
 
         self.ui.pushButton_Detector_Open_calibration.clicked.connect(self.openDetectorCalibration)
@@ -266,6 +267,10 @@ class Atrex(QtGui.QMainWindow):
         self.ui.minRangeLabel.setText(QtCore.QString.number(mnmx[0]))
         self.ui.maxRangeLabel.setText(QtCore.QString.number(mnmx[1]))
         self.ui.selectedImageLE.setText(QtCore.QString.number(mnmx[2]))
+        self.ui.mergeStartLabel.setText (QtCore.QString.number(mnmx[0]))
+        self.ui.mergeEndLabel.setText (QtCore.QString.number(mnmx[1]))
+        #self.ui.mergeProgressBar.setRange (mnmx[0], 100)
+
         self.ui.rangeSlider.setRange(mnmx[0], mnmx[1])
         self.ui.rangeSlider.setValue(mnmx[2])
         self.minRange = mnmx[0]
@@ -831,17 +836,22 @@ class Atrex(QtGui.QMainWindow):
 
         z = QtCore.QChar('0')
         self.mergeSumMode = self.ui.sumButton.isChecked()
+        self.ui.mergeProgressBar.setValue (0) ;
 
         nimages = self.maxRange - self.minRange + 1
 
         if (self.mergeSumMode == True):
+
             for i in range(self.minRange, self.maxRange + 1):
+                percentDone = float(i-self.minRange) / nimages * 100.
+                self.ui.mergeProgressBar.setValue (percentDone)
                 newimage = QtCore.QString("%1%2.tif").arg(self.imageFilePref).arg(i, 3, 10, z)
                 tempimg.readTiff(newimage)
                 if i == self.minRange:
                     self.mergeArr = tempimg.imArray.copy().astype(np.float32)
                 else:
                     self.mergeArr = tempimg.imArray + self.mergeArr
+
             maxval = np.max(self.mergeArr)
             if (maxval > 65535):
                 scaleval = 65534. / maxval
@@ -850,6 +860,8 @@ class Atrex(QtGui.QMainWindow):
                 self.mergeArr *= scaleval
         else:
             for i in range(self.minRange, self.maxRange + 1):
+                percentDone = float(i-self.minRange) / nimages * 100.
+                self.ui.mergeProgressBar.setValue (percentDone)
                 newimage = QtCore.QString("%1%2.tif").arg(self.imageFilePref).arg(i, 3, 10, z)
                 tempimg.readTiff(newimage)
                 if i == self.minRange:
@@ -857,6 +869,8 @@ class Atrex(QtGui.QMainWindow):
                 else:
                     self.mergeArr = tempimg.imArray / nimages + self.mergeArr
 
+
+        self.ui.mergeProgressBar.setValue (100)
         # if maxval > 65535 :
         #    mergeArr = mergeArr / maxval * 655354.
         self.mergeArr = self.mergeArr.astype(np.uint16)
