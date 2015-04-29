@@ -41,6 +41,7 @@ class Atrex(QtGui.QMainWindow):
     mergeArr = None
     mergeFileName = None
     mergeDisplayFlag = False
+    imageFilePref = None
 
 
     def __init__(self):
@@ -62,6 +63,11 @@ class Atrex(QtGui.QMainWindow):
         self.ui.mergeCancelButton.clicked.connect (self.mergeCancel)
         self.ui.lutCB.currentIndexChanged.connect (self.lutChanged)
         self.ui.mergeProgressBar.setValue (0)
+
+        # display adjustments
+        self.ui.imageMinLE.returnPressed.connect (self.dispMinPressed)
+        self.ui.imageMaxLE.returnPressed.connect (self.dispMaxPressed)
+
 
 
         self.ui.pushButton_Detector_Open_calibration.clicked.connect(self.openDetectorCalibration)
@@ -118,6 +124,10 @@ class Atrex(QtGui.QMainWindow):
         self.ui.maxDNSlider.setSingleStep(100)
         self.ui.minDNSlider.setSingleStep(100)
         self.ui.maxDNSlider.setValue(1000)
+        self.ui.minDNSlider.sliderReleased.connect (self.minmaxDNSliderReleased)
+        self.ui.maxDNSlider.sliderReleased.connect (self.minmaxDNSliderReleased)
+
+
         self.ui.rangeSlider.setSingleStep(1)
         self.workDirectory = QtCore.QString('')
         self.imageDirectory = QtCore.QString('')
@@ -187,6 +197,7 @@ class Atrex(QtGui.QMainWindow):
 
         self.ui.peakProfWidget.setpType(0)
         self.fitarr = None
+
 
     def getHome(self):
         # get the users home directory
@@ -342,6 +353,30 @@ class Atrex(QtGui.QMainWindow):
     """
 
 
+    def dispMinPressed (self) :
+        lval = self.imageMinLE.text().toFloat()[0]
+        hval = self.imageMaxLE.text().toFloat()[0]
+        if (lval > hval) :
+            hval = lval +1.
+            hvalstr = '%f'%hval
+            self.imageMaxLE.setText (hvalstr)
+        self.ui.imageWidget.setMinMax (lval, hval)
+        self.ui.minDNSlider.setValue (lval)
+        self.ui.maxDNSlider.setValue (hval)
+        self.updateImage()
+
+    def dispMaxPressed (self) :
+        lval = self.imageMinLE.text().toFloat()[0]
+        hval = self.imageMaxLE.text().toFloat()[0]
+        if (hval < lval) :
+            lval = hval - 1.
+            lvalstr = '%f'%lval
+            self.imageMinLE.setText (lvalstr)
+        self.ui.imageWidget.setMinMax (lval, hval)
+        self.ui.minDNSlider.setValue (lval)
+        self.ui.maxDNSlider.setValue (hval)
+        self.updateImage()
+
 
 
     def updateImage(self):
@@ -355,6 +390,7 @@ class Atrex(QtGui.QMainWindow):
         tmpstr = self.ui.selectedImageLE.text()
         imnum = tmpstr.toInt()
         print 'New image number ', imnum[0]
+
         newimage = QtCore.QString("%1%2.tif").arg(self.imageFilePref).arg(imnum[0], 3, 10, z)
 
         status = self.displayImage(newimage)
@@ -429,6 +465,18 @@ class Atrex(QtGui.QMainWindow):
 
     def maxSliderUpdate(self, newval):
         self.ui.imageMaxLE.setText(QtCore.QString.number(newval))
+        minval = self.ui.minDNSlider.value()
+        if (minval >= newval) :
+            self.ui.minDNSlider.setValue(newval-1)
+
+
+
+    def minmaxDNSliderReleased (self) :
+        minval = self.ui.minDNSlider.value()
+        maxval = self.ui.maxDNSlider.value()
+        self.ui.imageWidget.setMinMax (minval, maxval)
+        self.updateImage ()
+
 
     """ minSliderUpdate is called by the DN max slider and updates the text line
         edit box. The value in the edit box is used when 
@@ -436,6 +484,9 @@ class Atrex(QtGui.QMainWindow):
 
     def minSliderUpdate(self, newval):
         self.ui.imageMinLE.setText(QtCore.QString.number(newval))
+        maxval = self.ui.maxDNSlider.value()
+        if (newval >= maxval) :
+            self.ui.maxDNSlider.setValue(newval+1)
 
     def lutChanged (self, index) :
         self.imageWidget.setLUT (index)
