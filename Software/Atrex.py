@@ -15,6 +15,7 @@ import myPeakTable
 import myDetector
 from peakFit import *
 from myPeakAdjustDlg import *
+from simulateDlg import *
 
 ##
 # @class Atrex
@@ -181,6 +182,9 @@ class Atrex(QtGui.QMainWindow):
         self.ui.plot_saveFileButton.clicked.connect(self.savePlotToFile)
         self.ui.plot_updateButton.clicked.connect(self.updatePlot)
         self.ui.plot_overlayXY.clicked.connect (self.overlayPlotFromFile)
+
+        #predict tab
+        self.ui.diffImageSimulateButton.clicked.connect (self.startSimulate)
 
         #Powder tab
         self.ui.JCPDSReadButton.clicked.connect (self.readJCPDS)
@@ -1300,6 +1304,10 @@ class Atrex(QtGui.QMainWindow):
             self.newPeakProfLocation (vFlag, self.peakStartx+npts/2, self.peakStarty)
         if (vFlag==2) :
             self.newPeakProfLocation (vFlag, self.peakStartx, self.peakStarty+npts/2)
+
+    def startSimulate (self) :
+        self.mysim = simulateDlg ()
+        self.mysim.show ()
 
 
 app = QtGui.QApplication(sys.argv)

@@ -39,7 +39,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>3</number>
     </property>
     <widget class="QWidget" name="FileTab">
      <attribute name="title">
@@ -1686,6 +1686,24 @@
       </property>
       <property name="text">
        <string>TestCalc</string>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="tab">
+     <attribute name="title">
+      <string>Predict</string>
+     </attribute>
+     <widget class="QPushButton" name="diffImageSimulateButton">
+      <property name="geometry">
+       <rect>
+        <x>70</x>
+        <y>30</y>
+        <width>100</width>
+        <height>24</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Simulate</string>
       </property>
      </widget>
     </widget>
