@@ -39,7 +39,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>3</number>
+     <number>2</number>
     </property>
     <widget class="QWidget" name="FileTab">
      <attribute name="title">
@@ -782,6 +782,178 @@
       </property>
      </widget>
     </widget>
+    <widget class="QWidget" name="tab_2">
+     <attribute name="title">
+      <string>PeakSearch</string>
+     </attribute>
+     <widget class="QPushButton" name="pushButton">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>10</y>
+        <width>121</width>
+        <height>111</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>PeakSearch</string>
+      </property>
+     </widget>
+     <widget class="QTextEdit" name="textEdit">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>150</y>
+        <width>341</width>
+        <height>361</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QCheckBox" name="ps_exclusionsCB">
+      <property name="geometry">
+       <rect>
+        <x>380</x>
+        <y>160</y>
+        <width>101</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Exclusions </string>
+      </property>
+     </widget>
+     <widget class="QWidget" name="">
+      <property name="geometry">
+       <rect>
+        <x>158</x>
+        <y>10</y>
+        <width>281</width>
+        <height>106</height>
+       </rect>
+      </property>
+      <layout class="QGridLayout" name="gridLayout_4">
+       <item row="0" column="0">
+        <widget class="QLabel" name="label_61">
+         <property name="text">
+          <string>Threshold :</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QLineEdit" name="ps_threshLE"/>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="label_62">
+         <property name="text">
+          <string>Max Size :</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QLineEdit" name="ps_maxsizeLE"/>
+       </item>
+       <item row="2" column="0">
+        <widget class="QLabel" name="label_63">
+         <property name="text">
+          <string>Percent median :</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <widget class="QLineEdit" name="ps_percmedLE"/>
+       </item>
+       <item row="3" column="0">
+        <widget class="QLabel" name="label_64">
+         <property name="text">
+          <string>No. of segments :</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="1">
+        <widget class="QLineEdit" name="ps_numsegLE"/>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="">
+      <property name="geometry">
+       <rect>
+        <x>380</x>
+        <y>200</y>
+        <width>171</width>
+        <height>52</height>
+       </rect>
+      </property>
+      <layout class="QGridLayout" name="gridLayout_5">
+       <item row="0" column="0">
+        <widget class="QLabel" name="label_65">
+         <property name="text">
+          <string>Center :</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QLineEdit" name="ps_centerLE"/>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="label_66">
+         <property name="text">
+          <string>Range :</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QLineEdit" name="ps_rangeLE"/>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="">
+      <property name="geometry">
+       <rect>
+        <x>378</x>
+        <y>260</y>
+        <width>91</width>
+        <height>211</height>
+       </rect>
+      </property>
+      <layout class="QGridLayout" name="gridLayout_6">
+       <item row="0" column="0">
+        <widget class="QPushButton" name="pushButton_4">
+         <property name="text">
+          <string>Clear</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QPushButton" name="pushButton_5">
+         <property name="text">
+          <string>Update</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <widget class="QPushButton" name="pushButton_6">
+         <property name="text">
+          <string>Remove</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="0">
+        <widget class="QPushButton" name="pushButton_7">
+         <property name="text">
+          <string>Open</string>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="0">
+        <widget class="QPushButton" name="pushButton_8">
+         <property name="text">
+          <string>Save</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </widget>
     <widget class="QWidget" name="peakTab">
      <attribute name="title">
       <string>Peaks</string>
@@ -789,9 +961,9 @@
      <widget class="QListWidget" name="peakListWidget">
       <property name="geometry">
        <rect>
-        <x>250</x>
+        <x>240</x>
         <y>30</y>
-        <width>261</width>
+        <width>321</width>
         <height>241</height>
        </rect>
       </property>
@@ -831,22 +1003,27 @@
      <widget class="QLabel" name="label_12">
       <property name="geometry">
        <rect>
-        <x>260</x>
+        <x>240</x>
         <y>10</y>
-        <width>161</width>
+        <width>321</width>
         <height>20</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>10</pointsize>
+       </font>
+      </property>
       <property name="text">
-       <string>      X             Y</string>
+       <string>    x    y     2-theta    d-spac    h     k     l       rot</string>
       </property>
      </widget>
      <widget class="MyPlotWidget" name="peakProfWidget" native="true">
       <property name="geometry">
        <rect>
-        <x>209</x>
+        <x>239</x>
         <y>279</y>
-        <width>341</width>
+        <width>311</width>
         <height>261</height>
        </rect>
       </property>
@@ -1114,7 +1291,7 @@
        <rect>
         <x>10</x>
         <y>280</y>
-        <width>191</width>
+        <width>221</width>
         <height>261</height>
        </rect>
       </property>
@@ -1272,7 +1449,7 @@
        <rect>
         <x>20</x>
         <y>560</y>
-        <width>121</width>
+        <width>151</width>
         <height>24</height>
        </rect>
       </property>
@@ -1614,7 +1791,7 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>410</y>
+        <y>740</y>
         <width>471</width>
         <height>111</height>
        </rect>
@@ -1678,14 +1855,37 @@
      <widget class="QPushButton" name="testCalcButton">
       <property name="geometry">
        <rect>
-        <x>310</x>
-        <y>230</y>
+        <x>340</x>
+        <y>290</y>
         <width>90</width>
         <height>27</height>
        </rect>
       </property>
       <property name="text">
        <string>TestCalc</string>
+      </property>
+     </widget>
+     <widget class="QComboBox" name="det_calibrantCB">
+      <property name="geometry">
+       <rect>
+        <x>160</x>
+        <y>330</y>
+        <width>131</width>
+        <height>31</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_67">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>330</y>
+        <width>71</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Calibrant :</string>
       </property>
      </widget>
     </widget>
