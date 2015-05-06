@@ -104,6 +104,7 @@ class Atrex(QtGui.QMainWindow):
 
         self.ui.peakListWidget.itemSelectionChanged.connect(self.PeakListBrowse)
 
+
         # peak tab buttons
         self.ui.selectAllButton.clicked.connect(self.selAllPeaks)
         self.ui.clearAllButton.clicked.connect(self.clearAllPeaks)
@@ -113,6 +114,8 @@ class Atrex(QtGui.QMainWindow):
         self.ui.peakSaveBoxsizeLE.returnPressed.connect (self.peakBoxSizeSet)
         self.ui.peakProfOrientCB.currentIndexChanged.connect (self.peakProfOrientationSet)
         self.ui.adjustPeakDisplaysButton.clicked.connect(self.adjustPeakDisplays)
+        self.ui.peaks_peakListWidgetTable.horizontalHeader().setVisible(True)
+
 
         # self.ui.clearAllButton.clicked.connect(self.RemoveAllPeaks)
 
@@ -140,7 +143,8 @@ class Atrex(QtGui.QMainWindow):
         self.peaks = myPeakTable.myPeakTable()  # This is the active PeakTable
         self.peaks0 = myPeakTable.myPeakTable()  # This is the PeakTable0
         self.peaks1 = myPeakTable.myPeakTable()  # This is the PeakTable1
-        self.detector = myDetector.myDetector()
+        self.detector = myDetector()
+        self.ui.peaks_peakListWidgetTable.setDetector (self.detector)
         self.peaks.setActiveList(self.peaks0, self.peaks1, self.activeList)
 
         self.imageWidget.setPeaks(self.peaks)
@@ -594,6 +598,8 @@ class Atrex(QtGui.QMainWindow):
         self.peaks.addPeak(peak)
         lstr = QtCore.QString(" %1\t%2").arg(pt.x()).arg(pt.y())
         self.ui.peakListWidget.addItem(lstr)
+        newitem = QtGui.QTableWidgetItem (QtCore.QString("%1").arg(pt.x))
+
         self.updatePeakNumberLE()
         self.imageWidget.repaint()
         self.zoomWidget.repaint()
@@ -614,7 +620,7 @@ class Atrex(QtGui.QMainWindow):
             xy = p.DetXY
             lstr = QtCore.QString(" %1\t%2").arg(xy[0]).arg(xy[1])
             self.ui.peakListWidget.addItem(lstr)
-
+        self.ui.peaks_peakListWidgetTable.setPeaks (self.peaks.peaks)
     ##
     # peakListCLicked
     # @brief Define a peak for analysis by clicking the combobox listing all peaks already identified.
@@ -855,6 +861,8 @@ class Atrex(QtGui.QMainWindow):
         self.detector.setpsizeXY([px, py])
 
     def SearchForPeaks(self):
+        self.detector.genTiltMtx ()
+
         print 'Search for peaks'
 
         # thr=self.threshold                       # 100:       raw counts threshold for locating peaks
@@ -872,6 +880,7 @@ class Atrex(QtGui.QMainWindow):
         print 'number of peaks received', self.peaks.getpeakno()
 
     def SearchForPeaksSeries(self):
+        self.detector.genTiltMtx ()
         self.peaks.remove_all_peaks()
         z = QtCore.QChar('0')
         tempimg = myImage()

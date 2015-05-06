@@ -964,7 +964,7 @@
         <x>240</x>
         <y>30</y>
         <width>321</width>
-        <height>241</height>
+        <height>71</height>
        </rect>
       </property>
      </widget>
@@ -1457,6 +1457,148 @@
        <string>Adjust Displays :</string>
       </property>
      </widget>
+     <widget class="myPeakTableWidget" name="peaks_peakListWidgetTable">
+      <property name="geometry">
+       <rect>
+        <x>240</x>
+        <y>110</y>
+        <width>321</width>
+        <height>161</height>
+       </rect>
+      </property>
+      <property name="rowCount">
+       <number>100</number>
+      </property>
+      <property name="columnCount">
+       <number>8</number>
+      </property>
+      <attribute name="horizontalHeaderVisible">
+       <bool>false</bool>
+      </attribute>
+      <attribute name="horizontalHeaderCascadingSectionResizes">
+       <bool>false</bool>
+      </attribute>
+      <attribute name="horizontalHeaderDefaultSectionSize">
+       <number>80</number>
+      </attribute>
+      <attribute name="horizontalHeaderHighlightSections">
+       <bool>true</bool>
+      </attribute>
+      <attribute name="horizontalHeaderMinimumSectionSize">
+       <number>26</number>
+      </attribute>
+      <attribute name="verticalHeaderVisible">
+       <bool>false</bool>
+      </attribute>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <row/>
+      <column/>
+      <column/>
+      <column/>
+      <column/>
+      <column/>
+      <column/>
+      <column/>
+      <column/>
+     </widget>
     </widget>
     <widget class="QWidget" name="tab_3">
      <attribute name="title">
@@ -1855,9 +1997,9 @@
      <widget class="QPushButton" name="testCalcButton">
       <property name="geometry">
        <rect>
-        <x>340</x>
-        <y>290</y>
-        <width>90</width>
+        <x>329</x>
+        <y>220</y>
+        <width>141</width>
         <height>27</height>
        </rect>
       </property>
@@ -1887,6 +2029,91 @@
       <property name="text">
        <string>Calibrant :</string>
       </property>
+     </widget>
+     <widget class="QGroupBox" name="groupBox_12">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>370</y>
+        <width>301</width>
+        <height>121</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>Pressure</string>
+      </property>
+      <widget class="QLabel" name="label_68">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>30</y>
+         <width>71</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Pressure :</string>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="det_PressureLE">
+       <property name="geometry">
+        <rect>
+         <x>152</x>
+         <y>30</y>
+         <width>131</width>
+         <height>23</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_69">
+       <property name="geometry">
+        <rect>
+         <x>8</x>
+         <y>60</y>
+         <width>111</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Pressure Step :</string>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="det_PressureStep">
+       <property name="geometry">
+        <rect>
+         <x>150</x>
+         <y>60</y>
+         <width>131</width>
+         <height>23</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="det_decPressButton">
+       <property name="geometry">
+        <rect>
+         <x>60</x>
+         <y>90</y>
+         <width>71</width>
+         <height>24</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>&lt;</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="det_incPressButton">
+       <property name="geometry">
+        <rect>
+         <x>160</x>
+         <y>90</y>
+         <width>71</width>
+         <height>24</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>&gt;</string>
+       </property>
+      </widget>
      </widget>
     </widget>
     <widget class="QWidget" name="tab">
@@ -3025,6 +3252,11 @@
    <extends>QWidget</extends>
    <header>MyPlotWidget</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>myPeakTableWidget</class>
+   <extends>QTableWidget</extends>
+   <header>myPeakTableWidget.h</header>
   </customwidget>
  </customwidgets>
  <resources/>
