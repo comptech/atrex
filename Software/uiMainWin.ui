@@ -225,7 +225,7 @@
          <string>&gt;</string>
         </property>
        </widget>
-       <widget class="QWidget" name="">
+       <widget class="QWidget" name="layoutWidget">
         <property name="geometry">
          <rect>
           <x>10</x>
@@ -265,7 +265,7 @@
          </item>
         </layout>
        </widget>
-       <widget class="QWidget" name="">
+       <widget class="QWidget" name="layoutWidget">
         <property name="geometry">
          <rect>
           <x>10</x>
@@ -317,7 +317,7 @@
          </item>
         </layout>
        </widget>
-       <widget class="QWidget" name="">
+       <widget class="QWidget" name="layoutWidget">
         <property name="geometry">
          <rect>
           <x>10</x>
@@ -822,7 +822,7 @@
        <string>Exclusions </string>
       </property>
      </widget>
-     <widget class="QWidget" name="">
+     <widget class="QWidget" name="layoutWidget">
       <property name="geometry">
        <rect>
         <x>158</x>
@@ -874,7 +874,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="">
+     <widget class="QWidget" name="layoutWidget">
       <property name="geometry">
        <rect>
         <x>380</x>
@@ -906,7 +906,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="">
+     <widget class="QWidget" name="layoutWidget">
       <property name="geometry">
        <rect>
         <x>378</x>
@@ -962,9 +962,9 @@
       <property name="geometry">
        <rect>
         <x>240</x>
-        <y>30</y>
+        <y>5</y>
         <width>321</width>
-        <height>71</height>
+        <height>21</height>
        </rect>
       </property>
      </widget>
@@ -999,24 +999,6 @@
         </widget>
        </item>
       </layout>
-     </widget>
-     <widget class="QLabel" name="label_12">
-      <property name="geometry">
-       <rect>
-        <x>240</x>
-        <y>10</y>
-        <width>321</width>
-        <height>20</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>10</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string>    x    y     2-theta    d-spac    h     k     l       rot</string>
-      </property>
      </widget>
      <widget class="MyPlotWidget" name="peakProfWidget" native="true">
       <property name="geometry">
@@ -1303,7 +1285,7 @@
         <rect>
          <x>11</x>
          <y>31</y>
-         <width>161</width>
+         <width>191</width>
          <height>241</height>
         </rect>
        </property>
@@ -1461,9 +1443,9 @@
       <property name="geometry">
        <rect>
         <x>240</x>
-        <y>110</y>
+        <y>50</y>
         <width>321</width>
-        <height>161</height>
+        <height>221</height>
        </rect>
       </property>
       <property name="rowCount">
@@ -1598,6 +1580,19 @@
       <column/>
       <column/>
       <column/>
+     </widget>
+     <widget class="QLabel" name="label_12">
+      <property name="geometry">
+       <rect>
+        <x>250</x>
+        <y>30</y>
+        <width>181</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Peaks  (double click to edit)</string>
+      </property>
      </widget>
     </widget>
     <widget class="QWidget" name="tab_3">

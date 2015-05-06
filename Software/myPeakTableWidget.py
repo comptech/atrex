@@ -1,6 +1,7 @@
 from PyQt4 import QtCore, QtGui
 from myPeaks import *
 from myDetector import *
+from peakEditDlg import *
 
 
 
@@ -9,6 +10,8 @@ class myPeakTableWidget (QtGui.QTableWidget) :
     numPeaks = 0
     headList = QtCore.QString("X;Y;2-theta;d-spacing;h;k;l;rot. angle").split(";")
     myDet = 0
+    peaks = 0
+
 
 
     def __init__(self, parent=None) :
@@ -27,6 +30,7 @@ class myPeakTableWidget (QtGui.QTableWidget) :
                 #newItem = QtGui.QTableWidgetItem("%d %d"%(j,i))
                 #self.setItem(i, j, newItem)
         self.setSelectionBehavior (QtGui.QAbstractItemView.SelectRows)
+        self.cellDoubleClicked.connect (self.peakEdit)
 
 
     def setDetector (self, det) :
@@ -34,6 +38,7 @@ class myPeakTableWidget (QtGui.QTableWidget) :
 
 
     def setPeaks (self, peaks) :
+        self.peaks = peaks
         count = 0
         self.setRowCount (len(peaks))
         for p in peaks :
@@ -43,8 +48,19 @@ class myPeakTableWidget (QtGui.QTableWidget) :
             str = '%d'%xy[1]
             self.setItem (count, 1, QtGui.QTableWidgetItem(str))
             tthval = self.myDet.calculate_tth_from_pixels(xy, self.myDet.gonio)
+            xyz = self.myDet.calculate_xyz_from_pixels (xy, self.myDet.gonio)
             str = '%f'%tthval
             self.setItem (count, 2, QtGui.QTableWidgetItem(str))
             count = count + 1
 
+
+    """ peakEdit
+        method called by dbl clicking of the peakTableWidget item
+        will open a dialog to further edit the peak parameters
+        """
+    def peakEdit (self, row, col):
+        #open peakEditDlg
+        curpeak = self.peaks[row]
+        pedit_dlg = peakEditDlg (curpeak, row)
+        pedit_dlg.exec_()
 
