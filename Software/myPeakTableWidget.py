@@ -11,7 +11,8 @@ class myPeakTableWidget (QtGui.QTableWidget) :
     headList = QtCore.QString("X;Y;2-theta;d-spacing;h;k;l;rot. angle").split(";")
     myDet = 0
     peaks = 0
-
+    imname =''
+    numPeaks = 0
 
 
     def __init__(self, parent=None) :
@@ -32,6 +33,9 @@ class myPeakTableWidget (QtGui.QTableWidget) :
         self.setSelectionBehavior (QtGui.QAbstractItemView.SelectRows)
         self.cellDoubleClicked.connect (self.peakEdit)
 
+    def setImageFileName (self, imname) :
+        self.imfile = imname
+
 
     def setDetector (self, det) :
         self.myDet = det
@@ -48,11 +52,22 @@ class myPeakTableWidget (QtGui.QTableWidget) :
             str = '%d'%xy[1]
             self.setItem (count, 1, QtGui.QTableWidgetItem(str))
             tthval = self.myDet.calculate_tth_from_pixels(xy, self.myDet.gonio)
-            xyz = self.myDet.calculate_xyz_from_pixels (xy, self.myDet.gonio)
+           # xyz = self.myDet.calculate_xyz_from_pixels (xy, self.myDet.gonio)
             str = '%f'%tthval
             self.setItem (count, 2, QtGui.QTableWidgetItem(str))
             count = count + 1
+        self.numPeaks = count
 
+    def addPeak (self, peak) :
+        xy = peak.DetXY
+        str = '%d'%xy[0]
+        self.setItem (self.numPeaks, 0, QtGui.QTableWidgetItem(str))
+        str = '%d'%xy[1]
+        self.setItem (self.numPeaks, 1, QtGui.QTableWidgetItem(str))
+        tthval = self.myDet.calculate_tth_from_pixels(xy, self.myDet.gonio)
+        str = '%f'%tthval
+        self.setItem (self.numPeaks, 2, QtGui.QTableWidgetItem(str))
+        self.numPeaks += 1
 
     """ peakEdit
         method called by dbl clicking of the peakTableWidget item
@@ -62,5 +77,6 @@ class myPeakTableWidget (QtGui.QTableWidget) :
         #open peakEditDlg
         curpeak = self.peaks[row]
         pedit_dlg = peakEditDlg (curpeak, row)
+        pedit_dlg.setImageFile (self.imfile)
         pedit_dlg.exec_()
 

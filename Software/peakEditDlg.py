@@ -12,6 +12,9 @@ class peakEditDlg (QtGui.QDialog) :
         self.textSetF (self.ui.pe_detXY_0, peak.DetXY[0])
         self.textSetF (self.ui.pe_detXY_1, peak.DetXY[1])
 
+    def setImageFile (self, imf) :
+        self.ui.pe_SourceImageLE.setText (imf)
+
     def textSetD (self, LE, number) :
         str = "%d"%number
         LE.setText (str)

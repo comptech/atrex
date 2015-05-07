@@ -621,6 +621,7 @@ class Atrex(QtGui.QMainWindow):
             lstr = QtCore.QString(" %1\t%2").arg(xy[0]).arg(xy[1])
             self.ui.peakListWidget.addItem(lstr)
         self.ui.peaks_peakListWidgetTable.setPeaks (self.peaks.peaks)
+        self.ui.peaks_peakListWidgetTable.setImageFileName (self.imageFile)
     ##
     # peakListCLicked
     # @brief Define a peak for analysis by clicking the combobox listing all peaks already identified.
