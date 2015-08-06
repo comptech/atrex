@@ -16,6 +16,7 @@ import myDetector
 from peakFit import *
 from myPeakAdjustDlg import *
 from simulateDlg import *
+from Project import *
 
 ##
 # @class Atrex
@@ -43,6 +44,7 @@ class Atrex(QtGui.QMainWindow):
     mergeFileName = None
     mergeDisplayFlag = False
     imageFilePref = None
+    myproj = Project()
 
 
     def __init__(self):
@@ -269,6 +271,8 @@ class Atrex(QtGui.QMainWindow):
         self.imtypeCB.setCurrentIndex(0)
         wdir = self.ui.imDirLE.text()
         self.imageFile = QtGui.QFileDialog.getOpenFileName(self, 'Open Tiff Image', wdir)
+        self.base = self.myproj.getImageBase (self.imageFile)
+
         # get the path and put it in imDirLE
         # z = QtCore.QDir.separator()
         fi = QtCore.QFileInfo (self.imageFile)
@@ -277,7 +281,8 @@ class Atrex(QtGui.QMainWindow):
         self.ui.imDirLE.setText(wdir)
         # image file prefix will be used to build new images to display
         prefind = self.imageFile.lastIndexOf(".tif")
-        self.imageFilePref = self.imageFile.left(prefind - 3)
+        #self.imageFilePref = self.imageFile.left(prefind - 3)
+        self.imageFilePref = self.base
         print 'pref is ', self.imageFilePref
         self.imfileLE.setText(self.imageFile)
         self.displayImage(self.imageFile)
