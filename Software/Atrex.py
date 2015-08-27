@@ -562,6 +562,7 @@ class Atrex(QtGui.QMainWindow):
             return False
         else:
             qf.close()
+
         self.myim.readTiff(filename)
         status = self.myim.readText(filename)
         self.imsize = self.myim.imArraySize
@@ -574,7 +575,8 @@ class Atrex(QtGui.QMainWindow):
             self.zoomWidget.setMinMax (mn, mx)
             self.ui.minDNSlider.setValue (mn)
             self.ui.maxDNSlider.setValue (mx)
-
+            self.myproj = Project()
+            self.myproj.getImageBase (filename)
 
         if not self.displayedImage:
             self.mymask.createMask(self.myim.imArraySize[0], self.myim.imArraySize[1])

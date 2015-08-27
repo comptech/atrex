@@ -43,6 +43,23 @@ class myImage :
         self.CalcTheta.integrate_cake.argtypes= [ndpointer(np.int32), ndpointer(np.float32), ndpointer(np.uint16), \
             ndpointer (np.float32), ndpointer(np.float32), ndpointer(np.float32)]
 
+    def readTiffRaw (self, infile) :
+        self.imFileName = infile
+        print 'Loading ',infile
+        im = Image.open (infile)
+        (x,y) = im.size
+        print x, y
+        self.imArraySize=[x,y]
+        mnval = np.min (im)
+        mxval = np.max (im)
+        #img = mpimg.imread(infile.toLatin1().data())
+        #plt.imshow(im)
+        self.imArray = np.asarray(im.getdata())
+        self.imArray[self.imArray<0]+= 65535
+        self.imArray = np.reshape (self.imArray,(y,x))
+        self.imArray_orig = self.imArray [:,:]
+        print self.imArray.min(), self.imArray.max()
+
     def readTiff (self, infile) :
         self.imFileName = infile
         print 'Loading ',infile

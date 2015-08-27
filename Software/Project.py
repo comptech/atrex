@@ -18,9 +18,8 @@ class Project :
         self.base = filename.left(ind_of_suffx-3)
         curimage = filename
         self.filenum = self.getFileNumber (filename)
+        print 'Debug : %s'%self.filenum
         return self.base
-
-
 
     def getFileNameFromNum (self, number) :
         tempfile = QtCore.QString('%1%2.tif').arg(self.base).arg(int(number), 3, 10, QtCore.QChar('0'))
@@ -31,6 +30,15 @@ class Project :
     def getFileNumber (self, filename) :
         ind_of_suffix = filename.lastIndexOf ('.')
         left = filename.mid (ind_of_suffix - 3, 3)
-        self.filenum = left.toInt()
-        print 'Debug : %d', self.filenum
+        self.filenum = left.toInt()[0]
+        #print "Debug : %d" % self.filenum
         return self.filenum
+
+    def checkForFiles (self) :
+        prjFile = QtCore.QString ('%s_projset.txt').arg (self.base)
+        qfil = QtCore.QFile (prjFile)
+        if (qfil.exists()==False) :
+            print 'Debug : project settings file does not exist'
+            self.projFlag = False
+
+

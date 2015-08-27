@@ -23,7 +23,7 @@ def getImageRange (imageDir, imstring) :
         firstind = imstring.lastIndexOf('\\')
     firstind = firstind + 1
     matchstring = imstring.mid(firstind, lastind-firstind)
-    print 'MS = ',matchstring
+    print 'Debug : Matchstring = ',matchstring
     for i in range(nfiles) :
         print filelist[i]
         if not (filelist[i].contains(".tif")) :
