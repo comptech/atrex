@@ -564,6 +564,9 @@ class Atrex(QtGui.QMainWindow):
             qf.close()
 
         self.myim.readTiff(filename)
+        ### read in the accompanying settings file for the image
+        ### if it exists
+        ###
         status = self.myim.readText(filename)
         self.imsize = self.myim.imArraySize
 
@@ -577,6 +580,7 @@ class Atrex(QtGui.QMainWindow):
             self.ui.maxDNSlider.setValue (mx)
             self.myproj = Project()
             self.myproj.getImageBase (filename)
+            print 'Image base is %s'%self.myproj.base
 
         if not self.displayedImage:
             self.mymask.createMask(self.myim.imArraySize[0], self.myim.imArraySize[1])
