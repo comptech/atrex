@@ -21,9 +21,15 @@ class Project :
     numDigits = 3
     minImageNum = 1E9
     maxImageNum = -1
-
+    imFile = ''
+    omega0 = 0
+    omegaR = 15
+    expos = 10.
+    chi = 0.
+    detector = 0.
 
     def getImageBase (self, filename) :
+        self.imFile = filename
         ind_of_suffx = filename.lastIndexOf ('.')
         ind_of_start_num = filename.lastIndexOf ('_') +1
         self.base = filename.left(ind_of_start_num)
@@ -74,8 +80,8 @@ class Project :
         return self.filenum
 
     def checkForFiles (self) :
-        self.prjFile = QtCore.QString ('%s_projset.txt').arg (self.base)
-        self.ubFile = QtCore.QString ('%s_ub.txt').arg (self.base)
+        self.prjFile = QtCore.QString ('%1_projset.txt').arg (self.base)
+        self.ubFile = QtCore.QString ('%1_ub.txt').arg (self.base)
         qfil = QtCore.QFile (self.prjFile)
         if (qfil.exists()==False) :
             print 'Debug : project settings file does not exist'
@@ -91,13 +97,45 @@ class Project :
             self.ubFlag = True
         print 'UB flag is : %r'%self.ubFlag
 
-        gsdlg = myGenSettingsDlg ()
-        gsdlg.setInitialVals (0., 15., self.minImageNum, self.maxImageNum-self.minImageNum + 1, 5., 3., 10.)
-        gsdlg.setArr (self.settingsArray)
-        gsdlg.exec_()
-        if (gsdlg.status > 0) :
-            self.writeSettingsFiles()
-        print self.settingsArray
+        imsettingsFile = QtCore.QString ('%1.txt').arg (self.imFile)
+        qfil = QtCore.QFile (imsettingsFile)
+        if (qfil.exists()==False) :
+            gsdlg = myGenSettingsDlg ()
+            gsdlg.setInitialVals (0., 15., self.minImageNum, self.maxImageNum-self.minImageNum + 1, 5., 3., 10.)
+            gsdlg.setArr (self.settingsArray)
+            gsdlg.exec_()
+            if (gsdlg.status > 0) :
+                self.writeSettingsFiles()
+            print self.settingsArray
+            self.omega0 = self.settingsArray[0]
+            self.omegaR = self.settingsArray[1]
+            self.chi = self.settingsArray[4]
+            self.detector = self.settingsArray[5]
+            self.expos = self.settingsArray[6]
+
+        else :
+            qfil.close()
+            self.readFileSettings(imsettingsFile)
+
+    def readFileSettings (self, fname) :
+        f = open (fname, 'r')
+        str = f.readline()
+        a = str.split('=')
+        self.omega0 = float(a[1])
+        str = f.readline()
+        a = str.split('=')
+        self.omegaR = float(a[1])
+        str = f.readline()
+        a = str.split('=')
+        self.chi = float(a[1])
+        str = f.readline()
+        a = str.split('=')
+        self.detector = float(a[1])
+        str = f.readline()
+        a = str.split('=')
+        self.expos = float(a[1])
+        f.close()
+
 
     def writeSettingsFiles (self) :
         z = QtCore.QChar ('0')
@@ -112,10 +150,10 @@ class Project :
             outfil.write (str)
             expos = self.settingsArray[6]
             chi = self.settingsArray [4]
-            detect = self.settingsArray[5]
+            detector = self.settingsArray[5]
             str = 'chi = %f\r\n'%chi
             outfil.write (str)
-            str = 'detector = %f\r\n'%detect
+            str = 'detector = %f\r\n'%detector
             outfil.write (str)
             str = 'exp. time = %f\r\n'%expos
             outfil.write (str)

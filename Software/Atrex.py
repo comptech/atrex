@@ -271,6 +271,10 @@ class Atrex(QtGui.QMainWindow):
         self.imtypeCB.setCurrentIndex(0)
         wdir = self.ui.imDirLE.text()
         self.imageFile = QtGui.QFileDialog.getOpenFileName(self, 'Open Tiff Image', wdir)
+        self.openImageFile (self.imageFile)
+
+        return
+        """
         self.base = self.myproj.getImageBase (self.imageFile)
 
         # get the path and put it in imDirLE
@@ -301,13 +305,14 @@ class Atrex(QtGui.QMainWindow):
         self.minRange = mnmx[0]
         self.maxRange = mnmx[1]
         self.firstDisplay = True
-
+        """
     """ Method to open the selected image
     """
 
     def openImageFile(self, filename):
         self.imageFile = filename
         fi = QtCore.QFileInfo (self.imageFile)
+        self.base = self.myproj.getImageBase (self.imageFile)
         basename = fi.baseName()
         wdir = self.imageFile.left(self.imageFile.lastIndexOf(basename))
         self.ui.imDirLE.setText(wdir)
@@ -324,7 +329,8 @@ class Atrex(QtGui.QMainWindow):
         self.displayImage(self.imageFile)
         # self.myim.readTiff (self.imageFile)
         #self.ui.imageWidget.writeQImage (self.myim.imArray)
-        mnmx = getImageRange(wdir, self.imageFile)
+        #mnmx = getImageRange(wdir, self.imageFile)
+        mnmx = [self.myproj.minImageNum, self.myproj.maxImageNum, self.myproj.filenum]
         self.ui.minRangeLabel.setText(QtCore.QString.number(mnmx[0]))
         self.ui.maxRangeLabel.setText(QtCore.QString.number(mnmx[1]))
         self.ui.selectedImageLE.setText(QtCore.QString.number(mnmx[2]))
@@ -332,6 +338,16 @@ class Atrex(QtGui.QMainWindow):
         self.ui.rangeSlider.setValue(mnmx[2])
         self.minRange = mnmx[0]
         self.maxRange = mnmx[1]
+        str = '%f'%self.myproj.omega0
+        self.ui.omega0Lab.setText(str)
+        str = '%f'%self.myproj.detector
+        self.ui.detectorLab.setText (str)
+        str = '%f'%self.myproj.chi
+        self.ui.chiLab.setText(str)
+        str = '%f'%self.myproj.expos
+        self.ui.expLab.setText(str)
+
+
 
 
 
@@ -459,6 +475,9 @@ class Atrex(QtGui.QMainWindow):
         self.mergeDisplayFlag = False
         self.ui.imtypeCB.setCurrentIndex (0)
         newval = self.ui.rangeSlider.value()
+        imname = self.myproj.getFileNameFromNum (newval)
+        self.openImageFile (imname)
+        return
         QtGui.QApplication.setOverrideCursor(QtGui.QCursor(QtCore.Qt.BusyCursor))
         # self.ui.selectedImageLE.setText (QtCore.QString.number(newval))
         z = QtCore.QChar('0')

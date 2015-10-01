@@ -39,7 +39,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>2</number>
+     <number>4</number>
     </property>
     <widget class="QWidget" name="FileTab">
      <attribute name="title">
@@ -231,7 +231,7 @@
           <x>10</x>
           <y>80</y>
           <width>441</width>
-          <height>25</height>
+          <height>31</height>
          </rect>
         </property>
         <layout class="QHBoxLayout" name="horizontalLayout_2">
@@ -271,7 +271,7 @@
           <x>10</x>
           <y>110</y>
           <width>441</width>
-          <height>29</height>
+          <height>33</height>
          </rect>
         </property>
         <layout class="QHBoxLayout" name="horizontalLayout_3">
@@ -828,7 +828,7 @@
         <x>158</x>
         <y>10</y>
         <width>281</width>
-        <height>106</height>
+        <height>152</height>
        </rect>
       </property>
       <layout class="QGridLayout" name="gridLayout_4">
@@ -880,7 +880,7 @@
         <x>380</x>
         <y>200</y>
         <width>171</width>
-        <height>52</height>
+        <height>74</height>
        </rect>
       </property>
       <layout class="QGridLayout" name="gridLayout_5">
@@ -1286,7 +1286,7 @@
          <x>11</x>
          <y>31</y>
          <width>191</width>
-         <height>241</height>
+         <height>269</height>
         </rect>
        </property>
        <layout class="QGridLayout" name="gridLayout_3">
@@ -2118,15 +2118,151 @@
      <widget class="QPushButton" name="diffImageSimulateButton">
       <property name="geometry">
        <rect>
-        <x>70</x>
-        <y>30</y>
-        <width>100</width>
-        <height>24</height>
+        <x>20</x>
+        <y>360</y>
+        <width>161</width>
+        <height>61</height>
        </rect>
       </property>
       <property name="text">
        <string>Simulate</string>
       </property>
+     </widget>
+     <widget class="QWidget" name="">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>230</y>
+        <width>161</width>
+        <height>113</height>
+       </rect>
+      </property>
+      <layout class="QGridLayout" name="gridLayout_7">
+       <item row="0" column="0">
+        <widget class="QLabel" name="label_76">
+         <property name="text">
+          <string>h :</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QLineEdit" name="pred_h0LE"/>
+       </item>
+       <item row="0" column="2">
+        <widget class="QLineEdit" name="pred_h1lE"/>
+       </item>
+       <item row="1" column="1" rowspan="2">
+        <widget class="QLineEdit" name="pred_k0LE"/>
+       </item>
+       <item row="1" column="2" rowspan="2">
+        <widget class="QLineEdit" name="pred_k1LE"/>
+       </item>
+       <item row="3" column="1">
+        <widget class="QLineEdit" name="pred_l0LE"/>
+       </item>
+       <item row="3" column="2">
+        <widget class="QLineEdit" name="pred_l1LE"/>
+       </item>
+       <item row="3" column="0">
+        <widget class="QLabel" name="label_79">
+         <property name="text">
+          <string>l:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0" rowspan="2">
+        <widget class="QLabel" name="label_72">
+         <property name="text">
+          <string>k :</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>50</y>
+        <width>247</width>
+        <height>152</height>
+       </rect>
+      </property>
+      <layout class="QGridLayout" name="gridLayout_8">
+       <item row="2" column="0" colspan="2">
+        <widget class="QLabel" name="label_78">
+         <property name="text">
+          <string>Part Overlap :</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="2">
+        <widget class="QLineEdit" name="pred_partOverlapLE"/>
+       </item>
+       <item row="3" column="0" colspan="2">
+        <widget class="QLabel" name="label_77">
+         <property name="text">
+          <string>Full Overlap :</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="2">
+        <widget class="QLineEdit" name="pred_fullOverlapLE"/>
+       </item>
+       <item row="1" column="2">
+        <widget class="QLineEdit" name="pred_rangeLE"/>
+       </item>
+       <item row="0" column="2">
+        <widget class="QLineEdit" name="pred_startLE"/>
+       </item>
+       <item row="0" column="0" colspan="2">
+        <widget class="QLabel" name="label_70">
+         <property name="text">
+          <string>Start :</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0" colspan="2">
+        <widget class="QLabel" name="label_71">
+         <property name="text">
+          <string>Range :</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="">
+      <property name="geometry">
+       <rect>
+        <x>290</x>
+        <y>50</y>
+        <width>100</width>
+        <height>58</height>
+       </rect>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <item>
+        <widget class="QLabel" name="label_73">
+         <property name="text">
+          <string>Axis / Energy : </string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QComboBox" name="comboBox_2">
+         <item>
+          <property name="text">
+           <string>Omega</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Energy</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+      </layout>
      </widget>
     </widget>
     <widget class="QWidget" name="integrateTab">
@@ -3217,7 +3353,7 @@
      <x>0</x>
      <y>0</y>
      <width>1380</width>
-     <height>21</height>
+     <height>27</height>
     </rect>
    </property>
   </widget>
