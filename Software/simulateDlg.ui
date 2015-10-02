@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>717</width>
-    <height>479</height>
+    <height>551</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -59,7 +59,7 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>170</y>
+     <y>220</y>
      <width>351</width>
      <height>161</height>
     </rect>
@@ -115,9 +115,9 @@
    <widget class="QPushButton" name="assignHKLButton">
     <property name="geometry">
      <rect>
-      <x>190</x>
-      <y>10</y>
-      <width>151</width>
+      <x>170</x>
+      <y>0</y>
+      <width>171</width>
       <height>31</height>
      </rect>
     </property>
@@ -138,18 +138,18 @@
      <string>0</string>
     </property>
    </widget>
-   <widget class="QWidget" name="">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
       <x>80</x>
       <y>50</y>
-      <width>71</width>
-      <height>81</height>
+      <width>87</width>
+      <height>109</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout_2">
      <item row="0" column="0">
-      <widget class="QLineEdit" name="lineEdit_7"/>
+      <widget class="QLineEdit" name="sim_incLE"/>
      </item>
      <item row="1" column="0">
       <widget class="QPushButton" name="pushButton">
@@ -167,18 +167,18 @@
      </item>
     </layout>
    </widget>
-   <widget class="QWidget" name="">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
       <x>200</x>
       <y>50</y>
       <width>141</width>
-      <height>91</height>
+      <height>113</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout_3">
      <item row="0" column="1">
-      <widget class="QLineEdit" name="lineEdit_8"/>
+      <widget class="QLineEdit" name="sim_omegaLE"/>
      </item>
      <item row="1" column="0">
       <widget class="QLabel" name="label_8">
@@ -188,7 +188,7 @@
       </widget>
      </item>
      <item row="1" column="1">
-      <widget class="QLineEdit" name="lineEdit_9"/>
+      <widget class="QLineEdit" name="sim_chiLE"/>
      </item>
      <item row="2" column="0">
       <widget class="QLabel" name="label_9">
@@ -198,7 +198,7 @@
       </widget>
      </item>
      <item row="2" column="1">
-      <widget class="QLineEdit" name="lineEdit_10"/>
+      <widget class="QLineEdit" name="sim_phiLE"/>
      </item>
      <item row="0" column="0">
       <widget class="QLabel" name="label_7">
@@ -214,7 +214,7 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>340</y>
+     <y>390</y>
      <width>341</width>
      <height>91</height>
     </rect>
@@ -312,47 +312,56 @@
      <string>Peaks</string>
     </property>
    </widget>
-   <widget class="QWidget" name="">
+   <widget class="QLineEdit" name="sim_scaleIncLE">
     <property name="geometry">
      <rect>
-      <x>0</x>
-      <y>50</y>
-      <width>211</width>
-      <height>26</height>
+      <x>68</x>
+      <y>51</y>
+      <width>71</width>
+      <height>33</height>
      </rect>
     </property>
-    <layout class="QHBoxLayout" name="horizontalLayout">
-     <item>
-      <widget class="QPushButton" name="pushButton_4">
-       <property name="text">
-        <string>&lt;</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLineEdit" name="lineEdit_12">
-       <property name="text">
-        <string>0.005</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="pushButton_5">
-       <property name="text">
-        <string>&gt;</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
+    <property name="text">
+     <string>0.002</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_5">
+    <property name="geometry">
+     <rect>
+      <x>159</x>
+      <y>52</y>
+      <width>51</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>&gt;</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_4">
+    <property name="geometry">
+     <rect>
+      <x>1</x>
+      <y>52</y>
+      <width>51</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="contextMenuPolicy">
+     <enum>Qt::ActionsContextMenu</enum>
+    </property>
+    <property name="text">
+     <string>&lt;</string>
+    </property>
    </widget>
   </widget>
-  <widget class="QWidget" name="">
+  <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>70</y>
+     <y>90</y>
      <width>341</width>
-     <height>83</height>
+     <height>119</height>
     </rect>
    </property>
    <layout class="QGridLayout" name="gridLayout">
@@ -364,7 +373,7 @@
      </widget>
     </item>
     <item row="0" column="1">
-     <widget class="QLineEdit" name="lineEdit"/>
+     <widget class="QLineEdit" name="sim_aLE"/>
     </item>
     <item row="0" column="2">
      <widget class="QLabel" name="label_4">
@@ -374,7 +383,7 @@
      </widget>
     </item>
     <item row="0" column="3">
-     <widget class="QLineEdit" name="lineEdit_4"/>
+     <widget class="QLineEdit" name="sim_alphaLE"/>
     </item>
     <item row="1" column="0">
      <widget class="QLabel" name="label">
@@ -390,7 +399,7 @@
      </widget>
     </item>
     <item row="1" column="1" rowspan="2">
-     <widget class="QLineEdit" name="lineEdit_2"/>
+     <widget class="QLineEdit" name="sim_bLE"/>
     </item>
     <item row="1" column="2">
      <widget class="QLabel" name="label_5">
@@ -400,7 +409,7 @@
      </widget>
     </item>
     <item row="1" column="3">
-     <widget class="QLineEdit" name="lineEdit_5"/>
+     <widget class="QLineEdit" name="sim_betaLE"/>
     </item>
     <item row="2" column="0" rowspan="2">
      <widget class="QLabel" name="label_3">
@@ -417,10 +426,10 @@
      </widget>
     </item>
     <item row="2" column="3" rowspan="2">
-     <widget class="QLineEdit" name="lineEdit_6"/>
+     <widget class="QLineEdit" name="sim_gammaLE"/>
     </item>
     <item row="3" column="1">
-     <widget class="QLineEdit" name="lineEdit_3"/>
+     <widget class="QLineEdit" name="sim_cLE"/>
     </item>
    </layout>
   </widget>
@@ -428,7 +437,7 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>440</y>
+     <y>500</y>
      <width>121</width>
      <height>31</height>
     </rect>
@@ -447,7 +456,7 @@
    <property name="geometry">
     <rect>
      <x>140</x>
-     <y>440</y>
+     <y>500</y>
      <width>121</width>
      <height>31</height>
     </rect>
@@ -522,7 +531,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>Incident energy range (KeV) :</string>
+     <string>Incident energy range (keV) :</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_12">
@@ -637,13 +646,13 @@
      <string>Save</string>
     </property>
    </widget>
-   <widget class="QWidget" name="">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
       <x>0</x>
       <y>90</y>
       <width>291</width>
-      <height>25</height>
+      <height>35</height>
      </rect>
     </property>
     <layout class="QHBoxLayout" name="horizontalLayout_3">
@@ -655,22 +664,22 @@
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="lineEdit_13"/>
+      <widget class="QLineEdit" name="sim_DACOpenLE"/>
      </item>
     </layout>
    </widget>
-   <widget class="QWidget" name="">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
       <x>1</x>
       <y>150</y>
       <width>291</width>
-      <height>25</height>
+      <height>35</height>
      </rect>
     </property>
     <layout class="QHBoxLayout" name="horizontalLayout_2">
      <item>
-      <widget class="QLineEdit" name="lineEdit_14">
+      <widget class="QLineEdit" name="sim_incidRangeLowLE">
        <property name="maximumSize">
         <size>
          <width>100</width>
@@ -680,7 +689,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="lineEdit_15">
+      <widget class="QLineEdit" name="sim_incidRangeHighLE">
        <property name="maximumSize">
         <size>
          <width>100</width>

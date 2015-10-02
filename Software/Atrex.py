@@ -14,6 +14,7 @@ import time
 import myPeakTable
 import myDetector
 from peakFit import *
+from myPredict import *
 from myPeakAdjustDlg import *
 from simulateDlg import *
 from Project import *
@@ -29,6 +30,7 @@ class Atrex(QtGui.QMainWindow):
     maxRange = 99
     mergeSumMode = True
     mymask = myMask()
+    mypred = myPredict ()
     olayFile =""
     olaySecFlag = False
     firstDisplay = True
@@ -340,12 +342,17 @@ class Atrex(QtGui.QMainWindow):
         self.maxRange = mnmx[1]
         str = '%f'%self.myproj.omega0
         self.ui.omega0Lab.setText(str)
+        self.ui.pred_startLE.setText (str)
+        str='%f'%self.myproj.omegaR
+        self.ui.pred_rangeLE.setText (str)
         str = '%f'%self.myproj.detector
         self.ui.detectorLab.setText (str)
         str = '%f'%self.myproj.chi
         self.ui.chiLab.setText(str)
         str = '%f'%self.myproj.expos
         self.ui.expLab.setText(str)
+
+
 
 
 
@@ -472,22 +479,17 @@ class Atrex(QtGui.QMainWindow):
     """
 
     def newImageValue(self):
+        QtGui.QApplication.setOverrideCursor(QtGui.QCursor(QtCore.Qt.BusyCursor))
         self.mergeDisplayFlag = False
         self.ui.imtypeCB.setCurrentIndex (0)
         newval = self.ui.rangeSlider.value()
         imname = self.myproj.getFileNameFromNum (newval)
         self.openImageFile (imname)
-        return
-        QtGui.QApplication.setOverrideCursor(QtGui.QCursor(QtCore.Qt.BusyCursor))
-        # self.ui.selectedImageLE.setText (QtCore.QString.number(newval))
-        z = QtCore.QChar('0')
-        newimage = QtCore.QString("%1%2.tif").arg(self.imageFilePref).arg(newval, 3, 10, z)
-        print newimage
-        status = self.displayImage(newimage)
-        if (status):
-            self.ui.imfileLE.setText(newimage)
-            self.imageFile = newimage
         QtGui.QApplication.restoreOverrideCursor()
+        self.ui.imfileLE.setText(imname)
+        self.imageFile = imname
+        return
+
 
 
 

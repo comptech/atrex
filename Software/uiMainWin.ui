@@ -2128,7 +2128,7 @@
        <string>Simulate</string>
       </property>
      </widget>
-     <widget class="QWidget" name="">
+     <widget class="QWidget" name="layoutWidget">
       <property name="geometry">
        <rect>
         <x>20</x>
@@ -2146,22 +2146,46 @@
         </widget>
        </item>
        <item row="0" column="1">
-        <widget class="QLineEdit" name="pred_h0LE"/>
+        <widget class="QLineEdit" name="pred_h0LE">
+         <property name="text">
+          <string>-25</string>
+         </property>
+        </widget>
        </item>
        <item row="0" column="2">
-        <widget class="QLineEdit" name="pred_h1lE"/>
+        <widget class="QLineEdit" name="pred_h1lE">
+         <property name="text">
+          <string>25</string>
+         </property>
+        </widget>
        </item>
        <item row="1" column="1" rowspan="2">
-        <widget class="QLineEdit" name="pred_k0LE"/>
+        <widget class="QLineEdit" name="pred_k0LE">
+         <property name="text">
+          <string>-25</string>
+         </property>
+        </widget>
        </item>
        <item row="1" column="2" rowspan="2">
-        <widget class="QLineEdit" name="pred_k1LE"/>
+        <widget class="QLineEdit" name="pred_k1LE">
+         <property name="text">
+          <string>25</string>
+         </property>
+        </widget>
        </item>
        <item row="3" column="1">
-        <widget class="QLineEdit" name="pred_l0LE"/>
+        <widget class="QLineEdit" name="pred_l0LE">
+         <property name="text">
+          <string>-25</string>
+         </property>
+        </widget>
        </item>
        <item row="3" column="2">
-        <widget class="QLineEdit" name="pred_l1LE"/>
+        <widget class="QLineEdit" name="pred_l1LE">
+         <property name="text">
+          <string>25</string>
+         </property>
+        </widget>
        </item>
        <item row="3" column="0">
         <widget class="QLabel" name="label_79">
@@ -2179,7 +2203,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="">
+     <widget class="QWidget" name="layoutWidget">
       <property name="geometry">
        <rect>
         <x>20</x>
@@ -2197,7 +2221,11 @@
         </widget>
        </item>
        <item row="2" column="2">
-        <widget class="QLineEdit" name="pred_partOverlapLE"/>
+        <widget class="QLineEdit" name="pred_partOverlapLE">
+         <property name="text">
+          <string>10</string>
+         </property>
+        </widget>
        </item>
        <item row="3" column="0" colspan="2">
         <widget class="QLabel" name="label_77">
@@ -2207,7 +2235,11 @@
         </widget>
        </item>
        <item row="3" column="2">
-        <widget class="QLineEdit" name="pred_fullOverlapLE"/>
+        <widget class="QLineEdit" name="pred_fullOverlapLE">
+         <property name="text">
+          <string>5</string>
+         </property>
+        </widget>
        </item>
        <item row="1" column="2">
         <widget class="QLineEdit" name="pred_rangeLE"/>
@@ -2231,7 +2263,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="">
+     <widget class="QWidget" name="layoutWidget">
       <property name="geometry">
        <rect>
         <x>290</x>
