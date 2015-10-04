@@ -10,6 +10,7 @@ class simulateDlg (QtGui.QDialog) :
 
 
     detect = myDetector()
+    ub = np.zeros ((3,3),dtype=np.float64)
 
     def __init__(self) :
         QtGui.QDialog.__init__(self)
@@ -17,8 +18,11 @@ class simulateDlg (QtGui.QDialog) :
         self.fillUp()
         self.sim_inc_omchiphi.clicked.connect (self.incVal)
         self.sim_dec_omchiphi.clicked.connect (self.decVal)
+        self.sim_genBButton.clicked.connect (self.genB)
+        self.sim_changeBButton.clicked.connect (self.changeB)
         self.ui.sim_closeButton.clicked.connect (self.closeUp)
         self.ui.sim_resetOCPButton.clicked.connect (self.resetOCP)
+
 
 
     def fillUp(self) :
@@ -85,11 +89,43 @@ class simulateDlg (QtGui.QDialog) :
             return (1)
         return (2)
 
+    def genB (self):
+        lp = self.read_LP()
+        self.ub = b_from_lp(lp)
+        self.displayMatrix  (0)
+
+    def changeB (self):
+        lp = self.read_LP()
+        self.ub = b_from_lp(lp)
+        self.displayMatrix  (0)
+
     def resetOCP (self):
         str = '0.0'
         self.sim_omegaLE.setText(str)
         self.sim_chiLE.setText(str)
         self.sim_phiLE.setText(str)
+
+
+    def read_LP (self):
+        a = self.sim_aLE.text().toFloat()[0]
+        b = self.sim_bLE.text().toFloat()[0]
+        c = self.sim_cLE.text().toFloat()[0]
+        alpha = self.sim_alphaLE.text().toFloat()[0]
+        gamma = self.sim_gammaLE.text().toFloat()[0]
+        beta = self.sim_betaLE.text().toFloat()[0]
+        lp = [a,b,c,alpha,beta,gamma]
+
+        return lp
+
+    def displayMatrix (self, matType) :
+        ### display in the matrixDispText Box matrix
+        ### 0 - UB
+
+        if (matType ==0) :
+            l0 = '%10.5f\t%10.5f\t%10.5f\r\n%10.5f\t%10.5f\t%10.5f\r\n%10.5f\t%10.5f\t%10.5f'%(self.ub[0,0],self.ub[0,1],self.ub[0,2],self.ub[1,0],self.ub[1,1],self.ub[1,2],self.ub[2,0],self.ub[2,1],self.ub[2,2])
+            self.sim_matrixDispText.setText(l0)
+            return
+
 
     def closeUp (self) :
         self.destroy ()

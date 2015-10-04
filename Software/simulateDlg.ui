@@ -28,11 +28,11 @@
    <property name="flat">
     <bool>true</bool>
    </property>
-   <widget class="QPushButton" name="genBButton">
+   <widget class="QPushButton" name="sim_genBButton">
     <property name="geometry">
      <rect>
       <x>230</x>
-      <y>10</y>
+      <y>5</y>
       <width>111</width>
       <height>24</height>
      </rect>
@@ -41,11 +41,11 @@
      <string>Generate B</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="changeBButton">
+   <widget class="QPushButton" name="sim_changeBButton">
     <property name="geometry">
      <rect>
       <x>230</x>
-      <y>35</y>
+      <y>40</y>
       <width>111</width>
       <height>24</height>
      </rect>
@@ -362,84 +362,6 @@
     </property>
    </widget>
   </widget>
-  <widget class="QWidget" name="layoutWidget">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>90</y>
-     <width>341</width>
-     <height>119</height>
-    </rect>
-   </property>
-   <layout class="QGridLayout" name="gridLayout">
-    <item row="0" column="0">
-     <widget class="QLabel" name="label_2">
-      <property name="text">
-       <string>a</string>
-      </property>
-     </widget>
-    </item>
-    <item row="0" column="1">
-     <widget class="QLineEdit" name="sim_aLE"/>
-    </item>
-    <item row="0" column="2">
-     <widget class="QLabel" name="label_4">
-      <property name="text">
-       <string>alpha</string>
-      </property>
-     </widget>
-    </item>
-    <item row="0" column="3">
-     <widget class="QLineEdit" name="sim_alphaLE"/>
-    </item>
-    <item row="1" column="0">
-     <widget class="QLabel" name="label">
-      <property name="minimumSize">
-       <size>
-        <width>20</width>
-        <height>0</height>
-       </size>
-      </property>
-      <property name="text">
-       <string>b</string>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="1" rowspan="2">
-     <widget class="QLineEdit" name="sim_bLE"/>
-    </item>
-    <item row="1" column="2">
-     <widget class="QLabel" name="label_5">
-      <property name="text">
-       <string>beta</string>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="3">
-     <widget class="QLineEdit" name="sim_betaLE"/>
-    </item>
-    <item row="2" column="0" rowspan="2">
-     <widget class="QLabel" name="label_3">
-      <property name="text">
-       <string>c</string>
-      </property>
-     </widget>
-    </item>
-    <item row="2" column="2" rowspan="2">
-     <widget class="QLabel" name="label_6">
-      <property name="text">
-       <string>gamma</string>
-      </property>
-     </widget>
-    </item>
-    <item row="2" column="3" rowspan="2">
-     <widget class="QLineEdit" name="sim_gammaLE"/>
-    </item>
-    <item row="3" column="1">
-     <widget class="QLineEdit" name="sim_cLE"/>
-    </item>
-   </layout>
-  </widget>
   <widget class="QPushButton" name="sim_genButton">
    <property name="geometry">
     <rect>
@@ -607,9 +529,9 @@
    <widget class="QCheckBox" name="checkBox">
     <property name="geometry">
      <rect>
-      <x>140</x>
+      <x>150</x>
       <y>210</y>
-      <width>151</width>
+      <width>141</width>
       <height>21</height>
      </rect>
     </property>
@@ -617,7 +539,7 @@
      <string>Generate on load</string>
     </property>
    </widget>
-   <widget class="QTextEdit" name="textEdit">
+   <widget class="QTextEdit" name="sim_matrixDispText">
     <property name="geometry">
      <rect>
       <x>0</x>
@@ -720,6 +642,84 @@
      </item>
     </layout>
    </widget>
+  </widget>
+  <widget class="QWidget" name="">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>92</y>
+     <width>261</width>
+     <height>95</height>
+    </rect>
+   </property>
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="0">
+     <widget class="QLabel" name="label_2">
+      <property name="text">
+       <string>a</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="1">
+     <widget class="QLineEdit" name="sim_aLE"/>
+    </item>
+    <item row="0" column="2">
+     <widget class="QLabel" name="label_4">
+      <property name="text">
+       <string>alpha</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="3">
+     <widget class="QLineEdit" name="sim_alphaLE"/>
+    </item>
+    <item row="1" column="0">
+     <widget class="QLabel" name="label">
+      <property name="minimumSize">
+       <size>
+        <width>20</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="text">
+       <string>b</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="1">
+     <widget class="QLineEdit" name="sim_bLE"/>
+    </item>
+    <item row="1" column="2">
+     <widget class="QLabel" name="label_5">
+      <property name="text">
+       <string>beta</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="3">
+     <widget class="QLineEdit" name="sim_betaLE"/>
+    </item>
+    <item row="2" column="0">
+     <widget class="QLabel" name="label_3">
+      <property name="text">
+       <string>c</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="1">
+     <widget class="QLineEdit" name="sim_cLE"/>
+    </item>
+    <item row="2" column="2">
+     <widget class="QLabel" name="label_6">
+      <property name="text">
+       <string>gamma</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="3">
+     <widget class="QLineEdit" name="sim_gammaLE"/>
+    </item>
+   </layout>
   </widget>
  </widget>
  <resources/>
