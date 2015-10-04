@@ -15,6 +15,10 @@ class simulateDlg (QtGui.QDialog) :
         QtGui.QDialog.__init__(self)
         self.ui = uic.loadUi("simulateDlg.ui", self)
         self.fillUp()
+        self.sim_inc_omchiphi.clicked.connect (self.incVal)
+        self.sim_dec_omchiphi.clicked.connect (self.decVal)
+        self.ui.sim_closeButton.clicked.connect (self.closeUp)
+        self.ui.sim_resetOCPButton.clicked.connect (self.resetOCP)
 
 
     def fillUp(self) :
@@ -32,3 +36,60 @@ class simulateDlg (QtGui.QDialog) :
         self.ui.sim_incidRangeHighLE.setText ('25.')
         self.ui.sim_incLE.setText('1.')
         self.ui.sim_scaleIncLE.setText('.002')
+
+    def incVal (self):
+        incValue = self.ui.sim_incLE.text().toFloat()[0]
+        # check for which radiobutton is selected
+        valType = self.radState ()
+        if (valType == 0) :
+            value = self.ui.sim_omegaLE.text().toFloat()[0] + incValue
+            str = "%f"%value
+            self.ui.sim_omegaLE.setText(str)
+            return
+        if (valType == 1) :
+            value = self.ui.sim_chiLE.text().toFloat()[0] + incValue
+            str = "%f"%value
+            self.ui.sim_chiLE.setText(str)
+        if (valType == 2) :
+            value = self.ui.sim_phiLE.text().toFloat()[0] + incValue
+            str = "%f"%value
+            self.ui.sim_phiLE.setText(str)
+
+
+    def decVal (self):
+        incValue = self.ui.sim_incLE.text().toFloat()[0]
+        # check for which radiobutton is selected
+        valType = self.radState ()
+        if (valType == 0) :
+            value = self.ui.sim_omegaLE.text().toFloat()[0] - incValue
+            str = "%f"%value
+            self.ui.sim_omegaLE.setText(str)
+            return
+        if (valType == 1) :
+            value = self.ui.sim_chiLE.text().toFloat()[0] - incValue
+            str = "%f"%value
+            self.ui.sim_chiLE.setText(str)
+        if (valType == 2) :
+            value = self.ui.sim_phiLE.text().toFloat()[0] - incValue
+            str = "%f"%value
+            self.ui.sim_phiLE.setText(str)
+
+    def radState(self):
+        ### checks to see which radio button is checked
+        ### returns 0 for omega
+        ### returns 1 for chi
+        ### returns 2 for phi
+        if self.ui.omRad.isChecked() :
+            return (0)
+        if self.ui.chiRad.isChecked() :
+            return (1)
+        return (2)
+
+    def resetOCP (self):
+        str = '0.0'
+        self.sim_omegaLE.setText(str)
+        self.sim_chiLE.setText(str)
+        self.sim_phiLE.setText(str)
+
+    def closeUp (self) :
+        self.destroy ()

@@ -70,7 +70,7 @@
    <property name="flat">
     <bool>true</bool>
    </property>
-   <widget class="QRadioButton" name="radioButton">
+   <widget class="QRadioButton" name="omRad">
     <property name="geometry">
      <rect>
       <x>0</x>
@@ -86,7 +86,7 @@
      <bool>true</bool>
     </property>
    </widget>
-   <widget class="QRadioButton" name="radioButton_2">
+   <widget class="QRadioButton" name="chiRad">
     <property name="geometry">
      <rect>
       <x>0</x>
@@ -99,7 +99,7 @@
      <string>chi</string>
     </property>
    </widget>
-   <widget class="QRadioButton" name="radioButton_3">
+   <widget class="QRadioButton" name="phiRad">
     <property name="geometry">
      <rect>
       <x>0</x>
@@ -125,47 +125,18 @@
      <string>Assign hkl from d-spc</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_3">
+   <widget class="QPushButton" name="sim_resetOCPButton">
     <property name="geometry">
      <rect>
-      <x>170</x>
-      <y>50</y>
-      <width>21</width>
+      <x>80</x>
+      <y>130</y>
+      <width>111</width>
       <height>31</height>
      </rect>
     </property>
     <property name="text">
-     <string>0</string>
+     <string>Reset</string>
     </property>
-   </widget>
-   <widget class="QWidget" name="layoutWidget">
-    <property name="geometry">
-     <rect>
-      <x>80</x>
-      <y>50</y>
-      <width>87</width>
-      <height>109</height>
-     </rect>
-    </property>
-    <layout class="QGridLayout" name="gridLayout_2">
-     <item row="0" column="0">
-      <widget class="QLineEdit" name="sim_incLE"/>
-     </item>
-     <item row="1" column="0">
-      <widget class="QPushButton" name="pushButton">
-       <property name="text">
-        <string>&lt;</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="0">
-      <widget class="QPushButton" name="pushButton_2">
-       <property name="text">
-        <string>&gt;</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
    </widget>
    <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
@@ -204,6 +175,42 @@
       <widget class="QLabel" name="label_7">
        <property name="text">
         <string>omega :</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QLineEdit" name="sim_incLE">
+    <property name="geometry">
+     <rect>
+      <x>81</x>
+      <y>51</y>
+      <width>111</width>
+      <height>33</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QWidget" name="layoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>81</x>
+      <y>90</y>
+      <width>111</width>
+      <height>33</height>
+     </rect>
+    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QPushButton" name="sim_dec_omchiphi">
+       <property name="text">
+        <string>&lt;</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="sim_inc_omchiphi">
+       <property name="text">
+        <string>&gt;</string>
        </property>
       </widget>
      </item>
@@ -433,7 +440,7 @@
     </item>
    </layout>
   </widget>
-  <widget class="QPushButton" name="generateButton">
+  <widget class="QPushButton" name="sim_genButton">
    <property name="geometry">
     <rect>
      <x>10</x>
@@ -452,7 +459,7 @@
     <string>Generate</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="closeButton">
+  <widget class="QPushButton" name="sim_closeButton">
    <property name="geometry">
     <rect>
      <x>140</x>
