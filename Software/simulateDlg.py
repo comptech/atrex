@@ -167,4 +167,4 @@ class simulateDlg (QtGui.QDialog) :
 
 
     def closeUp (self) :
-        self.destroy ()
+        self.close ()
