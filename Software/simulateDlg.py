@@ -31,6 +31,7 @@ class simulateDlg (QtGui.QDialog) :
         self.myPredict = myPredict()
         self.myPeaks = myPeakTable.myPeakTable()
         self.bravType = 'P'
+        self.setAttribute (QtCore.Qt.WA_DeleteOnClose, True)
 
 
     def setDetector (self, mydetect) :
