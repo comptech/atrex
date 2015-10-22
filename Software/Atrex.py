@@ -147,7 +147,7 @@ class Atrex(QtGui.QMainWindow):
         self.peaks = myPeakTable.myPeakTable()  # This is the active PeakTable
         self.peaks0 = myPeakTable.myPeakTable()  # This is the PeakTable0
         self.peaks1 = myPeakTable.myPeakTable()  # This is the PeakTable1
-        self.detector = myDetector()
+        self.detector = myDetector.myDetector()
         self.ui.peaks_peakListWidgetTable.setDetector (self.detector)
         self.peaks.setActiveList(self.peaks0, self.peaks1, self.activeList)
 
@@ -590,6 +590,7 @@ class Atrex(QtGui.QMainWindow):
         ###
         status = self.myim.readText(filename)
         self.imsize = self.myim.imArraySize
+        self.detector.setnopixXY (self.imsize)
 
         if self.firstDisplay :
             self.firstDisplay = False
@@ -639,6 +640,13 @@ class Atrex(QtGui.QMainWindow):
 
     """ update peak list usually called when one of the peakList radio boxes is called
     """
+
+    def updatePeaks (self) :
+        self.updatePeakList()
+        self.imageWidget.repaint()
+        self.zoomWidget.repaint()
+
+
 
     def updatePeakList(self):
         self.ui.peakListWidget.clear()
@@ -1347,9 +1355,28 @@ class Atrex(QtGui.QMainWindow):
         if (vFlag==2) :
             self.newPeakProfLocation (vFlag, self.peakStartx, self.peakStarty+npts/2)
 
+
+    def readPredictSettings(self):
+        self.mypred.om_range = self.ui.pred_rangeLE.text().toFloat()[0]
+        self.mypred.om_start = self.ui.pred_startLE.text().toFloat()[0]
+        self.mypred.partOverlap =  self.ui.pred_partOverlapLE.text().toFloat()[0]
+        self.mypred.fullOverlap = self.ui.pred_fullOverlapLE.text().toFloat()[0]
+        self.mypred.h1 = self.ui.pred_h0LE.text().toInt()[0]
+        self.mypred.h2 = self.ui.pred_h1LE.text().toInt()[0]
+        self.mypred.k1 = self.ui.pred_k0LE.text().toInt()[0]
+        self.mypred.k2 = self.ui.pred_k1LE.text().toInt()[0]
+        self.mypred.l1 = self.ui.pred_l0LE.text().toInt()[0]
+        self.mypred.l2 = self.ui.pred_l1LE.text().toInt()[0]
+
+
     def startSimulate (self) :
+        self.readPredictSettings()
         self.mysim = simulateDlg ()
+        self.mysim.setPredict (self.mypred)
+        self.mysim.setDetector (self.detector)
+        self.mysim.setPeakTable (self.peaks)
         self.mysim.show ()
+        self.mysim.updatePeaks.connect (self.updatePeaks)
 
 
 app = QtGui.QApplication(sys.argv)

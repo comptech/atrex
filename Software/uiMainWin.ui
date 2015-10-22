@@ -2153,7 +2153,7 @@
         </widget>
        </item>
        <item row="0" column="2">
-        <widget class="QLineEdit" name="pred_h1lE">
+        <widget class="QLineEdit" name="pred_h1LE">
          <property name="text">
           <string>25</string>
          </property>
@@ -3385,7 +3385,7 @@
      <x>0</x>
      <y>0</y>
      <width>1380</width>
-     <height>27</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>

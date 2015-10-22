@@ -6,9 +6,9 @@ class myPredict :
     om_range = 0.
     chi = 0.
     d = 0.
-    h1 = -25.
-    h2 = 25.
+    h1 = -25
+    h2 = 25
     k1 = -25
-    k2 = 25.
+    k2 = 25
     l1 = -25
-    l2 = 25.
+    l2 = 25

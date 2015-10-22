@@ -112,7 +112,7 @@
      <string>phi</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="assignHKLButton">
+   <widget class="QPushButton" name="sim_assignHKLButton">
     <property name="geometry">
      <rect>
       <x>170</x>
@@ -195,7 +195,7 @@
      <rect>
       <x>81</x>
       <y>90</y>
-      <width>111</width>
+      <width>178</width>
       <height>33</height>
      </rect>
     </property>
@@ -476,7 +476,7 @@
      <string>Bravais lattice type :</string>
     </property>
    </widget>
-   <widget class="QComboBox" name="comboBox_2">
+   <widget class="QComboBox" name="sim_bravTypeCB">
     <property name="geometry">
      <rect>
       <x>0</x>
@@ -643,7 +643,7 @@
     </layout>
    </widget>
   </widget>
-  <widget class="QWidget" name="">
+  <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
      <x>20</x>

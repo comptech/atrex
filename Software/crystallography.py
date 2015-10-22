@@ -5,6 +5,9 @@ DTOR = math.pi / 180.
 radeg = 180. / math.pi
 
 def A_to_kev (la):
+    # avoid divide by zero condition
+    if (la < 1.E-9) :
+        la = 1.E-9
     val = 12.39842/la
     return val
 
@@ -12,12 +15,25 @@ def kev_to_A (E) :
     val = 12.39842/E
     return val
 
+def tth_from_xyz (xyz) :
+    if xyz[0] > 0.:
+        return (0.)
+    e1=[-1.,0.,0.]
+    a1 = ang(xyz,e1)
+    tth = 2.*(90.-a1)
+    return tth
+
 
 def en_from_tth_and_d( atth, d) :
     tth=atth * DTOR
     #calculates energy from bragg angle and d-spc
     la=2.0*d*math.sin(tth/2.0)
     return A_to_kev(la)
+
+def en_from_xyz (xyz):
+    tth = tth_from_xyz (xyz)
+    d = 1./vlength(xyz)
+    return en_from_tth_and_d(tth, d)
 
 def d_from_tth_and_en (atth, en) :
     tth=atth * DTOR
