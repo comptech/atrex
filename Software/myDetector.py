@@ -8,6 +8,7 @@ from PyQt4 import QtCore, QtGui
 from ctypes import *
 from numpy.ctypeslib import ndpointer
 from platform import *
+
 import myPeakTable
 
 
@@ -461,7 +462,7 @@ class myDetector (QtCore.QObject):
                     if (syst_extinction (exti, hkl)==1) :
                         xyz = np.dot (ub, hkl)
                         if (vlength(xyz) >0.0000001) :
-                            print 'hkl is : ', h,k,l
+                            #print 'hkl is : ', h,k,l
                             Ene = en_from_xyz(xyz)
                             if (Ene > en[0] and Ene <= en[1]) :
                                 pix = np.asarray(self.calculate_pixels_from_xyz (xyz, gonio))

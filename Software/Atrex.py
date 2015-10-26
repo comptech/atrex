@@ -1377,6 +1377,14 @@ class Atrex(QtGui.QMainWindow):
         self.mysim.setPeakTable (self.peaks)
         self.mysim.show ()
         self.mysim.updatePeaks.connect (self.updatePeaks)
+        self.mysim.updateDisplay.connect(self.updateDisplay)
+
+    def updateDisplay (self) :
+        self.imageWidget.repaint()
+        self.zoomWidget.repaint()
+        self.updatePeakList()
+        self.ui.imageWidget.repaint()
+
 
 
 app = QtGui.QApplication(sys.argv)

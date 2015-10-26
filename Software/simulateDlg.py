@@ -12,7 +12,7 @@ from myPredict import *
 class simulateDlg (QtGui.QDialog) :
 
     updatePeaks = QtCore.pyqtSignal ()
-
+    updateDisplay = QtCore.pyqtSignal ()
 
 
     def __init__(self) :
@@ -113,10 +113,12 @@ class simulateDlg (QtGui.QDialog) :
         self.displayMatrix  (0)
         self.generate_laue()
 
+    # presently this has the same functionality as genB
     def changeB (self):
         lp = self.read_LP()
         self.ub = b_from_lp(lp)
         self.displayMatrix  (0)
+        self.generate_laue()
 
     def resetOCP (self):
         str = '0.0'
@@ -149,6 +151,18 @@ class simulateDlg (QtGui.QDialog) :
         lp = self.read_LP()
         numpeaks = self.myPeaks.getpeakno()
         print 'number of peaks in assign hkl is ', numpeaks
+        ds = np.zeros((numpeaks),dtype=np.float32)
+        ipeak=0
+        for peakO in self.myPeaks.peaks :
+            xyz = peakO.xyz
+            #print ipeak, xyz
+            ds[ipeak]= 1./vlength (xyz)
+            hkls1 = find_possible_hkls (ds[ipeak],lp, 0.02, [10,10,10])
+            print 'hkls : ',hkls1[0][0]
+            if hkls1[0][0]==0 :
+                peakO.clickSelected = True
+            ipeak = ipeak + 1
+        self.updateDisplay.emit()
 
 
     def getBravaisType (self) :

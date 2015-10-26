@@ -212,6 +212,27 @@ def hkl_from_ub_and_xyz (ub, xyz) :
     hkl=iUB ## np.asmatrix(xyz)
     return hkl
 
+def find_possible_hkls (d1,lp,dtol, hkl):
+    il = 0
+    res = [0,0,0]
+    resArr=[]
+    resArr.append(res)
+    for i in range(-hkl[0], hkl[0]+1):
+        for j in range(-hkl[1], hkl[1]+1):
+            for k in range(-hkl[2], hkl[2]+1):
+                if i == 0 and j == 0 and k==0 :
+                    continue
+                hkla = [i,j,k]
+                dc = d_from_lp_and_hkl (lp, hkla)
+                dd = abs(d1-dc)
+                if (dd < dtol) :
+                    il = il + 1
+                    resArr[0][0] = il
+                    resArr.append(hkla)
+    return resArr
+
+
+
 def flags_from_sym ( sym) :
 
 # Creates a flag vector, based on symmetry for controlling refinement
