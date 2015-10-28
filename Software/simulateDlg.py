@@ -153,6 +153,8 @@ class simulateDlg (QtGui.QDialog) :
         print 'number of peaks in assign hkl is ', numpeaks
         ds = np.zeros((numpeaks),dtype=np.float32)
         ipeak=0
+        notSelected = 0
+        w =[]
         for peakO in self.myPeaks.peaks :
             xyz = peakO.xyz
             #print ipeak, xyz
@@ -161,8 +163,22 @@ class simulateDlg (QtGui.QDialog) :
             print 'hkls : ',hkls1[0][0]
             if hkls1[0][0]==0 :
                 peakO.clickSelected = True
+            else :
+                notSelected += 1
+                w.append (ipeak)
             ipeak = ipeak + 1
         self.updateDisplay.emit()
+        if (notSelected > 0) :
+            s = np.argsort (ds[w])[::-1]
+            succ = 0
+            att0 = 0
+            while succ==0 and att0 < notSelected-2 :
+                x1 = self.myPeaks.peaks[w[s[att0]]].xyz
+                att1 = att0 + 1
+                while succ != 1 and att1 < notSelected -1 :
+                    x2 = self.myPeaks.peaks[w[s[att1]]].xyz
+                    a = recognize_two_vectors (x1, x2, lp, 0.02, 0.02)
+
 
 
     def getBravaisType (self) :

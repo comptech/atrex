@@ -1,5 +1,6 @@
 import math
 import numpy as np
+import vector_math
 
 DTOR = math.pi / 180.
 radeg = 180. / math.pi
@@ -158,7 +159,7 @@ def dotprod (v, w):
     return np.vdot(v,w)
 
 
-def vlength (v):
+def vlength(v):
     vecv = np.asarray(v)
     val = np.vdot (vecv,vecv)
     return math.sqrt(val)
