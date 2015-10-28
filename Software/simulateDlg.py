@@ -6,6 +6,7 @@ import myPeakTable
 import numpy as np
 from crystallography import *
 from myPredict import *
+import vector_math
 
 
 
@@ -177,7 +178,7 @@ class simulateDlg (QtGui.QDialog) :
                 att1 = att0 + 1
                 while succ != 1 and att1 < notSelected -1 :
                     x2 = self.myPeaks.peaks[w[s[att1]]].xyz
-                    a = recognize_two_vectors (x1, x2, lp, 0.02, 0.02)
+                    a = vector_math.recognize_two_vectors (x1, x2, lp, 0.02, 0.02)
 
 
 

@@ -84,17 +84,17 @@ def recognize_two_vectors (x1, x2, lp, dtol, angtol):
     num_1 = hkls1[0][0]
     num_2 = hkls2[0][0]
     a = (num_1-1) * (num_2-1)
-    ch = np.array(a, dtype=np.float32)
-    ij = np.array((2,a), dtype=np.float32)
+    ch = np.zeros(a, dtype=np.float32)
+    ij = np.zeros((2,a), dtype=np.int16)
     if (num_1 !=0 and num_2 != 0) :
         for i in range (1, num_1-2) :
             for j in range (1, num_2-2) :
                 ij[:, (i-1)* (num_2-1)+j-1]=[i,j]
-                ch[(i-1)* (num_2-1)+j-1]= angle_between_hkls(hkls1[:,i], hkls2[:,j], lp)
+                ch[(i-1)* (num_2-1)+j-1]= crystallography.angle_between_hkls(hkls1[:][i], hkls2[:][j], lp)
     ch1 = min (abs(ch-meas_ang))
     w = np.argmin (abs(ch-meas_ang))
-    hkl1 = hkls1[:,ij[0,w]]
-    hkl2 = hkls2[:,ij[1,w]]
+    hkl1 = hkls1[:][ij[0,w]]
+    hkl2 = hkls2[:][ij[1,w]]
     angerr = ch1
 
 

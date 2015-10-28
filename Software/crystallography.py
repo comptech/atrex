@@ -380,3 +380,10 @@ def apply_symmetry_to_lp (lp, ch, sym) :
 
 
     return lp1
+
+def angle_between_hkls (h1, h2, lp) :
+    B = b_from_lp (lp)
+    x1 = np.dot(h1, B)
+    x2 = np.dot(h2, B)
+    angle = vector_math.ang_between_vecs(x1, x2)
+    return angle
