@@ -23,8 +23,10 @@ class simulateDlg (QtGui.QDialog) :
         self.sim_inc_omchiphi.clicked.connect (self.incVal)
         self.sim_dec_omchiphi.clicked.connect (self.decVal)
         self.sim_genBButton.clicked.connect (self.genB)
+        self.sim_genButton.clickec.connect (self.generate)
         self.sim_changeBButton.clicked.connect (self.changeB)
         self.sim_assignHKLButton.clicked.connect (self.assignHKL)
+        self.ui.sim_indexButton.clicked.connect (self.index)
         self.ui.sim_closeButton.clicked.connect (self.closeUp)
         self.ui.sim_resetOCPButton.clicked.connect (self.resetOCP)
         self.myDetect = myDetector.myDetector()
@@ -139,6 +141,22 @@ class simulateDlg (QtGui.QDialog) :
 
         return lp
 
+
+    def print_LP (self, lp):
+        str=QtCore.QString.number (lp[0])
+        self.sim_aLE.setText(str)
+        str=QtCore.QString.number (lp[1])
+        self.sim_bLE.setText(str)
+        str=QtCore.QString.number (lp[2])
+        self.sim_cLE.setText(str)
+        str=QtCore.QString.number (lp[3])
+        self.sim_alphaLE.setText(str)
+        str=QtCore.QString.number (lp[4])
+        self.sim_betaLE.setText(str)
+        str=QtCore.QString.number (lp[5])
+        self.sim_gammaLE.setText(str)
+
+
     def displayMatrix (self, matType) :
         ### display in the matrixDispText Box matrix
         ### 0 - UB
@@ -179,6 +197,39 @@ class simulateDlg (QtGui.QDialog) :
                 while succ != 1 and att1 < notSelected -1 :
                     x2 = self.myPeaks.peaks[w[s[att1]]].xyz
                     a = vector_math.recognize_two_vectors (x1, x2, lp, 0.02, 0.02)
+                    if (a[0] == 1) :
+                        succ=1
+                        self.myPeaks.peaks[w[s[att0]]].hkl = a[1]
+                        self.myPeaks.peaks[w[s[att1]]].hkl = a[2]
+                    else :
+                        att1 = att1+1
+                        lenw = len(w)
+                        if (att1 == lenw) :
+                            att0 = att0+1
+        if (succ == 1) :
+            ubSave = self.ub
+            self.ub = vector_math.UB_from_two_vecs_and_lp (x1, x2, a[1], a[2], lp)
+            self.displayMatrix(0)
+            self.print_LP (lp)
+            self.updatePeaks.emit()
+
+    def generate (self) :
+        polyFlag = self.ui.sim_polyRButton.isChecked() ;
+        if (polyFlag) :
+            self.generate_laue ()
+        else :
+            self.generate_mono()
+        self.updatePeaks.emit()
+
+
+    def index (self) :
+        npeaks = self.myPeaks.getpeakno()
+        if npeaks < 1 :
+            return
+
+        #ab = cell_now_solution_n(1)
+
+
 
 
 
@@ -196,6 +247,18 @@ class simulateDlg (QtGui.QDialog) :
         numpeaks = self.myPeaks.getpeakno ()
         print 'Numpeaks is now : ', numpeaks
         self.updatePeaks.emit()
+
+
+    def generate_mono (self) :
+        en0 = self.ui.sim_incidRangeLowLE.text().toFloat()[0]
+        en1 = self.ui.sim_incidRangeHighLE.text().toFloat()[0]
+        DAC_open = self.ui.sim_DACOpenLE.text().toFloat()[0]
+        #updates the bravType member
+        self.getBravaisType ()
+        bx = read_box_size()
+        gg = read_overlap_limits()
+
+
 
 
     def closeUp (self) :

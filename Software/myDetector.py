@@ -597,3 +597,15 @@ class myDetector (QtCore.QObject):
             y[i,:]=[psi1,psi2]
         return y
 
+    def generate_all_peaks (self, ub, pktable, wv, pred, exti, dac_open, box):
+        kt = self.read_kappa_ttheta ()
+        gonio = np.zeros(6, dtype=np.float32)
+        # 2theta
+        gonio[1] = kt[1]
+        # kappa/chi
+        gonio[4] = pred.chi
+        a = self.read_box_change()
+
+    def read_kappa_and_theta (self) :
+        a=np.zeros(2,dtype=np.floatr32)
+        return a

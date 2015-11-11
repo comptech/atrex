@@ -96,6 +96,28 @@ def recognize_two_vectors (x1, x2, lp, dtol, angtol):
     hkl1 = hkls1[:][ij[0,w]]
     hkl2 = hkls2[:][ij[1,w]]
     angerr = ch1
+    if (angerr < angtol) :
+        return [1,hkl1, hkl2]
+    return [0,[0,0,0], [0,0,0]]
+
+
+
+def UB_from_two_vecs_and_lp (x1, x2, hkl1, hkl2, lp) :
+    B =crystallography.b_from_lp (lp)
+    hkl3 = np.cross (hkl1, hkl2)
+
+    x3 = np.cross (x1,x2)
+    #x3 = np.asarray ((x3),dtype=np.float64)
+    len_x3 = crystallography.vlength(x3)
+    if (len_x3 < 1.E-8) :
+        len_x3 = 1.E-8
+    x3 /= len_x3
+    d0 = crystallography.d_from_lp_and_hkl (lp, hkl3)
+    x3 = x3 / d0
+    xyzs = [np.asarray([x1]),np.asarray([x2]),np.asarray([x3])]
+    hkls = [np.asarray([hkl1]), np.asarray([hkl2]), np.asarray([hkl3])]
+    ub = crystallography.calc_ub_from_three (hkls, xyzs)
+    return ub
 
 
 

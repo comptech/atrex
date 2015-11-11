@@ -60,7 +60,10 @@ def d_from_lp_and_hkl (lp, hkl) :
     b=b_from_lp(lp)
     hklArr = np.asarray (hkl)
     xyz=hkl * b
-    return 1./vlength(xyz)
+    len_xyz = vlength(xyz)
+    if (len_xyz < 1.E-8) :
+        len_xyz = 1.E-8
+    return 1./len_xyz
 
 
 
@@ -387,3 +390,15 @@ def angle_between_hkls (h1, h2, lp) :
     x2 = np.dot(h2, B)
     angle = vector_math.ang_between_vecs(x1, x2)
     return angle
+
+def calc_ub_from_three (hkls, xyzs) :
+    xyzs = np.asarray(xyzs).reshape(3,3)
+    hkls = np.asarray(hkls).reshape(3,3)
+    transH = np.transpose(hkls)
+    transX = np.transpose (xyzs)
+    x0 = np.dot (transH, xyzs).reshape((3,3))
+
+    h0 = np.dot (transH, hkls).reshape((3,3))
+    h0T = np.linalg.pinv (h0)
+    x0 = np.dot (x0, h0T)
+    return np.transpose (x0).reshape((3,3))
