@@ -39,7 +39,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>3</number>
+     <number>4</number>
     </property>
     <widget class="QWidget" name="FileTab">
      <attribute name="title">
@@ -50,8 +50,8 @@
        <rect>
         <x>0</x>
         <y>10</y>
-        <width>561</width>
-        <height>561</height>
+        <width>651</width>
+        <height>551</height>
        </rect>
       </property>
       <property name="sizePolicy">
@@ -725,6 +725,114 @@
         </layout>
        </widget>
       </widget>
+      <widget class="QCheckBox" name="checkBox_18">
+       <property name="geometry">
+        <rect>
+         <x>550</x>
+         <y>570</y>
+         <width>96</width>
+         <height>26</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Load</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="checkBox_19">
+       <property name="geometry">
+        <rect>
+         <x>560</x>
+         <y>610</y>
+         <width>96</width>
+         <height>26</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Load</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="checkBox_20">
+       <property name="geometry">
+        <rect>
+         <x>560</x>
+         <y>640</y>
+         <width>96</width>
+         <height>26</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Load</string>
+       </property>
+      </widget>
+      <widget class="QGroupBox" name="groupBox_14">
+       <property name="geometry">
+        <rect>
+         <x>489</x>
+         <y>20</y>
+         <width>161</width>
+         <height>381</height>
+        </rect>
+       </property>
+       <property name="title">
+        <string/>
+       </property>
+       <widget class="QWidget" name="">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>22</y>
+          <width>142</width>
+          <height>156</height>
+         </rect>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout_2">
+         <item>
+          <widget class="QCheckBox" name="im_loadpeaksCB">
+           <property name="text">
+            <string>Load Peaktables</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="checkBox_17">
+           <property name="text">
+            <string>Invert X</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="checkBox_21">
+           <property name="text">
+            <string>Invert Y</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="im_excludeCB">
+           <property name="text">
+            <string>Exclude Corners</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="im_transposeCB">
+           <property name="text">
+            <string>Transpose</string>
+           </property>
+           <property name="checked">
+            <bool>false</bool>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </widget>
      </widget>
      <widget class="myZmDisplay" name="zoomWidget" native="true">
       <property name="geometry">
@@ -1286,7 +1394,7 @@
          <x>11</x>
          <y>31</y>
          <width>211</width>
-         <height>171</height>
+         <height>269</height>
         </rect>
        </property>
        <layout class="QGridLayout" name="gridLayout_3">
@@ -1625,7 +1733,7 @@
        <string>30</string>
       </property>
      </widget>
-     <widget class="QLineEdit" name="lineEdit_2">
+     <widget class="QLineEdit" name="p2_boxSizeLE">
       <property name="geometry">
        <rect>
         <x>80</x>
@@ -1742,7 +1850,7 @@
        <string>Change Size</string>
       </property>
      </widget>
-     <widget class="QRadioButton" name="radioButton">
+     <widget class="QRadioButton" name="p2_box_change_1">
       <property name="geometry">
        <rect>
         <x>110</x>
@@ -2387,7 +2495,7 @@
       <property name="geometry">
        <rect>
         <x>160</x>
-        <y>290</y>
+        <y>330</y>
         <width>131</width>
         <height>23</height>
        </rect>
@@ -2400,7 +2508,7 @@
       <property name="geometry">
        <rect>
         <x>20</x>
-        <y>290</y>
+        <y>330</y>
         <width>131</width>
         <height>17</height>
        </rect>
@@ -2556,7 +2664,7 @@
       <property name="geometry">
        <rect>
         <x>160</x>
-        <y>330</y>
+        <y>360</y>
         <width>131</width>
         <height>31</height>
        </rect>
@@ -2566,7 +2674,7 @@
       <property name="geometry">
        <rect>
         <x>20</x>
-        <y>330</y>
+        <y>360</y>
         <width>71</width>
         <height>16</height>
        </rect>
@@ -2659,6 +2767,32 @@
         <string>&gt;</string>
        </property>
       </widget>
+     </widget>
+     <widget class="QLabel" name="label_80">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>300</y>
+        <width>131</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>kappa</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="LE_Detector_kappa">
+      <property name="geometry">
+       <rect>
+        <x>160</x>
+        <y>300</y>
+        <width>131</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>0.</string>
+      </property>
      </widget>
     </widget>
     <widget class="QWidget" name="tab">

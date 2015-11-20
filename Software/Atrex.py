@@ -16,8 +16,8 @@ import myDetector
 from peakFit import *
 from myPredict import *
 from myPeakAdjustDlg import *
-from simulateDlg import *
 from Project import *
+import simulateDlg
 
 ##
 # @class Atrex
@@ -148,6 +148,8 @@ class Atrex(QtGui.QMainWindow):
         self.peaks0 = myPeakTable.myPeakTable()  # This is the PeakTable0
         self.peaks1 = myPeakTable.myPeakTable()  # This is the PeakTable1
         self.detector = myDetector.myDetector()
+        self.detector.setTopLevel (self)
+        #myDetector.myDetector.setTopLevel (self)
         self.ui.peaks_peakListWidgetTable.setDetector (self.detector)
         self.peaks.setActiveList(self.peaks0, self.peaks1, self.activeList)
 
@@ -1371,7 +1373,9 @@ class Atrex(QtGui.QMainWindow):
 
     def startSimulate (self) :
         self.readPredictSettings()
-        self.mysim = simulateDlg ()
+        self.mysim = simulateDlg.simulateDlg()
+        self.mysim.setBSizeControl (self.ui.p2_boxSizeLE)
+        self.mysim.setExcludeControl (self.ui.im_excludeCB)
         self.mysim.setPredict (self.mypred)
         self.mysim.setDetector (self.detector)
         self.mysim.setPeakTable (self.peaks)
@@ -1385,6 +1389,12 @@ class Atrex(QtGui.QMainWindow):
         self.updatePeakList()
         self.ui.imageWidget.repaint()
 
+    # return 0 if 1, 1 if all
+    def read_box_change (self):
+        state = (self.ui.p2_box_change_1.isChecked())
+        if (state) :
+            return 0
+        return 1
 
 
 app = QtGui.QApplication(sys.argv)

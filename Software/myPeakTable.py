@@ -182,7 +182,18 @@ class myPeakTable:
         del self.peaks[:]
 
 
+    def remove_peaks_outside_aa (self, detect):
+        for p in self.peaks :
+            xy = p.getDetxy()
 
+            x = xy[0]-detect.nopixx/2.
+            y = xy[1]-detect.nopixy/2.
+            dist = sqrt(x**2+y**2)
+            if (dist > detect.nopixx/2-10.) :
+                p.selected[0] = 1
+            else :
+                p.selected[0] = 0
+        self.deleteSelected ()
 
     def find_closest_peak(self, peak, START_NO):
         tab=np.zeros([self.peakno-START_NO,2],dtype=np.float)
@@ -213,3 +224,19 @@ class myPeakTable:
            # else:
             i=i+1
         self.deleteSelected()
+
+    def select_close_overlaps (self, far):
+        npeaks = self.peakno
+        for i in range (npeaks-3) :
+            xy1 = self.peaks[i].getDet()
+            for j in range (i+1, npeaks-2) :
+                xy2 = self.peaks[j].getDetxy()
+                dist = self.getDist (xy1, xy2)
+                if (dist < far):
+                    self.peaks[i].selected[0]=1
+                    self.peaks[j].selected[0]=1
+
+    def getDist (self, xy1, xy2):
+        xdiff = xy1[0] - xy2[0]
+        ydiff = xy1[1] - xy2[1]
+        return sqrt(xdiff**2 + ydiff**2)

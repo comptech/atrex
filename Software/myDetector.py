@@ -1,6 +1,7 @@
 import os
 import pickle
 import tifffile
+
 from crystallography import *
 from vector_math import *
 from threading import Thread
@@ -8,6 +9,7 @@ from PyQt4 import QtCore, QtGui
 from ctypes import *
 from numpy.ctypeslib import ndpointer
 from platform import *
+#import Atrex
 
 import myPeakTable
 
@@ -56,6 +58,9 @@ class myDetector (QtCore.QObject):
         testarrs[0]= 32
         testarrs[1]= 48
         self.CalcTheta.testPyth (testarrs, 2)
+
+    def setTopLevel (self, a):
+        self.topLevel = a
 
     def getdist(self):
         return self.dist
@@ -598,14 +603,49 @@ class myDetector (QtCore.QObject):
         return y
 
     def generate_all_peaks (self, ub, pktable, wv, pred, exti, dac_open, box):
-        kt = self.read_kappa_ttheta ()
+        kt = self.read_kappa_and_ttheta()
         gonio = np.zeros(6, dtype=np.float32)
         # 2theta
         gonio[1] = kt[1]
         # kappa/chi
         gonio[4] = pred.chi
-        a = self.read_box_change()
+        boxval = self.topLevel.read_box_change()
+        refpeak = myPeakTable.myPeak()
+        refpeak.IntSSD[0:2]=[boxval, boxval]
+        for h in range (pred.h1, pred.h2+1) :
+            for k in range (pred.k1, pred.k2+1) :
+                for l in range (pred.l1, pred.l2+1) :
+                    hkl = [h,k,l]
+                    extinct = syst_extinction (exti, hkl)
+                    if extinct == 1 :
+                        xyz = np.dot (hkl,ub)
+                        om = get_omega(A_to_kev(wv), xyz)
+                        #om = solve_general_axis (A_to_kev(wv), xyz, gonio)
+                        om0 = om[0]
+                        if om0 >= pred.om_start and om0 <= pred.om_start + pred.om_range :
+                            gonio[3] = om0
+                            pix = self.calculate_pixels_from_xyz(xyz, gonio)
+                            r = [pix[0]-self.beamx, pix[1]-self.beamy]
+                            r = math.sqrt (r[0]**2+r[1]**2)
+                            psi2 = self.calculate_psi_angles(gonio, pix)
+                            print pix[0], psi2[0][1]
+                            if (pix[0]>0 and pix[0] < self.nopixx-1 and abs(psi2[0,1]< dac_open)) :
+                                refpeak.setDetxy (pix)
+                                refpeak.gonio = gonio
+                                refpeak.xyz = xyz
+                                refpeak.hkl = hkl
+                                refpeak.IntSSD[0:2] = [box[0], box[0]]
+                                pktable.appendPeak (refpeak)
 
-    def read_kappa_and_theta (self) :
-        a=np.zeros(2,dtype=np.floatr32)
+
+
+    def read_kappa_and_ttheta(self) :
+        a=np.zeros(2,dtype=np.float32)
+        theta = self.topLevel.ui.LE_Detector_2theta.text().toFloat()[0]
+        kappa = self.topLevel.ui.LE_Detector_kappa.text().toFloat()[0]
+        a[0] = theta
+        a[1] = kappa
         return a
+
+
+

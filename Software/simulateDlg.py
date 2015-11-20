@@ -23,7 +23,7 @@ class simulateDlg (QtGui.QDialog) :
         self.sim_inc_omchiphi.clicked.connect (self.incVal)
         self.sim_dec_omchiphi.clicked.connect (self.decVal)
         self.sim_genBButton.clicked.connect (self.genB)
-        self.sim_genButton.clickec.connect (self.generate)
+        self.sim_genButton.clicked.connect (self.generate)
         self.sim_changeBButton.clicked.connect (self.changeB)
         self.sim_assignHKLButton.clicked.connect (self.assignHKL)
         self.ui.sim_indexButton.clicked.connect (self.index)
@@ -36,6 +36,12 @@ class simulateDlg (QtGui.QDialog) :
         self.bravType = 'P'
         self.setAttribute (QtCore.Qt.WA_DeleteOnClose, True)
 
+
+    def setBSizeControl (self, tl) :
+        self.bsControl = tl
+
+    def setExcludeControl (self, ec):
+        self.excludeCBox = ec
 
     def setDetector (self, mydetect) :
         self.myDetect = mydetect
@@ -250,14 +256,32 @@ class simulateDlg (QtGui.QDialog) :
 
 
     def generate_mono (self) :
+        self.myPeaks.remove_all_peaks()
         en0 = self.ui.sim_incidRangeLowLE.text().toFloat()[0]
         en1 = self.ui.sim_incidRangeHighLE.text().toFloat()[0]
         DAC_open = self.ui.sim_DACOpenLE.text().toFloat()[0]
+        wv = self.myDetect.getwavelength()
         #updates the bravType member
         self.getBravaisType ()
-        bx = read_box_size()
-        gg = read_overlap_limits()
+        #get from the predict tab in the Atrex class
+        ## generate all peaks
+        bx = self.read_box_size()
+        self.myDetect.generate_all_peaks(self.ub, self.myPeaks, wv, self.myPredict, self.bravType,  DAC_open, bx)
 
+        #check whether to exclude peaks at corners
+        if (self.excludeCBox.isChecked()):
+            self.myPeaks.remove_peaks_outside_aa (self.myDetect)
+        # this is from the part/full overlap on the predict tab
+        gg = [self.myPredict.fullOverlap, self.myPredict.partOverlap]
+        self.myPeaks.select_close_overlaps (gg)
+        self.updatePeaks.emit()
+
+
+
+    # from the topLevel Peaks2 tab, get the box size....
+    def read_box_size (self):
+        val = self.bsControl.text().toInt()
+        return [val[0],val[0]]
 
 
 

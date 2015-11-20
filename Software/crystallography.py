@@ -45,6 +45,9 @@ def d_from_tth_and_en (atth, en) :
 def tth_from_en_and_d (en, d) :
     #calculates bragg angle from energy and d-spc
     la=kev_to_A(en)
+    argVal = la / (2. * d)
+    if abs(argVal) > 1.0:
+        return 999
     return 2.0*math.asin(la/(2.0*d))*radeg
 
 def tth_from_hkl_and_lp  (hkl, lp, wv) :
@@ -402,3 +405,62 @@ def calc_ub_from_three (hkls, xyzs) :
     h0T = np.linalg.pinv (h0)
     x0 = np.dot (x0, h0T)
     return np.transpose (x0).reshape((3,3))
+
+
+### get_omega -- From xyz and energy  calculates the omega angle (in deg) at which xyz will come
+### into diffracting position during omega scan at chi 0
+###if diffraction position inaccessible in omega scan returns [-1000,-1000]
+
+
+def get_omega (en, xyz):
+    errArr = [-1000,-1000]
+    d = 1./ vlength(xyz)
+    tthe= tth_from_en_and_d(en, d)
+    if tthe == 999 :
+        return errArr
+    xyz1 = xyz / vlength (xyz)
+    x = xyz1[0]
+    y = xyz1[1]
+    z = xyz1[2]
+
+    tth = math.cos (math.radians(90. + tthe/2.))
+    b1 = (x**2 * y**2 - y**2 * tth**2 + y**4)
+    if (b1 < 0.) :
+        return errArr
+    b2 = (x**2 + y**2)
+
+    a1 = -(x*(x*tth-math.sqrt(b1))/b2 - tth)/ y
+    a2 = (x * tth - math.sqrt(b1))/b2
+    om1 = math.atan2 (a1, a2)
+    a1 = -(x*(x*tth+math.sqrt(b1))/b2 - tth)/ y
+    a2 = (x * tth + math.sqrt(b1))/b2
+    om2 = math.atan2 (a1, a2)
+    return [math.degrees(om1), math.degrees(om2)]
+
+
+def general_axis (A, vec, en):
+    d = 1./vlength(vec)
+    ttheta = tth_from_en_d(en,d)
+    xyz = vec * d
+    xyz1 = np.dot ([1,0,0],A)
+    #sc = sincos ()
+
+def solve_general_axis (en, xyz, gonio) :
+    om = 0
+    chi = gonio[4]
+    om_mtx = vector_math.generate_rot_mat(3, om)
+    chi_mtx = vector_math.generate_rot_mat(3, chi)
+    A = np.dot (chi_mtx, om_mtx)
+    newaxis = general_axis (np.linalg.inv(A), xyz, en)
+    return newaxis
+
+
+def sincos (a,b,c) :
+    delval = -c**2+a**2+b**2
+    if (delval < 0.) :
+        res=[-1000,-1000]
+    else :
+        x1 = math.degrees(-2. * math.atan ((a+math.sqrt(delval))/(c-b)))
+        x2 = math.degrees(-2. * math.atan ((a-math.sqrt(delval))/(c-b)))
+        res =-[x1,x2]
+    return res
