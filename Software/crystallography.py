@@ -414,14 +414,20 @@ def calc_ub_from_three (hkls, xyzs) :
 
 def get_omega (en, xyz):
     errArr = [-1000,-1000]
-    d = 1./ vlength(xyz)
+    vlen = vlength (xyz)
+    if vlen < 0.000001 :
+        d = 1.E9
+    else :
+        d = 1./ vlength(xyz)
     tthe= tth_from_en_and_d(en, d)
     if tthe == 999 :
         return errArr
-    xyz1 = xyz / vlength (xyz)
+    xyz1 = xyz / vlen
     x = xyz1[0]
     y = xyz1[1]
     z = xyz1[2]
+
+
 
     tth = math.cos (math.radians(90. + tthe/2.))
     b1 = (x**2 * y**2 - y**2 * tth**2 + y**4)
@@ -440,7 +446,7 @@ def get_omega (en, xyz):
 
 def general_axis (A, vec, en):
     d = 1./vlength(vec)
-    ttheta = tth_from_en_d(en,d)
+    ttheta = tth_from_en_and_d(en,d)
     xyz = vec * d
     xyz1 = np.dot ([1,0,0],A)
     #sc = sincos ()

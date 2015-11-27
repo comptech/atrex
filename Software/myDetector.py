@@ -150,11 +150,18 @@ class myDetector (QtCore.QObject):
         self.wavelength = float(flist[3])
         self.beamx = float(flist[4])
         self.beamy = float(flist[5])
-        self.twist = float(flist[6])
-        self.tiltom = float(flist[7])
-        self.ttheta = float(flist[8])
-        self.tiltch = float(flist[9])
-        fil.close()
+        self.tiltom = float(flist[6])
+        self.tiltch = float(flist[7])
+        if (len (flist) > 8) :
+		    self.angle = float(flist[8])
+        else :
+            self.angle = 0.
+        if (len(flist) > 9) :
+			self.alpha = float(flist[8])
+        else :
+            self.alpha = 0.
+
+
 
 
     def write_to_text_file(self, filename):
@@ -165,10 +172,10 @@ class myDetector (QtCore.QObject):
         fil.write(str(self.wavelength) + '\n')
         fil.write(str(self.beamx) + '\n')
         fil.write(str(self.beamy) + '\n')
-        fil.write(str(self.twist) + '\n')
         fil.write(str(self.tiltom) + '\n')
-        fil.write(str(self.ttheta) + '\n')
         fil.write(str(self.tiltch) + '\n')
+        fil.write(str(self.angle) + '\n')
+        fil.write(str(self.alpha) + '\n')
         fil.close()
 
     def calculate_tth_from_pixels(self, pix, gonio):

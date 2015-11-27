@@ -1,6 +1,7 @@
 from math import *
 import crystallography
 import numpy as np
+import pdb
 
 
 
@@ -61,6 +62,7 @@ def ang_between_vecs (vec1, vec2) :
 ### vector line u with a plane defined by a point V0 and vector
 ### normal n
 def line_plane_intersection (u, n, P0, V0):
+    #pdb.set_trace()
     P0 = np.asarray(P0)
     V0 = np.asarray(V0)
     u = np.asarray(u).squeeze()
@@ -71,7 +73,10 @@ def line_plane_intersection (u, n, P0, V0):
         xyz=np.asarray([0.,0.,0.])
 
     w=P0-V0
-    s=-np.dot(n,w)/np.dot(n,u)
+    denom = np.dot (n,u)
+    if (abs(denom) < .000001) :
+       denom = .000001
+    s=-np.dot(n,w)/denom
     xyz=P0+s*u
     return xyz
 
