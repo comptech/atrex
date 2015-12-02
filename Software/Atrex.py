@@ -542,6 +542,7 @@ class Atrex(QtGui.QMainWindow):
                                                                     QtGui.QFileDialog.ShowDirsOnly)
         # print self.imageDirectory
         self.ui.outDirLE.setText(self.workDirectory)
+        self.mysim.setWorkDir (self.workDirectory)
 
     def imageMouseClicked (self, vals) :
         # get the 2-theta
@@ -605,6 +606,7 @@ class Atrex(QtGui.QMainWindow):
             self.myproj = Project()
             self.myproj.getImageBase (filename)
             print 'Image base is %s'%self.myproj.base
+
 
         if not self.displayedImage:
             self.mymask.createMask(self.myim.imArraySize[0], self.myim.imArraySize[1])
@@ -1374,6 +1376,7 @@ class Atrex(QtGui.QMainWindow):
     def startSimulate (self) :
         self.readPredictSettings()
         self.mysim = simulateDlg.simulateDlg()
+        self.mysim.setProject (self.myproj)
         self.mysim.setBSizeControl (self.ui.p2_boxSizeLE)
         self.mysim.setExcludeControl (self.ui.im_excludeCB)
         self.mysim.setPredict (self.mypred)

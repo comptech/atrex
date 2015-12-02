@@ -6,6 +6,7 @@ import myPeakTable
 import numpy as np
 from crystallography import *
 from myPredict import *
+from Project import *
 import vector_math
 
 
@@ -29,13 +30,21 @@ class simulateDlg (QtGui.QDialog) :
         self.ui.sim_indexButton.clicked.connect (self.index)
         self.ui.sim_closeButton.clicked.connect (self.closeUp)
         self.ui.sim_resetOCPButton.clicked.connect (self.resetOCP)
+        self.ui.sim_openUB.clicked.connect (self.openUB)
+        self.ui.sim_saveUB.clicked.connect (self.saveUB)
         self.myDetect = myDetector.myDetector()
         self.ub = np.zeros ((3,3),dtype=np.float64)
         self.myPredict = myPredict()
         self.myPeaks = myPeakTable.myPeakTable()
         self.bravType = 'P'
         self.setAttribute (QtCore.Qt.WA_DeleteOnClose, True)
+        self.workdir = ''
+        self.base = ''
+        self.projFlag = False
 
+
+    def setWorkDir (self, d) :
+        self.workdir = d
 
     def setBSizeControl (self, tl) :
         self.bsControl = tl
@@ -51,6 +60,17 @@ class simulateDlg (QtGui.QDialog) :
 
     def setPredict (self, myPredict) :
         self.myPredict = myPredict
+
+    def setProject (self, p) :
+        self.project = p
+        self.projFlag = True
+        ubf = self.project.base+'.ub'
+        fil = QtCore.QFile (ubf)
+        if (fil.exists()) :
+            fil.close()
+            self.loadUB(ubf)
+        else :
+            fil.close()
 
     def fillUp(self) :
         self.ui.sim_aLE.setText( '3.')
@@ -162,6 +182,36 @@ class simulateDlg (QtGui.QDialog) :
         str=QtCore.QString.number (lp[5])
         self.sim_gammaLE.setText(str)
 
+    ### open UB matrix
+    def openUB (self) :
+        if self.projFlag :
+            suggFile = self.project.base+'.ub'
+        else :
+            suggFile = self.workdir
+        ubFile = QtGui.QFileDialog.getOpenFileName(self, 'Open UB File for Reading ', suggFile)
+        if (ubFile.length() < 2) :
+            return
+
+
+    def loadUB (self, fname) :
+        self.ub = open_UB (fname)
+        self.displayMatrix (0)
+
+
+    def saveUB (self) :
+        if self.projFlag :
+            suggFile = self.project.base+'.ub'
+        else :
+            suggFile = self.workdir
+
+        ubFile = QtGui.QFileDialog.getSaveFileName(self, 'Open UB File for Reading ', suggFile)
+        if (ubFile.length() < 2) :
+            return
+        f = open (ubFile , 'w')
+        for i in range (3) :
+            str = '%f %f %f\r\n'%(self.ub[i][0],self.ub[i][1], self.ub[i][2])
+            f.write (str)
+        f.close()
 
     def displayMatrix (self, matType) :
         ### display in the matrixDispText Box matrix

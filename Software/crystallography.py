@@ -470,3 +470,16 @@ def sincos (a,b,c) :
         x2 = math.degrees(-2. * math.atan ((a-math.sqrt(delval))/(c-b)))
         res =-[x1,x2]
     return res
+
+
+def open_UB (infile):
+    ub = np.zeros((3,3), dtype=np.float32)
+    f = open (infile.toLatin1().data(), 'r')
+    count = 0
+    for line in f :
+        vals = line.split ()
+        ub[count] = vals
+        count += 1
+    print ub
+    return ub
+
