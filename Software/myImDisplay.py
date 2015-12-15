@@ -43,6 +43,10 @@ class myImDisplay (QtGui.QWidget) :
         self.customContextMenuRequested.connect (self.contextMenuKickoff)
         for i in range (256) :
             self.rgb_lut[:,i] = i
+        self.calPointsFlag = False
+        self.calPoints = []
+        self.proxPoints= [0.,0.]
+        self.proxPointsF= [0.,0.]
 
     def setPeakBoxSize (self,val) :
         self.peakBoxSize = val
@@ -500,6 +504,25 @@ class myImDisplay (QtGui.QWidget) :
                     pen.setStyle (QtCore.Qt.DashLine)
                     painter.setPen (pen)
                     painter.drawRect (QtCore.QRect(self.selectPointUL, self.selectPointLR))
+                if (self.calPointsFlag) :
+                    pen = QtGui.QPen (QtCore.Qt.magenta)
+                    painter.setPen (pen)
+                    npts = len (self.calPoints)
+                    for i in range (npts) :
+                        xloc = int(self.calPoints[i][0]*h)
+                        yloc = int(self.calPoints[i][1]*w)
+                        painter.drawEllipse (QtCore.QPoint(xloc,yloc),5, 5)
+                    pen = QtGui.QPen (QtCore.Qt.green)
+                    painter.setPen (pen)
+                    xloc = int(self.proxPoints[1]*h)
+                    yloc = int(self.proxPoints[0]*w)
+                    painter.drawEllipse (QtCore.QPoint(xloc,yloc),5, 5)
+                    pen = QtGui.QPen (QtCore.Qt.blue)
+                    painter.setPen (pen)
+                    xloc = int(self.proxPointsF[1]*h)
+                    yloc = int(self.proxPointsF[0]*w)
+                    painter.drawEllipse (QtCore.QPoint(xloc,yloc),5, 5)
+
 
     def applyMask (self, fullmask) :
         self.applyMaskFlag = True
@@ -520,3 +543,20 @@ class myImDisplay (QtGui.QWidget) :
     def applyMaskToArray (self, arr) :
 
         return self.curmask * arr
+
+    def setCalibrationMarks (self, fpoints, scale):
+
+        self.calPointsFlag = True
+        npts = len (fpoints[0])
+        self.calPoints=[]
+        for i in range (len(fpoints[0])) :
+            a = (fpoints[1][i]/scale, fpoints[0][i]/scale)
+            self.calPoints.append (a)
+
+
+    def setProxPoints (self, points, points1):
+        self.proxPoints [0]= points [0]
+        self.proxPoints [1]= points [1]
+        self.proxPointsF [0]= points1 [0]
+        self.proxPointsF [1]= points1 [1]
+        self.repaint()

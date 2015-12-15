@@ -2,13 +2,14 @@ __author__ = 'harold'
 from PyQt4 import QtCore, QtGui, uic
 from myGenSettingsDlg import *
 
-""" Project.py
-    File containing utilities to get the image base from a input file name and to return a filename
-    based upon the image base
-"""
+
 
 
 class Project :
+    """ Project.py
+    Class containing utilities to get the image base from a input file name and to return a filename
+    based upon the image base
+    """
 
     base = ''
     filenum = 0
@@ -29,6 +30,12 @@ class Project :
     detector = 0.
 
     def getImageBase (self, filename) :
+        """
+        getImageBase returns the prefix which will be used for subsequent file naming based upon
+        an input filename
+        :param filename:
+        :return:
+        """
         self.imFile = filename
         ind_of_suffx = filename.lastIndexOf ('.')
         ind_of_start_num = filename.lastIndexOf ('_') +1

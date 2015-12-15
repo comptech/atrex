@@ -1,0 +1,27 @@
+var searchData=
+[
+  ['name',['name',['../classtifffile_1_1_tiff_tag.html#ac34a7b79c29ce864523c939668c5e4f7',1,'tifffile::TiffTag']]],
+  ['nbins',['nbins',['../classmy_detector_1_1my_detector.html#ab1ca2803f8b16b976504a260af1ec86b',1,'myDetector::myDetector']]],
+  ['nbinsaz',['nbinsAz',['../classmy_image_1_1my_image.html#aeaf615c8bded2e97661cfc47db6d0371',1,'myImage::myImage']]],
+  ['nbinstth',['nbinsTth',['../classmy_image_1_1my_image.html#a722eda5ce89e24cebc89da923364fb0b',1,'myImage::myImage']]],
+  ['nen',['nen',['../classmy_peak_table_1_1my_peak.html#a9c1b6178ca664594ee881dde502d2f32',1,'myPeakTable::myPeak']]],
+  ['newx',['newx',['../classmy_zm_display_1_1my_zm_display.html#a88f396278207e78ff8c5e27dd6749b4c',1,'myZmDisplay.myZmDisplay.newx()'],['../classmy_zm_display_1_1my_zm_display.html#a54ce03f488e6c7852c76aca77a5c3895',1,'myZmDisplay.myZmDisplay.newx()'],['../classmy_zm_peak_display_1_1my_zm_peak_display.html#a61900777c8f1ee16eefca8614f7a940c',1,'myZmPeakDisplay.myZmPeakDisplay.newx()'],['../classmy_zm_peak_display_1_1my_zm_peak_display.html#ac30db7d7e88a260a660c73842cc7e70c',1,'myZmPeakDisplay.myZmPeakDisplay.newx()']]],
+  ['newy',['newy',['../classmy_zm_display_1_1my_zm_display.html#a0770201bb3e33e877d381cae65d6cfd9',1,'myZmDisplay.myZmDisplay.newy()'],['../classmy_zm_display_1_1my_zm_display.html#a736a1b9ec07a3565161b71961923da74',1,'myZmDisplay.myZmDisplay.newy()'],['../classmy_zm_peak_display_1_1my_zm_peak_display.html#ac6ef82ef45e92d1380a4122b085933e6',1,'myZmPeakDisplay.myZmPeakDisplay.newy()'],['../classmy_zm_peak_display_1_1my_zm_peak_display.html#aa5d3657333093135e384f3bfa49a9ddf',1,'myZmPeakDisplay.myZmPeakDisplay.newy()']]],
+  ['nfev',['nfev',['../classmpfit_1_1mpfit.html#a4a63457ae8102a51227f7ebae4d1d63d',1,'mpfit::mpfit']]],
+  ['nih_5fcolortable_5ftype',['NIH_COLORTABLE_TYPE',['../namespacetifffile.html#abe1a6d366c3be01c66a3c9e876a6eec7',1,'tifffile']]],
+  ['nih_5fcurvefit_5ftype',['NIH_CURVEFIT_TYPE',['../namespacetifffile.html#af09e992d4e37ddf454d4df4e7670902b',1,'tifffile']]],
+  ['nih_5fimage_5fheader',['NIH_IMAGE_HEADER',['../namespacetifffile.html#acf163877284af58b0c492c308be45006',1,'tifffile']]],
+  ['nih_5flutmode_5ftype',['NIH_LUTMODE_TYPE',['../namespacetifffile.html#a29b05f1c529c5abd896aec6cee9a1af3',1,'tifffile']]],
+  ['nih_5fstacktype_5ftype',['NIH_STACKTYPE_TYPE',['../namespacetifffile.html#a5c299b8313ca1b50275a0cdf769509ff',1,'tifffile']]],
+  ['nih_5funits_5ftype',['NIH_UNITS_TYPE',['../namespacetifffile.html#ae5e364e222f33b0da9bf47077e7e20da',1,'tifffile']]],
+  ['niter',['niter',['../classmpfit_1_1mpfit.html#a0acb816b501c7c62de9b40d51ed3e019',1,'mpfit::mpfit']]],
+  ['nl',['nl',['../classmy_zm_peak_display_1_1my_zm_peak_display.html#a98ac7ad822c6d740e6a748b1dabb96b5',1,'myZmPeakDisplay.myZmPeakDisplay.nl()'],['../classmy_zm_peak_display_1_1my_zm_peak_display.html#aa08f61c355a9ebaf1ee628a10ba72a02',1,'myZmPeakDisplay.myZmPeakDisplay.nl()']]],
+  ['nlines',['nlines',['../classmy_mask_1_1my_mask.html#a91b9f3c41dd6f0c54860b24069f56ca4',1,'myMask.myMask.nlines()'],['../classmy_mask_1_1my_mask.html#a580ea0a4ec202bbc76ac0ad31b3d9f2b',1,'myMask.myMask.nlines()']]],
+  ['nn',['nn',['../classmy_detector_1_1my_detector.html#a386c22e4c8877c163e1c1855ac602d08',1,'myDetector::myDetector']]],
+  ['nopixx',['nopixx',['../classmy_detector_1_1my_detector.html#ae7c12b4ce74cc80a85dae3843f8b764c',1,'myDetector::myDetector']]],
+  ['nopixy',['nopixy',['../classmy_detector_1_1my_detector.html#a3e60d490ee58d6c5d8ccb7a7a7f24c2e',1,'myDetector::myDetector']]],
+  ['ns',['ns',['../classmy_zm_peak_display_1_1my_zm_peak_display.html#a76602f7e8c11dbd816a9161b0a864ccd',1,'myZmPeakDisplay.myZmPeakDisplay.ns()'],['../classmy_zm_peak_display_1_1my_zm_peak_display.html#ad5645653988974bebc739532eac8ef86',1,'myZmPeakDisplay.myZmPeakDisplay.ns()']]],
+  ['nsamps',['nsamps',['../classmy_mask_1_1my_mask.html#a6a94c13fe022b092f42d5be3f3b29fe6',1,'myMask.myMask.nsamps()'],['../classmy_mask_1_1my_mask.html#aec05f7b9af1f9ba5b283f1034f229cdc',1,'myMask.myMask.nsamps()']]],
+  ['numdigits',['numDigits',['../class_project_1_1_project.html#a441402412f2536707678ddc504873b29',1,'Project.Project.numDigits()'],['../class_project_1_1_project.html#abf36ec5e3005385e03d533200b5c098a',1,'Project.Project.numDigits()']]],
+  ['numpeaks',['numPeaks',['../classmy_peak_table_widget_1_1my_peak_table_widget.html#a8e630a6f15d224300abc621b8bac8e23',1,'myPeakTableWidget.myPeakTableWidget.numPeaks()'],['../classmy_peak_table_widget_1_1my_peak_table_widget.html#ae4934e86392397c16937ababde3ac38e',1,'myPeakTableWidget.myPeakTableWidget.numPeaks()']]]
+];

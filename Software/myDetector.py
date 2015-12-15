@@ -9,6 +9,9 @@ from PyQt4 import QtCore, QtGui
 from ctypes import *
 from numpy.ctypeslib import ndpointer
 from platform import *
+from myImage import *
+import congrid as cgd
+from scipy.misc import imresize
 #import Atrex
 
 import myPeakTable
@@ -18,7 +21,7 @@ class myDetector (QtCore.QObject):
 
     tDone = QtCore.pyqtSignal (int)
     tDoneAll = QtCore.pyqtSignal ()
-
+    calPeaks = QtCore.pyqtSignal()
     def __init__(self):
         QtCore.QObject.__init__(self)
         self.dist = 0.0
@@ -58,6 +61,8 @@ class myDetector (QtCore.QObject):
         testarrs[0]= 32
         testarrs[1]= 48
         self.CalcTheta.testPyth (testarrs, 2)
+        self.eqprox = [0.,0.]
+        self.eqproxfine = [0.,0.]
 
     def setTopLevel (self, a):
         self.topLevel = a
@@ -653,6 +658,124 @@ class myDetector (QtCore.QObject):
         a[0] = theta
         a[1] = kappa
         return a
+
+
+    ### called when test detector cal button is clicked4
+    def testCalibration (self, myim) :
+    #def detector_calibration_test_points (self) :
+        en = 37.077
+        cut = 30.
+        dist_tol = 1.8
+        IovS = self.topLevel.ui.det_snrLE.text().toFloat()[0]
+        start_dist = self.dist - self.dist * 0.5
+        end_dist = self.dist + self.dist *.5
+        imarr = cgd.congrid (myim.imArray, [500, 500])
+        zarr = np.zeros ((500,500),dtype=np.uint8)
+
+        bg = self.local_background (imarr)
+        # only for debug
+
+        hpf = imarr / bg
+
+        self.ff = np.where ((hpf > IovS)&(imarr>20.))
+
+        nn = len(self.ff[0])
+        print 'number of pixels meeting the peak condition is %d'%(nn)
+
+
+        ### equal proximity coarse search
+        # in 5 pixel steps
+        h = np.zeros((100,100), dtype=np.float32)
+        for i in range (100) :
+            print i
+            for j in range (100) :
+                dist = self.compdist (self.ff, [j*5,i*5])
+                mx = dist.max()
+                mn = dist.min()
+                nbins = int(dist.max() - dist.min()+1)
+                histo,edges = np.histogram(dist, bins=nbins)
+                h[i,j] = np.max (histo)
+        maxsub = np.argmax(h)
+        maxrow = maxsub / 100
+        maxcol = maxsub - maxrow * 100
+        print maxsub, maxrow, maxcol
+
+        self.eqprox[0]=maxrow/100.
+        self.eqprox[1]=maxcol/100.
+
+        # is this even being used
+        dist = self.compdist (self.ff, [maxrow, maxcol])
+        nbins = int (dist.max()-dist.min()+1)
+        h = np.histogram(dist, bins=nbins)
+
+        ### equal proximity seach fine (in 500 space)
+        h = np.zeros((11,11),dtype=np.float32)
+        for i in range (-5,6) :
+            for j in range(-5,6) :
+                # note in gse_ada , there is a 5 + in the index calculation
+                dist = self.compdist(self.ff, [5.*maxrow+i, 5.*maxcol+j])
+                nbins = int(dist.max() - dist.min() +1)
+                histo, edges = np.histogram(dist, bins=nbins)
+                h[i+5][j+5]=np.max(histo)
+        maxsub = np.argmax (h)
+
+        # then back in 100 space
+        xy = self.xy_from_ind (11,11,maxsub)
+        maxrow = maxrow + (xy[0] - 5)/5.
+        maxcol = maxcol + (xy[1] - 5)/5.
+        xy0 = [maxrow, maxcol]
+        self.eqproxfine[0]=maxrow/100.
+        self.eqproxfine[1]=maxcol/100.
+
+        self.calPeaks.emit()
+
+    def local_background (self, myarr) :
+        # scale this to a 1000 by 1000 grid but return an array in original format
+        # the returned array is the median on a 10x10 blocksize
+        s = myarr.shape
+        myarr0 = cgd.congrid (myarr, (1000, 1000) , minusone=True)
+        #myarr0 = imresize(myarr, (1000,1000))
+        n = int (math.sqrt(s[0]*s[1]))
+        out=np.zeros(myarr0.shape,myarr0.dtype)
+        for i in range (100) :
+            for j in range (100) :
+                box = myarr0[i*10:(i+1)*10, j*10:(j+1)*10]
+                nz = np.where (box != 0)
+                npts = len(nz[0])
+                if (npts == 0) :
+                    m = 1
+                else :
+                    m = np.median(box[nz[0],nz[1]])
+                out[i*10:(i+1)*10, j*10:(j+1)*10]=m
+        outnew = cgd.congrid (out, s, minusone=True)
+        #outnew = imresize (out, s)
+        return outnew
+
+    ###
+    #compdist - function to return  something from the other
+    # pos is two element vector
+    # ff is array of tuples, being coords of calib marks
+    # returns an npt array with each element being the distance of that
+    # point from that specified by pos
+    ###
+
+    def compdist (self, ff, pos) :
+        npts = len(ff[0])
+        b = np.zeros (npts, dtype=np.float32)
+        c = np.zeros ((2,npts),dtype=np.float32)
+        c[0] = ff[0] - pos[0]
+        c[1] = ff[1] - pos[1]
+
+        b = np.sqrt(c[0]**2+c[1]**2)
+        return b
+
+
+    def xy_from_ind (self, nx, ny, ind) :
+        y = ind / ny
+        x = ind - y * ny
+        return ((y,x))
+
+
 
 
 
