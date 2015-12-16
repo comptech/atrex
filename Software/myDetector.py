@@ -660,7 +660,10 @@ class myDetector (QtCore.QObject):
         return a
 
 
-    ### called when test detector cal button is clicked4
+    ## testCalibration
+    # function called when Detector -> Test calibration button
+    # is clicked.
+    # @param - myImage as displayed calibration image is used for input
     def testCalibration (self, myim) :
     #def detector_calibration_test_points (self) :
         en = 37.077
@@ -726,6 +729,25 @@ class myDetector (QtCore.QObject):
         xy0 = [maxrow, maxcol]
         self.eqproxfine[0]=maxrow/100.
         self.eqproxfine[1]=maxcol/100.
+
+        self.beamx = xy0[0]/100. * self.nopixx
+        self.beamy = xy0[1]/100. * self.nopixy
+        xy0[0]*=5.
+        xy0[1]*=5.
+        dist = self.compdist (self.ff, xy0)
+        nbins = int(dist.max() - dist.min() + 1)
+        h = np.histogram (dist, bins=nbins)
+        h1 = h[0]
+        numH = len(h[0])
+
+        while (np.max(h1)>cut) :
+            i = np.argmax (h1)
+            m = np.max(h1)
+            h1[i] = 0.
+            if (i > 0 and i < numH-1) :
+                j = i - 1
+
+
 
         self.calPeaks.emit()
 
