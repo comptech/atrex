@@ -738,7 +738,8 @@ class myDetector (QtCore.QObject):
         nbins = int(dist.max() - dist.min() + 1)
         h = np.histogram (dist, bins=nbins)
         h1 = h[0]
-        numH = len(h[0])
+        h = h[0]
+        numH = len(h)
 
         while (np.max(h1)>cut) :
             i = np.argmax (h1)
@@ -746,6 +747,34 @@ class myDetector (QtCore.QObject):
             h1[i] = 0.
             if (i > 0 and i < numH-1) :
                 j = i - 1
+                while (j >= 0) :
+                    if (h1[j] > cut/2.) :
+                        h[i] += h[j]
+                        h[j] =0.
+                        h1[j]=0.
+                    else :
+                        j = 0
+                    j=j-1
+
+                j=i+1
+                while (j <= numH-1) :
+                    if (h1[j]>cut/2.) :
+                        h[i]+=h[j]
+                        h[j]=0
+                        h1[j]=0
+                    else :
+                        j=numH-1
+                    j=j+1
+        # NOTE - should be cut not cut/2.
+        fh = np.where (h > cut/2.)
+        numB = len(fh)
+        rings = np.zeros(nn, dtype=np.int64)
+        for i in range (nn) :
+            c = np.absolute (np.subtract(dist[i],h1[fh]))
+            ri = np.min (c)
+            kk = np.argmin (c)
+
+
 
 
 
