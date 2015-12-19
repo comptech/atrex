@@ -799,7 +799,9 @@ class myDetector (QtCore.QObject):
         # x,y coords of points in ring
         self.rgx = np.zeros((numB,m), dtype=np.float32)
         self.rgy = np.zeros((numB,m), dtype=np.float32)
+        self.rgN = np.zeros (numB,dtype=np.uint16)
 
+        self.numRings = numB
         for k in range (numB) :
             r = np.where (rings == k)[0]
             ds[k] = np.mean(dist[r])*self.nopixx/500. * self.psizex

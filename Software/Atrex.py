@@ -1415,7 +1415,7 @@ class Atrex(QtGui.QMainWindow):
     def getCalPeaks (self) :
         self.imageWidget.setCalibrationMarks (self.detector.ff, 500.)
         self.imageWidget.setProxPoints ([self.detector.eqprox[0],self.detector.eqprox[1]],[self.detector.eqproxfine[0],self.detector.eqproxfine[1]])
-
+        self.imageWidget.setRingPoints (self.detector.numRings, self.detector.rgN, self.detector.rgx, self.detector.rgy)
 
 app = QtGui.QApplication(sys.argv)
 atrex = Atrex()

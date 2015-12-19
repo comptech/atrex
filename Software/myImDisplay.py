@@ -47,6 +47,10 @@ class myImDisplay (QtGui.QWidget) :
         self.calPoints = []
         self.proxPoints= [0.,0.]
         self.proxPointsF= [0.,0.]
+        self.nRings = 0
+        self.ptsPerRing=[]
+        self.ringsX = []
+        self.ringsY = []
 
     def setPeakBoxSize (self,val) :
         self.peakBoxSize = val
@@ -523,6 +527,13 @@ class myImDisplay (QtGui.QWidget) :
                     yloc = int(self.proxPointsF[0]*w)
                     painter.drawEllipse (QtCore.QPoint(xloc,yloc),5, 5)
 
+                    for i in range (self.nRings) :
+                        for j in range (self.ptsPerRing[i]):
+                            xloc = int(self.ringsX[i][j]*w)
+                            yloc = int (self.ringsY[i][j]*h)
+                            painter.drawEllipse (QtCore.QPoint(xloc,yloc),5, 5)
+
+
 
     def applyMask (self, fullmask) :
         self.applyMaskFlag = True
@@ -560,3 +571,9 @@ class myImDisplay (QtGui.QWidget) :
         self.proxPointsF [0]= points1 [0]
         self.proxPointsF [1]= points1 [1]
         self.repaint()
+
+    def setRingPoints (self, nrings, ptsPerRing, ringsX, ringsY) :
+        self.nRings = nrings
+        self.ptsPerRing = np.copy(ptsPerRing)
+        self.ringsX = np.copy(ringsX)
+        self.ringsY = np.copy(ringsY)
