@@ -672,15 +672,17 @@ class myDetector (QtCore.QObject):
         IovS = self.topLevel.ui.det_snrLE.text().toFloat()[0]
         start_dist = self.dist - self.dist * 0.5
         end_dist = self.dist + self.dist *.5
-        imarr = cgd.congrid (myim.imArray, [500, 500])
+        im = myim.imArray.astype(np.int64)
+        imarr = cgd.congrid (im, [500, 500], method='nearest',minusone=True).astype(np.int64)
         zarr = np.zeros ((500,500),dtype=np.uint8)
 
         bg = self.local_background (imarr)
+        imarr.tofile ("/home/harold/imarr.dat")
         # only for debug
 
-        hpf = imarr / bg
+        hpf = imarr / bg.astype(np.int64)
 
-        self.ff = np.where ((hpf > IovS)&(imarr>20.))
+        self.ff = np.where ((hpf > IovS) & (imarr>20.))
 
         nn = len(self.ff[0])
         print 'number of pixels meeting the peak condition is %d'%(nn)
@@ -692,11 +694,12 @@ class myDetector (QtCore.QObject):
         for i in range (100) :
             print i
             for j in range (100) :
-                dist = self.compdist (self.ff, [j*5,i*5])
-                mx = dist.max()
-                mn = dist.min()
-                nbins = int(dist.max() - dist.min()+1)
-                histo,edges = np.histogram(dist, bins=nbins)
+                dist = self.compdist (self.ff, [i*5,j*5])
+                mx = int(dist.max())+1
+                mn = int(dist.min())
+
+                #nbins = int(dist.max() - dist.min()+1)
+                histo,edges = np.histogram(dist, range=[mn,mx],bins=(mx-mn))
                 h[i,j] = np.max (histo)
         maxsub = np.argmax(h)
         maxrow = maxsub / 100
@@ -718,7 +721,9 @@ class myDetector (QtCore.QObject):
                 # note in gse_ada , there is a 5 + in the index calculation
                 dist = self.compdist(self.ff, [5.*maxrow+i, 5.*maxcol+j])
                 nbins = int(dist.max() - dist.min() +1)
-                histo, edges = np.histogram(dist, bins=nbins)
+                mx = int(dist.max()+1)
+                mn = int(dist.min())
+                histo, edges = np.histogram(dist, range=[mn,mx],bins=mx-mn)
                 h[i+5][j+5]=np.max(histo)
         maxsub = np.argmax (h)
 
@@ -735,10 +740,12 @@ class myDetector (QtCore.QObject):
         xy0[0]*=5.
         xy0[1]*=5.
         dist = self.compdist (self.ff, xy0)
-        nbins = int(dist.max() - dist.min() + 1)
-        h = np.histogram (dist, bins=nbins)
-        h1 = h[0]
-        h = h[0]
+        mn = int(dist.min())
+        mx = int(dist.max()+1)
+        nbins = mx-mn
+        h,edges = np.histogram (dist, range=[mn,mx],bins=nbins)
+        h1 = np.copy(h)
+        #h = h[0]
         numH = len(h)
 
         while (np.max(h1)>cut) :
@@ -766,17 +773,41 @@ class myDetector (QtCore.QObject):
                         j=numH-1
                     j=j+1
         # NOTE - should be cut not cut/2.
-        fh = np.where (h > cut/2.)
+        fh = np.where (h > cut)[0]
         numB = len(fh)
+        # number of different rings with sufficient number of points
         rings = np.zeros(nn, dtype=np.int64)
         for i in range (nn) :
-            c = np.absolute (np.subtract(dist[i],h1[fh]))
+            c = np.absolute (np.subtract(dist[i],edges[fh]))
             ri = np.min (c)
             kk = np.argmin (c)
+            if (ri < dist_tol) :
+                rings[i] = kk
+            else :
+                rings[i] = -1
 
 
+        nr = np.zeros(numB, dtype=np.int64)
+        ds = np.zeros (numB, dtype=np.float32)
+        for k in range (numB) :
+            r = np.where(rings == k)[0]
+            nr[k]= len(r)
+        print "Classes Done ...\r\n"
+        m = np.max(nr)
+        print 'Max of nr is : %d'%(m)
 
+        # x,y coords of points in ring
+        self.rgx = np.zeros((numB,m), dtype=np.float32)
+        self.rgy = np.zeros((numB,m), dtype=np.float32)
 
+        for k in range (numB) :
+            r = np.where (rings == k)[0]
+            ds[k] = np.mean(dist[r])*self.nopixx/500. * self.psizex
+            print 'ds of %d is : %f'%(k, ds[k])
+            #xya=self.xy_from_indArr(500,500,self.ff[r])
+            self.rgy[k,0:nr[k]] = self.ff[0][r]/500.
+            self.rgx[k,0:nr[k]] = self.ff[1][r]/500.
+            self.rgN[k] = len(r)
 
         self.calPeaks.emit()
 
@@ -784,7 +815,7 @@ class myDetector (QtCore.QObject):
         # scale this to a 1000 by 1000 grid but return an array in original format
         # the returned array is the median on a 10x10 blocksize
         s = myarr.shape
-        myarr0 = cgd.congrid (myarr, (1000, 1000) , minusone=True)
+        myarr0 = cgd.congrid (myarr, (1000, 1000) , method='nearest', minusone=True)
         #myarr0 = imresize(myarr, (1000,1000))
         n = int (math.sqrt(s[0]*s[1]))
         out=np.zeros(myarr0.shape,myarr0.dtype)
@@ -798,7 +829,7 @@ class myDetector (QtCore.QObject):
                 else :
                     m = np.median(box[nz[0],nz[1]])
                 out[i*10:(i+1)*10, j*10:(j+1)*10]=m
-        outnew = cgd.congrid (out, s, minusone=True)
+        outnew = cgd.congrid (out, s, method='nearest', minusone=True)
         #outnew = imresize (out, s)
         return outnew
 
@@ -827,6 +858,13 @@ class myDetector (QtCore.QObject):
         return ((y,x))
 
 
+    def xy_from_indArr (self,nx, ny, indArr):
+        xys = np.zeros((len(indArr),2))
+        count = 0
+        for ia in indArr :
+            a = self.xy_from_ind (nx, ny, ia)
+            xys[count] = a
 
+        return xys
 
 
