@@ -822,7 +822,32 @@ class myDetector (QtCore.QObject):
         aa=np.argmin (ddists[1][:])
         dst = ddists[0][aa]
 
-        print 'Estimated detector distance : %f'%(dst)
+        print 'Coarse estimated detector distance : %f'%(dst)
+
+
+        # fine tune detector distance
+        start_dist = dst- step*5.
+        end_dist = dst + step * 5.
+        step = (end_dist-start_dist) / 1000.
+        for i in range (1000):
+            ddists[0][i] = start_dist + i * step
+            ddists[1][i] = self.sum_closest_refs (ds, ddists[0][i])
+        aa=np.argmin (ddists[1][:])
+        dst = ddists[0][aa]
+        print 'Refined estimated detector distance : %f'%(dst)
+
+
+        # use only peaks which match standard and are unique
+        cr = np.zeros ((2,numB), dtype=np.float32)
+        for i in range (numB) :
+            cr[0][i]= self.closest_ref (ds[i], dst)
+            cr[1][i]= self.closest_ref_d(ds[i], dst)
+
+        X = self.rgx[0][0:nr[0]]*self.nopixx/500.
+        Y = self.rgy[0][0:nr[0]]*self.nopixx/500.
+
+        dspcc = np.ones(nr[0]) * cr[1][0]
+
         self.calPeaks.emit()
 
     def local_background (self, myarr) :
@@ -894,6 +919,13 @@ class myDetector (QtCore.QObject):
 
         dr = np.min (np.absolute(ref-rad))
         return dr
+
+    def closest_ref_d (self, rad, dst):
+        ref = self.which_calibrant (dst, 0)
+        ds = self.which_calibrant (dst,1)
+        kk = np.argmin (np.absolute(ref - rad))
+        return ds[kk]
+
 
     def setCalibrant (self, ind) :
         self.calibrant = ind
