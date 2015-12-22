@@ -776,7 +776,7 @@
        <property name="title">
         <string/>
        </property>
-       <widget class="QWidget" name="">
+       <widget class="QWidget" name="layoutWidget">
         <property name="geometry">
          <rect>
           <x>10</x>
@@ -2669,6 +2669,26 @@
         <height>25</height>
        </rect>
       </property>
+      <item>
+       <property name="text">
+        <string>CeO2</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>LaB6</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Neon</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>CO2</string>
+       </property>
+      </item>
      </widget>
      <widget class="QLabel" name="label_67">
       <property name="geometry">

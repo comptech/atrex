@@ -10,6 +10,7 @@ from ctypes import *
 from numpy.ctypeslib import ndpointer
 from platform import *
 from myImage import *
+from calibrant import *
 import congrid as cgd
 from scipy.misc import imresize
 #import Atrex
@@ -38,6 +39,7 @@ class myDetector (QtCore.QObject):
         self.tiltch = 0.0
         self.ttheta = 0.0
         self.wavelength = 0.0
+        self.calibrant = 1
 
         self.gonio = [0., 0., 0.]
         self.tthetaArr = np.zeros((2048,2048), dtype=np.float32)
@@ -811,6 +813,16 @@ class myDetector (QtCore.QObject):
             self.rgx[k,0:nr[k]] = self.ff[1][r]/500.
             self.rgN[k] = len(r)
 
+        step = (end_dist - start_dist) / 1000.
+        ddists = np.zeros((2,1000), dtype = np.float32)
+        for i in range (1000) :
+            thisstep = start_dist + i * step
+            ddists[0][i] = thisstep
+            ddists[1][i] = self.sum_closest_refs (ds, thisstep)
+        aa=np.argmin (ddists[1][:])
+        dst = ddists[0][aa]
+
+        print 'Estimated detector distance : %f'%(dst)
         self.calPeaks.emit()
 
     def local_background (self, myarr) :
@@ -868,5 +880,37 @@ class myDetector (QtCore.QObject):
             xys[count] = a
 
         return xys
+
+
+    def sum_closest_refs (self, rads, dst):
+        n = len(rads)
+        sum = 0.
+        for i in range (n) :
+            sum += self.closest_ref(rads[i], dst)
+        return sum
+
+    def closest_ref (self, rad, dst) :
+        ref = self.which_calibrant (dst, 0)
+
+        dr = np.min (np.absolute(ref-rad))
+        return dr
+
+    def setCalibrant (self, ind) :
+        self.calibrant = ind
+
+    def which_calibrant (self, dst, cflag) :
+
+        if (self.calibrant == 0) :
+            r = CeO2 (dst, cflag, self.wavelength)
+            return r
+        if (self.calibrant ==1) :
+            r = LaB6 (dst, cflag, self.wavelength)
+            return r
+        if (self.calibrant ==2) :
+            r = Neon (dst, cflag, self.wavelength)
+            return r
+        if (self.calibrant ==3) :
+            r = CO2 (dst, cflag, self.wavelength)
+            return r
 
 

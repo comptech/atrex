@@ -176,6 +176,8 @@ class Atrex(QtGui.QMainWindow):
         self.ui.readTextDetFileButton.clicked.connect(self.readTextDetect)
         self.ui.writeTextDetFileButton.clicked.connect(self.writeTextDetect)
         self.ui.testCalcButton.clicked.connect (self.testCalc)
+        self.ui.det_calibrantCB.setCurrentIndex (1)
+        self.ui.det_calibrantCB.currentIndexChanged.connect (self.calibrantChanged)
 
         #integrate tab buttons
         self.ui.integrateCurrentButton.clicked.connect(self.intCurrent)
@@ -1384,6 +1386,9 @@ class Atrex(QtGui.QMainWindow):
         self.mypred.k2 = self.ui.pred_k1LE.text().toInt()[0]
         self.mypred.l1 = self.ui.pred_l0LE.text().toInt()[0]
         self.mypred.l2 = self.ui.pred_l1LE.text().toInt()[0]
+
+    def calibrantChanged (self, ind):
+        self.detector.setCalibrant (ind)
 
 
     def startSimulate (self) :
