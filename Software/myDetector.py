@@ -662,6 +662,198 @@ class myDetector (QtCore.QObject):
         return a
 
 
+    ## refineCalibration
+    # function called when Detector -> Refine calibration button
+    # is clicked.
+    # @param - myImage as displayed calibration image is used for input
+    def refineCalibration (self, myim) :
+        re = self.which_calibration (self)
+        # check if powder or solid, if powder re = 1
+        if (re == 1) :
+            self.testCalibration_esd (myim)
+
+    def testCalibration_esd (self, myim) :
+        esd = np.zeros(9, dtype=np.float32)
+        en = A_to_kev (self.wavelength)
+        cut = 30.
+        dist_tol = 1.8
+        IovS = self.topLevel.ui.det_snrLE.text().toFloat()[0]
+        start_dist = self.dist - self.dist * 0.5
+        end_dist = self.dist + self.dist *.5
+        im = myim.imArray.astype(np.int64)
+        imarr = cgd.congrid (im, [500, 500], method='nearest',minusone=True).astype(np.int64)
+        zarr = np.zeros ((500,500),dtype=np.uint8)
+
+        bg = self.local_background (imarr)
+        imarr.tofile ("/home/harold/imarr.dat")
+        # only for debug
+
+        hpf = imarr / bg.astype(np.int64)
+
+        self.ff = np.where ((hpf > IovS) & (imarr>20.))
+
+        nn = len(self.ff[0])
+        print 'number of pixels meeting the peak condition is %d'%(nn)
+
+
+        ### equal proximity coarse search
+        # in 5 pixel steps
+        h = np.zeros((100,100), dtype=np.float32)
+        for i in range (100) :
+            print i
+            for j in range (100) :
+                dist = self.compdist (self.ff, [i*5,j*5])
+                mx = int(dist.max())+1
+                mn = int(dist.min())
+
+                #nbins = int(dist.max() - dist.min()+1)
+                histo,edges = np.histogram(dist, range=[mn,mx],bins=(mx-mn))
+                h[i,j] = np.max (histo)
+        maxsub = np.argmax(h)
+        maxrow = maxsub / 100
+        maxcol = maxsub - maxrow * 100
+        print maxsub, maxrow, maxcol
+
+        self.eqprox[0]=maxrow/100.
+        self.eqprox[1]=maxcol/100.
+
+        # is this even being used
+        dist = self.compdist (self.ff, [maxrow, maxcol])
+        nbins = int (dist.max()-dist.min()+1)
+        h = np.histogram(dist, bins=nbins)
+
+        ### equal proximity seach fine (in 500 space)
+        h = np.zeros((11,11),dtype=np.float32)
+        for i in range (-5,6) :
+            for j in range(-5,6) :
+                # note in gse_ada , there is a 5 + in the index calculation
+                dist = self.compdist(self.ff, [5.*maxrow+i, 5.*maxcol+j])
+                nbins = int(dist.max() - dist.min() +1)
+                mx = int(dist.max()+1)
+                mn = int(dist.min())
+                histo, edges = np.histogram(dist, range=[mn,mx],bins=mx-mn)
+                h[i+5][j+5]=np.max(histo)
+        maxsub = np.argmax (h)
+
+        # then back in 100 space
+        xy = self.xy_from_ind (11,11,maxsub)
+        maxrow = maxrow + (xy[0] - 5)/5.
+        maxcol = maxcol + (xy[1] - 5)/5.
+        xy0 = [maxrow, maxcol]
+        self.eqproxfine[0]=maxrow/100.
+        self.eqproxfine[1]=maxcol/100.
+
+        self.beamx = xy0[0]/100. * self.nopixx
+        self.beamy = xy0[1]/100. * self.nopixy
+        xy0[0]*=5.
+        xy0[1]*=5.
+        dist = self.compdist (self.ff, xy0)
+        mn = int(dist.min())
+        mx = int(dist.max()+1)
+        nbins = mx-mn
+        h,edges = np.histogram (dist, range=[mn,mx],bins=nbins)
+        h1 = np.copy(h)
+        #h = h[0]
+        numH = len(h)
+
+        while (np.max(h1)>cut) :
+            i = np.argmax (h1)
+            m = np.max(h1)
+            h1[i] = 0.
+            if (i > 0 and i < numH-1) :
+                j = i - 1
+                while (j >= 0) :
+                    if (h1[j] > cut/2.) :
+                        h[i] += h[j]
+                        h[j] =0.
+                        h1[j]=0.
+                    else :
+                        j = 0
+                    j=j-1
+
+                j=i+1
+                while (j <= numH-1) :
+                    if (h1[j]>cut/2.) :
+                        h[i]+=h[j]
+                        h[j]=0
+                        h1[j]=0
+                    else :
+                        j=numH-1
+                    j=j+1
+        # NOTE - should be cut not cut/2.
+        fh = np.where (h > cut)[0]
+        numB = len(fh)
+        # number of different rings with sufficient number of points
+        rings = np.zeros(nn, dtype=np.int64)
+        for i in range (nn) :
+            c = np.absolute (np.subtract(dist[i],edges[fh]))
+            ri = np.min (c)
+            kk = np.argmin (c)
+            if (ri < dist_tol) :
+                rings[i] = kk
+            else :
+                rings[i] = -1
+
+
+        nr = np.zeros(numB, dtype=np.int64)
+        ds = np.zeros (numB, dtype=np.float32)
+        for k in range (numB) :
+            r = np.where(rings == k)[0]
+            nr[k]= len(r)
+        print "Classes Done ...\r\n"
+        m = np.max(nr)
+        print 'Max of nr is : %d'%(m)
+
+        # x,y coords of points in ring
+        self.rgx = np.zeros((numB,m), dtype=np.float32)
+        self.rgy = np.zeros((numB,m), dtype=np.float32)
+        self.rgN = np.zeros (numB,dtype=np.uint16)
+
+        self.numRings = numB
+        for k in range (numB) :
+            r = np.where (rings == k)[0]
+            ds[k] = np.mean(dist[r])*self.nopixx/500. * self.psizex
+            print 'ds of %d is : %f'%(k, ds[k])
+            #xya=self.xy_from_indArr(500,500,self.ff[r])
+            self.rgy[k,0:nr[k]] = self.ff[0][r]/500.
+            self.rgx[k,0:nr[k]] = self.ff[1][r]/500.
+            self.rgN[k] = len(r)
+
+        step = (end_dist - start_dist) / 1000.
+        ddists = np.zeros((2,1000), dtype = np.float32)
+        for i in range (1000) :
+            thisstep = start_dist + i * step
+            ddists[0][i] = thisstep
+            ddists[1][i] = self.sum_closest_refs (ds, thisstep)
+        aa=np.argmin (ddists[1][:])
+        dst = ddists[0][aa]
+
+        print 'Coarse estimated detector distance : %f'%(dst)
+
+
+        # fine tune detector distance
+        start_dist = dst- step*5.
+        end_dist = dst + step * 5.
+        step = (end_dist-start_dist) / 1000.
+        for i in range (1000):
+            ddists[0][i] = start_dist + i * step
+            ddists[1][i] = self.sum_closest_refs (ds, ddists[0][i])
+        aa=np.argmin (ddists[1][:])
+        dst = ddists[0][aa]
+        print 'Refined estimated detector distance : %f'%(dst)
+
+
+        # use only peaks which match standard and are unique
+        cr = np.zeros ((2,numB), dtype=np.float32)
+        for i in range (numB) :
+            cr[0][i]= self.closest_ref (ds[i], dst)
+            cr[1][i]= self.closest_ref_d(ds[i], dst)
+
+        X = self.rgx[0][0:nr[0]]*self.nopixx/500.
+        Y = self.rgy[0][0:nr[0]]*self.nopixx/500.
+
+        dspcc = np.ones(nr[0]) * cr[1][0]
+
     ## testCalibration
     # function called when Detector -> Test calibration button
     # is clicked.

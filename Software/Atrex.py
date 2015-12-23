@@ -178,6 +178,7 @@ class Atrex(QtGui.QMainWindow):
         self.ui.testCalcButton.clicked.connect (self.testCalc)
         self.ui.det_calibrantCB.setCurrentIndex (1)
         self.ui.det_calibrantCB.currentIndexChanged.connect (self.calibrantChanged)
+        self.ui.pushButton_Detector_Refine_calibration.clicked.connect (self.refineCalibration)
 
         #integrate tab buttons
         self.ui.integrateCurrentButton.clicked.connect(self.intCurrent)
@@ -1271,6 +1272,9 @@ class Atrex(QtGui.QMainWindow):
     def testCalc (self) :
         #self.detector.create_ttheta_array (self.myim.imArraySize)
         self.detector.testCalibration(self.myim)
+
+    def refineCalibration (self) :
+        self.detector.refineCalibration(self.myim)
 
     def calc2theta (self) :
         self.Update_Detector_calibration()
