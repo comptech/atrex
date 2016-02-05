@@ -12,7 +12,7 @@ class Project :
     based upon the image base
     """
 
-    base = ''
+
     filenum = 0
     curimage = QtCore.QString('')
     projFlag = False
@@ -29,7 +29,11 @@ class Project :
     expos = 10.
     chi = 0.
     detector = 0.
-    h5Flag = False
+
+
+    def __init__(self):
+        self.base = ""
+        self.h5Flag = False
 
     def getImageBase (self, filename) :
         """
@@ -47,11 +51,11 @@ class Project :
         else :
             self.h5Flag = False
 
-        self.base = filename.left(ind_of_start_num)
+        newbase = filename.left(ind_of_start_num)
         if not self.h5Flag :
-            imstringFilt = '*.tif'%self.base
+            imstringFilt = '*.tif'%newbase
         else :
-            imstringFilt = '*.h5'%self.base
+            imstringFilt = '*.h5'%newbase
         curimage = filename
         self.filenum = self.getFileNumber (filename)
         print 'Debug : %s'%self.filenum
@@ -78,8 +82,9 @@ class Project :
                 self.maxImageNum = num
         print 'min image : ', self.minImageNum
         print 'max image : ', self.maxImageNum
-
-        self.checkForFiles()
+        if (self.base != newbase) :
+            self.checkForFiles()
+            self.base = QtCore.QString (newbase)
         return self.base
 
     def getFileNameFromNum (self, number) :

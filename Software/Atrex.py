@@ -342,9 +342,9 @@ class Atrex(QtGui.QMainWindow):
         # self.ui.imDirLE.setText(wdir)
         # image file prefix will be used to build new images to display
 
-        prefind = self.imageFile.lastIndexOf(".tif")
-        self.imageFilePref = self.imageFile.left(prefind - 3)
-        print 'pref is ', self.imageFilePref
+        #prefind = self.imageFile.lastIndexOf(".tif")
+        #self.imageFilePref = self.imageFile.left(prefind - 3)
+        #print 'pref is ', self.imageFilePref
         print 'filename is ', self.imageFile
         self.imfileLE.setText(self.imageFile)
         self.displayImage(self.imageFile)
