@@ -287,8 +287,8 @@ class Atrex(QtGui.QMainWindow):
         self.mergeDisplayFlag = False
         self.imtypeCB.setCurrentIndex(0)
         wdir = self.ui.imDirLE.text()
-        self.imageFile = QtGui.QFileDialog.getOpenFileName(self, 'Open Tiff Image', wdir)
-        self.openImageFile (self.imageFile)
+        self.imageFile = QtGui.QFileDialog.getOpenFileName(self, 'Open Image', wdir)
+        extension = os.path.splitext(self.imageFile.toLatin1().data())[1]
 
         #return
 
@@ -301,14 +301,13 @@ class Atrex(QtGui.QMainWindow):
         wdir = self.imageFile.left(self.imageFile.lastIndexOf(basename))
         self.ui.imDirLE.setText(wdir)
         # image file prefix will be used to build new images to display
-        prefind = self.imageFile.lastIndexOf(".tif")
+
+        #prefind = self.imageFile.lastIndexOf(".tif")
         #self.imageFilePref = self.imageFile.left(prefind - 3)
         self.imageFilePref = self.base
         print 'pref is ', self.imageFilePref
         self.imfileLE.setText(self.imageFile)
-        self.displayImage(self.imageFile)
-        # self.myim.readTiff (self.imageFile)
-        #self.ui.imageWidget.writeQImage (self.myim.imArray)
+
         mnmx = getImageRange(wdir, self.imageFile)
         self.ui.minRangeLabel.setText(QtCore.QString.number(mnmx[0]))
         self.ui.maxRangeLabel.setText(QtCore.QString.number(mnmx[1]))
@@ -316,12 +315,14 @@ class Atrex(QtGui.QMainWindow):
         self.ui.mergeStartLabel.setText (QtCore.QString.number(mnmx[0]))
         self.ui.mergeEndLabel.setText (QtCore.QString.number(mnmx[1]))
         #self.ui.mergeProgressBar.setRange (mnmx[0], 100)
+        self.displayImage (self.imageFile)
 
         self.ui.rangeSlider.setRange(mnmx[0], mnmx[1])
         self.ui.rangeSlider.setValue(mnmx[2])
         self.minRange = mnmx[0]
         self.maxRange = mnmx[1]
         self.firstDisplay = True
+
 
 
     ## openImageFile
@@ -440,12 +441,13 @@ class Atrex(QtGui.QMainWindow):
             return
 
         # get the image num and convert to float
-        z = QtCore.QChar('0')
+        #z = QtCore.QChar('0')
         tmpstr = self.ui.selectedImageLE.text()
         imnum = tmpstr.toInt()
         print 'New image number ', imnum[0]
+        newimage = self.myproj.getFileNameFromNum (imnum[0])
 
-        newimage = QtCore.QString("%1%2.tif").arg(self.imageFilePref).arg(imnum[0], 3, 10, z)
+        #newimage = QtCore.QString("%1%2.tif").arg(self.imageFilePref).arg(imnum[0], 3, 10, z)
 
         status = self.displayImage(newimage)
         if (status):
@@ -603,7 +605,10 @@ class Atrex(QtGui.QMainWindow):
         else:
             qf.close()
 
-        self.myim.readTiff(filename)
+        if "h5" in filename :
+            self.myim.readHDF5 (filename)
+        else :
+            self.myim.readTiff(filename)
         ### read in the accompanying settings file for the image
         ### if it exists
         ###
@@ -619,9 +624,9 @@ class Atrex(QtGui.QMainWindow):
             self.zoomWidget.setMinMax (mn, mx)
             self.ui.minDNSlider.setValue (mn)
             self.ui.maxDNSlider.setValue (mx)
-            self.myproj = Project()
-            self.myproj.getImageBase (filename)
-            print 'Image base is %s'%self.myproj.base
+            #self.myproj = Project()
+            #self.myproj.getImageBase (filename)
+            #print 'Image base is %s'%self.myproj.base
 
 
         if not self.displayedImage:
@@ -1274,6 +1279,7 @@ class Atrex(QtGui.QMainWindow):
         self.detector.testCalibration(self.myim)
 
     def refineCalibration (self) :
+        self.detector.setRefineTwist(self.ui.refineTwistCB.isChecked())
         self.detector.refineCalibration(self.myim)
 
     def calc2theta (self) :

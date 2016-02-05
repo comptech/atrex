@@ -12,6 +12,7 @@ import myPeakTable
 from ctypes import *
 from numpy.ctypeslib import ndpointer
 from platform import *
+import h5py
 
 
 class myImage :
@@ -74,6 +75,33 @@ class myImage :
         self.imArray = np.asarray(im.getdata())
         self.imArray[self.imArray<0]+= 65535
         self.imArray = np.reshape (self.imArray,(y,x))
+        self.imArray_orig = self.imArray [:,:]
+        print self.imArray.min(), self.imArray.max()
+
+    ''' readText reads the image's associated text file extracting the
+        omega0 and omegaR, chi, detector, and exposure time values. These
+        are put into the respective members of this class.
+    '''
+
+    def readHDF5 (self, infile) :
+        self.imFileName = infile
+        print 'Loading ',infile
+        #im = Image.open (infile.toLatin1().data())
+        f = h5py.File (infile.toLatin1().data(), 'r')
+        g = f['entry1/data']
+        data = g.values()
+        self.imArray = np.asarray(data[0])
+
+        xy = self.imArray.shape
+        #print x, y
+        self.imArraySize=[xy[1], xy[0]]
+        mnval = np.min (self.imArray)
+        mxval = np.max (self.imArray)
+        #img = mpimg.imread(infile.toLatin1().data())
+        #plt.imshow(im)
+        #self.imArray = np.asarray(im.getdata())
+        self.imArray[self.imArray<0]+= 65535
+        #self.imArray = np.reshape (self.imArray,(y,x))
         self.imArray_orig = self.imArray [:,:]
         print self.imArray.min(), self.imArray.max()
 

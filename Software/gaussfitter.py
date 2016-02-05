@@ -11,6 +11,7 @@ import numpy
 from numpy.ma import median
 from numpy import pi
 #from scipy import optimize,stats,pi
+from scipy.optimize import curve_fit
 from mpfit import mpfit
 """ 
 Note about mpfit/leastsq: 
@@ -548,4 +549,5 @@ def collapse_gaussfit(cube,xax=None,axis=2,negamp=False,usemoments=True,nsigcut=
         return width_arr,offset_arr,amp_arr,width_err,offset_err,amp_err,chi2_arr
     else:
         return width_arr,offset_arr,amp_arr,chi2_arr
+
 

@@ -12,6 +12,8 @@ from platform import *
 from myImage import *
 from calibrant import *
 import congrid as cgd
+from gaussfitter import *
+from peakFit1 import *
 from scipy.misc import imresize
 #import Atrex
 
@@ -45,6 +47,8 @@ class myDetector (QtCore.QObject):
         self.tthetaArr = np.zeros((2048,2048), dtype=np.float32)
         self.tthetaBin = np.zeros ((2048,2048), dtype=np.uint16)
         self.threadDone = [False, False, False, False, False, False, False, False]
+        self.refineTwistFlag = False
+
         osname = system()
 
         if "Win" in osname :
@@ -667,7 +671,9 @@ class myDetector (QtCore.QObject):
     # is clicked.
     # @param - myImage as displayed calibration image is used for input
     def refineCalibration (self, myim) :
-        re = self.which_calibration (self)
+        re = 1
+        #check button later
+        #re = self.which_calibration (self)
         # check if powder or solid, if powder re = 1
         if (re == 1) :
             self.testCalibration_esd (myim)
@@ -814,9 +820,9 @@ class myDetector (QtCore.QObject):
             r = np.where (rings == k)[0]
             ds[k] = np.mean(dist[r])*self.nopixx/500. * self.psizex
             print 'ds of %d is : %f'%(k, ds[k])
-            #xya=self.xy_from_indArr(500,500,self.ff[r])
-            self.rgy[k,0:nr[k]] = self.ff[0][r]/500.
-            self.rgx[k,0:nr[k]] = self.ff[1][r]/500.
+            # xya=self.xy_from_indArr (500,500,self.ff[r])
+            self.rgy[k,0:nr[k]] = self.ff[0][r]
+            self.rgx[k,0:nr[k]] = self.ff[1][r]
             self.rgN[k] = len(r)
 
         step = (end_dist - start_dist) / 1000.
@@ -845,14 +851,122 @@ class myDetector (QtCore.QObject):
 
         # use only peaks which match standard and are unique
         cr = np.zeros ((2,numB), dtype=np.float32)
+        omissions = np.zeros (numB, dtype=np.int32)
         for i in range (numB) :
             cr[0][i]= self.closest_ref (ds[i], dst)
             cr[1][i]= self.closest_ref_d(ds[i], dst)
+            if (cr[0][i] > .2) :
+                omissions[i] = 1
 
+        rrr=0
         X = self.rgx[0][0:nr[0]]*self.nopixx/500.
         Y = self.rgy[0][0:nr[0]]*self.nopixx/500.
+        Z = np.zeros(nr[0],dtype=np.float32)
+        crval = cr[1][0]
+        dspcc = np.ones(nr[0]) * crval
+        nus = np.zeros(nr[0],dtype=np.float32)
+        tths = np.zeros(nr[0],dtype=np.float32)
+        tthval = tth_from_en_and_d (en, crval)
+        tths = np.ones (nr[0])*tthval
 
-        dspcc = np.ones(nr[0]) * cr[1][0]
+        for rrr in range (1, numB) :
+            if (omissions[rrr]==0) :
+                pos = len (X)
+                X=np.concatenate ((X, self.rgx[rrr][0:nr[rrr]]))
+                Y=np.concatenate ((Y, self.rgy[rrr][0:nr[rrr]]))
+                crval = cr[1][rrr]
+                newcr = np.ones(nr[rrr],dtype=np.float32)*crval
+                dspcc = np.concatenate ((dspcc, newcr))
+                tt = np.zeros(nr[rrr], dtype=np.float32)
+                nu = np.zeros(nr[rrr], dtype=np.float32)
+                tths = np.concatenate ((tths, tt))
+                nus=np.concatenate ((nus, nu))
+                newlen = pos+nr[rrr]
+                print 'RRR is ', rrr
+                for i in range (pos, pos+nr[rrr]) :
+                    print i
+
+                    tths [i] = tth_from_en_and_d (en, dspcc[i])
+                    nus[i]=self.get_nu_from_pix([X[i],Y[i]])
+
+        p = np.zeros(6,dtype=np.float32)
+        p[0] = self.dist
+        p[1] = self.beamx
+        p[2] = self.beamy
+        print 'Starting calibration refinement'
+
+        pars = {'value':0.,'fixed':0,'limited':[0,0],'limits':[0.,0]}
+        parinfo = []
+        for i in range (6) :
+            parinfo.append (pars.copy())
+
+        NNN = len(X)
+        arr1 = self.nopixx
+        arr2 = self.nopixy
+        imdat = myim.imArray
+        for i in range (NNN) :
+            if not (X[i]<5 or X[i] > (arr1 - 6) or Y[i] < 5 or Y[i] > (arr2-6))  :
+                if (imdat[X[i],Y[i]]< imdat[X[i]-1,Y[i]]):
+                    X[i] = X[i]-1
+                if (imdat[X[i],Y[i]]< imdat[X[i]+1,Y[i]]):
+                    X[i] = X[i]+1
+                if (imdat[X[i],Y[i]]< imdat[X[i],Y[i]-1]):
+                    Y[i] = Y[i]-1
+                if (imdat[X[i],Y[i]]< imdat[X[i],Y[i]+1]):
+                    Y[i] = Y[i]+1
+
+                if (imdat[X[i],Y[i]]< imdat[X[i]-1,Y[i]]):
+                    X[i] = X[i]-1
+                if (imdat[X[i],Y[i]]< imdat[X[i]+1,Y[i]]):
+                    X[i] = X[i]+1
+                if (imdat[X[i],Y[i]]< imdat[X[i],Y[i]-1]):
+                    Y[i] = Y[i]-1
+                if (imdat[X[i],Y[i]]< imdat[X[i],Y[i]+1]):
+                    Y[i] = Y[i]+1
+
+                if (imdat[X[i],Y[i]]< imdat[X[i]-1,Y[i]]):
+                    X[i] = X[i]-1
+                if (imdat[X[i],Y[i]]< imdat[X[i]+1,Y[i]]):
+                    X[i] = X[i]+1
+                if (imdat[X[i],Y[i]]< imdat[X[i],Y[i]-1]):
+                    Y[i] = Y[i]-1
+                if (imdat[X[i],Y[i]]< imdat[X[i],Y[i]+1]):
+                    Y[i] = Y[i]+1
+
+            if not (X[i]<5 or X[i] > (arr1 - 6) or Y[i] < 5 or Y[i] > (arr2-6))  :
+                xxx = np.arange(-5,6,1)
+                a=np.zeros(3, dtype=np.float32)
+                nus[i]= self.get_nu_from_pix((X[i],Y[i]))
+                if (nus[i]>45. and nus[i]<135.):
+                    ix = int (round(X[i],0))
+                    iy = int (round(Y[i],0))
+                    sec = myim.imArray[iy,ix-5:ix+6]
+                    a[0] = np.max(sec)-np.min(sec)
+                    a[1]= 0
+                    a[2] =2
+                    #res = gaussfit (sec, xxx, a, nterms=4)
+                    res =  gaussfit1d(xxx, sec, a)
+                    #print res
+                else :
+                    ix = int (round(X[i],0))
+                    iy = int (round(Y[i],0))
+                    sec = myim.imArray[iy-5:iy+6,ix]
+
+                    #res = gaussfit (sec, xxx, a, nterms=4)
+                    #res =  gauss_lsq(xxx, sec)
+                    a[0] = np.max(sec)-np.min(sec)
+                    a[1]= 0
+                    a[2] =2
+                    res =  gaussfit1d(xxx, sec, a)
+                    #print res
+        er = 1./dspcc
+        Z = np.zeros (NNN, dtype=np.float32)
+        parinfo[:].value = [P]
+
+
+        self.calPeaks.emit()
+
+
 
     ## testCalibration
     # function called when Detector -> Test calibration button
@@ -1064,6 +1178,9 @@ class myDetector (QtCore.QObject):
         #outnew = imresize (out, s)
         return outnew
 
+    def setRefineTwist(self, flag):
+        self.refineTwistFlag = flag
+
     ###
     #compdist - function to return  something from the other
     # pos is two element vector
@@ -1083,6 +1200,7 @@ class myDetector (QtCore.QObject):
         return b
 
 
+
     def xy_from_ind (self, nx, ny, ind) :
         y = ind / ny
         x = ind - y * ny
@@ -1097,6 +1215,27 @@ class myDetector (QtCore.QObject):
             xys[count] = a
 
         return xys
+
+    ##
+    # get_nu_from_pix
+    # method calculates the detector out of horiz. plane
+    # angle for a reflection from the Cartesian
+    # coordinates of reciprocal vector
+    # @param pix is 2 element list , x, y
+    # returns the angle
+    def get_nu_from_pix (self, pix) :
+        gonio = np.zeros(6, dtype=np.float32)
+        nn = len (pix) / 2
+        y = np.zeros(nn)
+        for i in range (nn) :
+            sd = self.calculate_sd_from_pixels(pix, gonio)
+            sd[0] = 0
+            nu = ang_between_vecs (sd, [0.,-1.,0.])
+            y[i] = nu
+            if (sd[2] >= 0.) :
+                y[i]*= (-1.)
+        return y
+
 
 
     def sum_closest_refs (self, rads, dst):
@@ -1136,5 +1275,22 @@ class myDetector (QtCore.QObject):
         if (self.calibrant ==3) :
             r = CO2 (dst, cflag, self.wavelength)
             return r
+
+
+
+
+    def radius_differences ( X,Y,P) :
+        newdet = myDetector  ()
+        newdet.dist = P[0]
+        newdet.beamx = P[1]
+        newdet.beamy = P[2]
+        newdet.angle = P[3]
+        newdet.tiltom = P[4]
+        newdet.tiltch = P[5]
+        n = len(X)
+        rado = math.sqrt(((X-newdet.beamx))**2. +((Y-newdet.beamy))**2)*newdet.psizex
+        pix = np.zeros ((2,n))
+        pix[0,:]=X
+        pix[1,:]=Y
 
 

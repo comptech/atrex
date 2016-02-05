@@ -1,6 +1,7 @@
 __author__ = 'harold'
 from PyQt4 import QtCore, QtGui, uic
 from myGenSettingsDlg import *
+import os
 
 
 
@@ -28,6 +29,7 @@ class Project :
     expos = 10.
     chi = 0.
     detector = 0.
+    h5Flag = False
 
     def getImageBase (self, filename) :
         """
@@ -39,8 +41,17 @@ class Project :
         self.imFile = filename
         ind_of_suffx = filename.lastIndexOf ('.')
         ind_of_start_num = filename.lastIndexOf ('_') +1
+        extension = os.path.splitext(filename.toLatin1().data())[1]
+        if "h5" in extension :
+            self.h5Flag = True
+        else :
+            self.h5Flag = False
+
         self.base = filename.left(ind_of_start_num)
-        imstringFilt = '*.tif'%self.base
+        if not self.h5Flag :
+            imstringFilt = '*.tif'%self.base
+        else :
+            imstringFilt = '*.h5'%self.base
         curimage = filename
         self.filenum = self.getFileNumber (filename)
         print 'Debug : %s'%self.filenum
@@ -72,7 +83,10 @@ class Project :
         return self.base
 
     def getFileNameFromNum (self, number) :
-        tempfile = QtCore.QString('%1%2.tif').arg(self.base).arg(int(number), self.numDigits, 10, QtCore.QChar('0'))
+        if self.h5Flag :
+            tempfile = QtCore.QString('%1%2.h5').arg(self.base).arg(int(number), self.numDigits, 10, QtCore.QChar('0'))
+        else :
+            tempfile = QtCore.QString('%1%2.tif').arg(self.base).arg(int(number), self.numDigits, 10, QtCore.QChar('0'))
         self.filenum = number
         #print 'debug :', tempfile
         return tempfile
