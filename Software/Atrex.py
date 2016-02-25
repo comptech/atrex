@@ -109,7 +109,7 @@ class Atrex(QtGui.QMainWindow):
         self.ui.maskButton.clicked.connect(self.maskMode)
         self.ui.unmaskButton.clicked.connect(self.unmaskMode)
         self.ui.list1Button.toggled.connect(self.listButtonChanged)
-        self.ui.peakListWidget.itemClicked.connect(self.peakListClicked)
+        self.ui.peaks_peakListWidgetTable.itemClicked.connect(self.peakListClicked)
 
         self.ui.peakListWidget.itemSelectionChanged.connect(self.PeakListBrowse)
 
@@ -699,7 +699,7 @@ class Atrex(QtGui.QMainWindow):
     # peakListCLicked
     # @brief Define a peak for analysis by clicking the combobox listing all peaks already identified.
     def peakListClicked(self, event):
-        itemNumber = self.ui.peakListWidget.currentRow()
+        itemNumber = self.ui.peaks_peakListWidgetTable.currentRow()
         xy = self.peaks.peaks[itemNumber].DetXY
         if (self.oldSelected >= 0) :
             self.peaks.peaks[self.oldSelected].clickSelected = False
