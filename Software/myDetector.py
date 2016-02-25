@@ -42,6 +42,7 @@ class myDetector (QtCore.QObject):
         self.ttheta = 0.0
         self.wavelength = 0.0
         self.calibrant = 1
+        self.dacopen = 18.
 
         self.gonio = [0., 0., 0.]
         self.tthetaArr = np.zeros((2048,2048), dtype=np.float32)

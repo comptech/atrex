@@ -70,13 +70,15 @@ class Atrex(QtGui.QMainWindow):
         self.ui.mergeButton.clicked.connect(self.mergeImageRange)
         self.ui.mergeCancelButton.clicked.connect (self.mergeCancel)
         self.ui.lutCB.currentIndexChanged.connect (self.lutChanged)
+
         self.ui.mergeProgressBar.setValue (0)
 
         # display adjustments
         self.ui.imageMinLE.returnPressed.connect (self.dispMinPressed)
         self.ui.imageMaxLE.returnPressed.connect (self.dispMaxPressed)
 
-
+        self.ui.saveProjSetButton.clicked.connect (self.saveProj)
+        self.ui.loadProjSetButton.clicked.connect (self.readProj)
 
         self.ui.pushButton_Detector_Open_calibration.clicked.connect(self.openDetectorCalibration)
         self.ui.pushButton_Detector_Save_calibration.clicked.connect(self.saveDetectorCalibration)
@@ -217,11 +219,12 @@ class Atrex(QtGui.QMainWindow):
 
         self.ui.peakProfWidget.setpType(0)
         self.fitarr = None
+        str = '%f'%self.detector.dacopen
+        self.ui.scan_dacopenLE.setText(str)
 
 
         #detector calibration ready...
         self.detector.calPeaks.connect (self.getCalPeaks)
-
     ## getHome
     #   get the user's home directory
     def getHome(self):
@@ -362,15 +365,20 @@ class Atrex(QtGui.QMainWindow):
         str = '%f'%self.myproj.omega0
         self.ui.omega0Lab.setText(str)
         self.ui.pred_startLE.setText (str)
+        self.ui.scan_startAngLE.setText (str)
         str='%f'%self.myproj.omegaR
         self.ui.pred_rangeLE.setText (str)
+        self.ui.scan_stepAngLE.setText (str)
         str = '%f'%self.myproj.detector
         self.ui.detectorLab.setText (str)
         str = '%f'%self.myproj.chi
         self.ui.chiLab.setText(str)
         str = '%f'%self.myproj.expos
         self.ui.expLab.setText(str)
-
+        str = "%d"%self.myproj.minImageNum
+        self.ui.scan_startImageLE.setText(str)
+        str = "%d"%self.myproj.numImages
+        self.ui.scan_numImagesLE.setText(str)
 
 
 
@@ -1431,6 +1439,123 @@ class Atrex(QtGui.QMainWindow):
         self.imageWidget.setCalibrationMarks (self.detector.ff, 500.)
         self.imageWidget.setProxPoints ([self.detector.eqprox[0],self.detector.eqprox[1]],[self.detector.eqproxfine[0],self.detector.eqproxfine[1]])
         self.imageWidget.setRingPoints (self.detector.numRings, self.detector.rgN, self.detector.rgx, self.detector.rgy)
+
+    def read_inversions (self, outarr) :
+        if self.ui.im_invertXCB.isChecked() :
+            outarr[0] = 1
+        else :
+            outarr[0] = 0
+
+        if self.ui.im_invertYCB.isChecked() :
+            outarr[1] = 1
+        else :
+            outarr[1] = 0
+
+        if self.ui.im_transposeCB.isChecked() :
+            outarr[2] = 1
+        else :
+            outarr[2] = 0
+        return
+    def set_inversions (self, arr):
+        setval = False
+        if arr[0] == 1 :
+            setval = True
+        self.ui.im_invertXCB.setChecked (setval)
+        setval = False
+        if arr[1] == 1 :
+            setval = True
+        self.ui.im_invertYCB.setChecked (setval)
+        setval = False
+        if arr[2] == 1 :
+            setval = True
+        self.ui.im_transposeCB.setChecked (setval)
+
+
+    def saveProj (self) :
+        basestring = self.myproj.base+'projset.txt'
+        outfile = QtGui.QFileDialog.getSaveFileName (self, "Project Settings File", basestring)
+        qf = QtCore.QFile (outfile)
+        qf.open(QtCore.QIODevice.WriteOnly)
+        qts = QtCore.QTextStream(qf)
+        zeroOff = self.ui.scan_zeroOffLE.text().toFloat()[0]
+        dacOpen = self.ui.scan_dacopenLE.text().toFloat()[0]
+        #self.detector.dacopen = dacOpen
+        corrArr = [0,0,0,0]
+        invArr = [0,0,0]
+        self.load_corrections (corrArr)
+        self.read_inversions (invArr)
+
+        qts << "Zero Offset : \t" << zeroOff << "\r\n"
+        qts  << "DAC Open : \t" << dacOpen << "\r\n"
+        qts << "DAC Abs : \t" << corrArr[0] << "\r\n"
+        qts << "Omega Rotation Dir : \t" << self.getOmegaRotationDir () << "\r\n"
+        qts << "X Inversion : \t" << invArr[0] << "\r\n"
+        qts << "Y Inversion : \t" << invArr [1] << "\r\n"
+        qts << "Transpose : \t" << invArr [2] << "\r\n"
+        qf.close()
+
+        return
+
+    def readProj (self) :
+        basestring = self.myproj.base+'projset.txt'
+        pfile = QtGui.QFileDialog.getOpenFileName (self, "Project Settings File", basestring)
+        qf = QtCore.QFile (pfile)
+        qf.open(QtCore.QIODevice.ReadOnly)
+        xinversion = 0
+        yinversion = 0
+        transpose = 0
+        while (1) :
+            qts = QtCore.QTextStream(qf)
+            str = qts.readLine ()
+            if str.length() < 1 :
+                break
+            strlist = str.split (":")
+            if (str.contains("Zero")) :
+                zeroOff = strlist[1].toFloat()
+            if (str.contains ("Open")) :
+                dacOpen = strlist[1].toFloat()
+            if (str.contains ("Abs")) :
+                dacabs = strlist[1].toInt()
+                if (dacabs ==1) :
+                    self.ui.intcor_dacAbsCB.setChecked(True)
+            if (str.contains("Omega")) :
+                omegaRot = strlist[1].toInt()
+                if omegaRot <0 :
+                    self.ui.scan_omegaRotDirCB.setChecked()
+            if (str.contains("X")) :
+                xinversion = strlist[1].toInt()
+            if (str.contains("Y")) :
+                yinversion = strlist[1].toInt()
+            if (str.contains ("Transpose")):
+                transpose = strlist[1].toInt()
+
+        self.set_inversions ([xinversion, yinversion, transpose])
+
+
+
+
+
+
+    def load_corrections (self, arr):
+        for i in range (4):
+            arr[i] = 0
+        if self.ui.intcor_dacAbsCB.isChecked() :
+            arr[0] = 1
+        if self.ui.intcor_lorenzCB.isChecked() :
+            arr[1] = 1
+        if self.ui.intcor_polarCB.isChecked() :
+            arr[2] = 1
+        if self.ui.intcor_verPolCB.isChecked() :
+            arr[3] = 1
+
+        return
+
+    def getOmegaRotationDir (self) :
+        if self.ui.scan_omegaRotDirCB.isChecked() :
+            dir = -1
+        else :
+            dir = 1
+        return dir
 
 app = QtGui.QApplication(sys.argv)
 atrex = Atrex()

@@ -21,8 +21,6 @@ class Project :
     ubFile = ''
     settingsArray = [0.,0.,0.,0.,0.,0.,0]
     numDigits = 3
-    minImageNum = 1E9
-    maxImageNum = -1
     imFile = ''
     omega0 = 0
     omegaR = 15
@@ -34,6 +32,9 @@ class Project :
     def __init__(self):
         self.base = ""
         self.h5Flag = False
+        self.minImageNum =1E9
+        self.maxImageNum =-1E9
+        self.numImages = 0
 
     def getImageBase (self, filename) :
         """
@@ -82,9 +83,16 @@ class Project :
                 self.maxImageNum = num
         print 'min image : ', self.minImageNum
         print 'max image : ', self.maxImageNum
+        self.numImages = self.maxImageNum - self.minImageNum + 1
+        print 'num images : ',self.numImages
         if (self.base != newbase) :
             self.checkForFiles()
             self.base = QtCore.QString (newbase)
+        else :
+            setfile = filename+'.txt'
+            qf = QtCore.QFile (setfile)
+            if (qf.exists()) :
+                self.readFileSettings (setfile)
         return self.base
 
     def getFileNameFromNum (self, number) :

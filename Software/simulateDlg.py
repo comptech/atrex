@@ -33,6 +33,7 @@ class simulateDlg (QtGui.QDialog) :
         self.ui.sim_openUB.clicked.connect (self.openUB)
         self.ui.sim_saveUB.clicked.connect (self.saveUB)
         self.myDetect = myDetector.myDetector()
+        self.dacOpen = self.myDetect.dacopen
         self.ub = np.zeros ((3,3),dtype=np.float64)
         self.myPredict = myPredict()
         self.myPeaks = myPeakTable.myPeakTable()
@@ -79,7 +80,8 @@ class simulateDlg (QtGui.QDialog) :
         self.ui.sim_alphaLE.setText('90.')
         self.ui.sim_betaLE.setText('90.')
         self.ui.sim_gammaLE.setText('90.')
-        self.ui.sim_DACOpenLE.setText('18')
+        str = '%f'%self.dacOpen
+        self.ui.sim_DACOpenLE.setText(str)
         self.ui.sim_chiLE.setText('0.')
         self.ui.sim_phiLE.setText('0.')
         self.ui.sim_omegaLE.setText ('0.')

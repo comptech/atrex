@@ -39,7 +39,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>4</number>
+     <number>7</number>
     </property>
     <widget class="QWidget" name="FileTab">
      <attribute name="title">
@@ -768,9 +768,9 @@
        <property name="geometry">
         <rect>
          <x>489</x>
-         <y>20</y>
+         <y>140</y>
          <width>161</width>
-         <height>381</height>
+         <height>261</height>
         </rect>
        </property>
        <property name="title">
@@ -797,14 +797,14 @@
           </widget>
          </item>
          <item>
-          <widget class="QCheckBox" name="checkBox_17">
+          <widget class="QCheckBox" name="im_invertXCB">
            <property name="text">
             <string>Invert X</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QCheckBox" name="checkBox_21">
+          <widget class="QCheckBox" name="im_invertYCB">
            <property name="text">
             <string>Invert Y</string>
            </property>
@@ -832,6 +832,32 @@
          </item>
         </layout>
        </widget>
+      </widget>
+      <widget class="QPushButton" name="saveProjSetButton">
+       <property name="geometry">
+        <rect>
+         <x>484</x>
+         <y>10</y>
+         <width>151</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Save Project Settings</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="loadProjSetButton">
+       <property name="geometry">
+        <rect>
+         <x>490</x>
+         <y>40</y>
+         <width>151</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Load Project Settings</string>
+       </property>
       </widget>
      </widget>
      <widget class="myZmDisplay" name="zoomWidget" native="true">
@@ -3074,9 +3100,9 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>140</y>
+        <y>270</y>
         <width>541</width>
-        <height>251</height>
+        <height>171</height>
        </rect>
       </property>
      </widget>
@@ -3085,7 +3111,7 @@
        <rect>
         <x>10</x>
         <y>50</y>
-        <width>181</width>
+        <width>161</width>
         <height>27</height>
        </rect>
       </property>
@@ -3098,7 +3124,7 @@
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>181</width>
+        <width>161</width>
         <height>27</height>
        </rect>
       </property>
@@ -3109,7 +3135,7 @@
      <widget class="QCheckBox" name="save2ThetaCB">
       <property name="geometry">
        <rect>
-        <x>200</x>
+        <x>170</x>
         <y>10</y>
         <width>111</width>
         <height>22</height>
@@ -3124,7 +3150,7 @@
        <rect>
         <x>10</x>
         <y>90</y>
-        <width>181</width>
+        <width>161</width>
         <height>23</height>
        </rect>
       </property>
@@ -3138,7 +3164,7 @@
      <widget class="QCheckBox" name="saveCakeCB">
       <property name="geometry">
        <rect>
-        <x>200</x>
+        <x>170</x>
         <y>90</y>
         <width>111</width>
         <height>26</height>
@@ -3151,10 +3177,10 @@
      <widget class="myImDisplay" name="intImageDisplay" native="true">
       <property name="geometry">
        <rect>
-        <x>150</x>
-        <y>400</y>
-        <width>400</width>
-        <height>400</height>
+        <x>219</x>
+        <y>449</y>
+        <width>331</width>
+        <height>351</height>
        </rect>
       </property>
      </widget>
@@ -3162,7 +3188,7 @@
       <property name="geometry">
        <rect>
         <x>108</x>
-        <y>410</y>
+        <y>460</y>
         <width>31</width>
         <height>16</height>
        </rect>
@@ -3194,7 +3220,7 @@
       <property name="geometry">
        <rect>
         <x>100</x>
-        <y>590</y>
+        <y>640</y>
         <width>41</width>
         <height>20</height>
        </rect>
@@ -3209,8 +3235,8 @@
      <widget class="QLabel" name="label_45">
       <property name="geometry">
        <rect>
-        <x>40</x>
-        <y>610</y>
+        <x>50</x>
+        <y>660</y>
         <width>59</width>
         <height>15</height>
        </rect>
@@ -3265,7 +3291,7 @@
       <property name="geometry">
        <rect>
         <x>20</x>
-        <y>400</y>
+        <y>450</y>
         <width>91</width>
         <height>20</height>
        </rect>
@@ -3274,16 +3300,100 @@
        <string>Cake Image :</string>
       </property>
      </widget>
+     <widget class="QTabWidget" name="tabWidget_2">
+      <property name="geometry">
+       <rect>
+        <x>300</x>
+        <y>10</y>
+        <width>361</width>
+        <height>251</height>
+       </rect>
+      </property>
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <widget class="QWidget" name="tab_6">
+       <attribute name="title">
+        <string>Corrections</string>
+       </attribute>
+       <widget class="QCheckBox" name="intcor_dacAbsCB">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>10</y>
+          <width>94</width>
+          <height>26</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>DAC abs.</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+       <widget class="QCheckBox" name="intcor_lorenzCB">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>30</y>
+          <width>94</width>
+          <height>26</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Lorenz</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+       <widget class="QCheckBox" name="intcor_polarCB">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>50</y>
+          <width>94</width>
+          <height>26</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Polariz.</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+       <widget class="QCheckBox" name="intcor_verPolCB">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>70</y>
+          <width>111</width>
+          <height>26</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Vert. Polariz.</string>
+        </property>
+       </widget>
+      </widget>
+      <widget class="QWidget" name="tab_7">
+       <attribute name="title">
+        <string>Tab 2</string>
+       </attribute>
+      </widget>
+     </widget>
     </widget>
     <widget class="QWidget" name="tab_4">
      <attribute name="title">
       <string>Scan</string>
      </attribute>
-     <widget class="QLineEdit" name="imDirLE_Detector_Distance_2">
+     <widget class="QLineEdit" name="scan_stepAngLE">
       <property name="geometry">
        <rect>
         <x>170</x>
-        <y>90</y>
+        <y>80</y>
         <width>131</width>
         <height>23</height>
        </rect>
@@ -3296,7 +3406,7 @@
       <property name="geometry">
        <rect>
         <x>30</x>
-        <y>90</y>
+        <y>80</y>
         <width>131</width>
         <height>17</height>
        </rect>
@@ -3305,11 +3415,11 @@
        <string>Step</string>
       </property>
      </widget>
-     <widget class="QLineEdit" name="imDirLE_Detector_Beam_Y_2">
+     <widget class="QLineEdit" name="scan_startAngLE">
       <property name="geometry">
        <rect>
         <x>170</x>
-        <y>60</y>
+        <y>50</y>
         <width>131</width>
         <height>23</height>
        </rect>
@@ -3322,33 +3432,33 @@
       <property name="geometry">
        <rect>
         <x>30</x>
-        <y>60</y>
+        <y>50</y>
         <width>131</width>
         <height>17</height>
        </rect>
       </property>
       <property name="text">
-       <string>Start</string>
+       <string>Start angle</string>
       </property>
      </widget>
      <widget class="QLabel" name="label_29">
       <property name="geometry">
        <rect>
         <x>30</x>
-        <y>30</y>
+        <y>10</y>
         <width>131</width>
         <height>17</height>
        </rect>
       </property>
       <property name="text">
-       <string>Axis</string>
+       <string>Axis / energy</string>
       </property>
      </widget>
      <widget class="QLabel" name="label_30">
       <property name="geometry">
        <rect>
         <x>30</x>
-        <y>240</y>
+        <y>450</y>
         <width>131</width>
         <height>17</height>
        </rect>
@@ -3361,7 +3471,7 @@
       <property name="geometry">
        <rect>
         <x>30</x>
-        <y>180</y>
+        <y>390</y>
         <width>131</width>
         <height>17</height>
        </rect>
@@ -3374,7 +3484,7 @@
       <property name="geometry">
        <rect>
         <x>30</x>
-        <y>210</y>
+        <y>420</y>
         <width>131</width>
         <height>17</height>
        </rect>
@@ -3387,7 +3497,7 @@
       <property name="geometry">
        <rect>
         <x>170</x>
-        <y>210</y>
+        <y>420</y>
         <width>131</width>
         <height>23</height>
        </rect>
@@ -3400,7 +3510,7 @@
       <property name="geometry">
        <rect>
         <x>170</x>
-        <y>240</y>
+        <y>450</y>
         <width>131</width>
         <height>23</height>
        </rect>
@@ -3413,7 +3523,7 @@
       <property name="geometry">
        <rect>
         <x>170</x>
-        <y>180</y>
+        <y>390</y>
         <width>131</width>
         <height>23</height>
        </rect>
@@ -3426,7 +3536,7 @@
       <property name="geometry">
        <rect>
         <x>30</x>
-        <y>330</y>
+        <y>590</y>
         <width>131</width>
         <height>17</height>
        </rect>
@@ -3439,7 +3549,7 @@
       <property name="geometry">
        <rect>
         <x>30</x>
-        <y>270</y>
+        <y>530</y>
         <width>131</width>
         <height>17</height>
        </rect>
@@ -3452,7 +3562,7 @@
       <property name="geometry">
        <rect>
         <x>30</x>
-        <y>300</y>
+        <y>560</y>
         <width>131</width>
         <height>17</height>
        </rect>
@@ -3465,7 +3575,7 @@
       <property name="geometry">
        <rect>
         <x>170</x>
-        <y>300</y>
+        <y>560</y>
         <width>131</width>
         <height>23</height>
        </rect>
@@ -3478,7 +3588,7 @@
       <property name="geometry">
        <rect>
         <x>170</x>
-        <y>330</y>
+        <y>590</y>
         <width>131</width>
         <height>23</height>
        </rect>
@@ -3491,7 +3601,7 @@
       <property name="geometry">
        <rect>
         <x>170</x>
-        <y>270</y>
+        <y>530</y>
         <width>131</width>
         <height>23</height>
        </rect>
@@ -3504,20 +3614,20 @@
       <property name="geometry">
        <rect>
         <x>30</x>
-        <y>120</y>
-        <width>131</width>
-        <height>17</height>
+        <y>110</y>
+        <width>91</width>
+        <height>21</height>
        </rect>
       </property>
       <property name="text">
-       <string>No of steps</string>
+       <string>Num of images</string>
       </property>
      </widget>
-     <widget class="QLineEdit" name="imDirLE_Detector_Distance_5">
+     <widget class="QLineEdit" name="scan_numImagesLE">
       <property name="geometry">
        <rect>
         <x>170</x>
-        <y>120</y>
+        <y>110</y>
         <width>131</width>
         <height>23</height>
        </rect>
@@ -3530,17 +3640,22 @@
       <property name="geometry">
        <rect>
         <x>170</x>
-        <y>30</y>
+        <y>10</y>
         <width>131</width>
         <height>22</height>
        </rect>
       </property>
+      <item>
+       <property name="text">
+        <string>Omega</string>
+       </property>
+      </item>
      </widget>
      <widget class="QPushButton" name="Peaks_Button_Search_2">
       <property name="geometry">
        <rect>
         <x>170</x>
-        <y>370</y>
+        <y>630</y>
         <width>131</width>
         <height>28</height>
        </rect>
@@ -3552,6 +3667,91 @@
       </property>
       <property name="text">
        <string>Search Scan</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_87">
+      <property name="geometry">
+       <rect>
+        <x>30</x>
+        <y>140</y>
+        <width>121</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Start image num</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="scan_startImageLE">
+      <property name="geometry">
+       <rect>
+        <x>170</x>
+        <y>140</y>
+        <width>131</width>
+        <height>23</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_88">
+      <property name="geometry">
+       <rect>
+        <x>30</x>
+        <y>360</y>
+        <width>111</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>DAC Opening</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="scan_dacopenLE">
+      <property name="geometry">
+       <rect>
+        <x>170</x>
+        <y>360</y>
+        <width>131</width>
+        <height>23</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_89">
+      <property name="geometry">
+       <rect>
+        <x>30</x>
+        <y>330</y>
+        <width>91</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Zero Offset </string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="scan_zeroOffLE">
+      <property name="geometry">
+       <rect>
+        <x>172</x>
+        <y>330</y>
+        <width>131</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>-90.</string>
+      </property>
+     </widget>
+     <widget class="QCheckBox" name="scan_omegaRotDirCB">
+      <property name="geometry">
+       <rect>
+        <x>350</x>
+        <y>330</y>
+        <width>211</width>
+        <height>26</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Invert Omega Rotation</string>
       </property>
      </widget>
     </widget>
