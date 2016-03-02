@@ -959,7 +959,8 @@ class Atrex(QtGui.QMainWindow):
         z = QtCore.QChar('0')
         tempimg = myImage()
         for i in range(self.minRange, self.maxRange):
-            newimage = QtCore.QString("%1%2.tif").arg(self.imageFilePref).arg(i, 3, 10, z)
+            #newimage = QtCore.QString("%1%2.tif").arg(self.imageFilePref).arg(i, 3, 10, z)
+            newimage = self.myproj.getFileNameFromNum (i)
             tempimg.readTiff(newimage)
             self.myim.search_for_peaks_arr(tempimg.imArray, self.peaks, 100, 10, [50, 50], 1.0)
         self.updatePeakNumberLE()
