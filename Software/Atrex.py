@@ -174,6 +174,13 @@ class Atrex(QtGui.QMainWindow):
         self.ui.saveMaskFileButton.clicked.connect(self.saveMask)
         self.ui.readMaskFileButton.clicked.connect(self.readMask)
 
+        self.setValToControl (self.ui.ps_gradAddLE, 2)
+        self.setValToControl (self.ui.ps_maxCountLE, 40000)
+        self.setValToControl (self.ui.ps_maxCountLE, 40000)
+        self.setValToControl (self.ui.ps_minCountLE, 50)
+        self.setValToControl (self.ui.ps_smoothWinLE, 2)
+        self.setValToControl (self.ui.ps_locBcgrLE, 50)
+
         #detector tab buttons
         self.ui.readTextDetFileButton.clicked.connect(self.readTextDetect)
         self.ui.writeTextDetFileButton.clicked.connect(self.writeTextDetect)
@@ -732,6 +739,9 @@ class Atrex(QtGui.QMainWindow):
         pf.fitArr()
         self.fitarr = pf.returnFit ()
         resids = subdat - self.fitarr
+        rms_std= np.std(resids)
+        str = '%5.1f'%rms_std
+        self.ui.peakRMSLE.setText(str)
         self.ui.peakZoomCalcWidget.calcHisto (self.fitarr)
         self.ui.peakZoomCalcWidget.arrayToQImage(self.fitarr, startx, starty)
         self.ui.peakZoomResidsWidget.calcHisto (resids)
@@ -945,6 +955,11 @@ class Atrex(QtGui.QMainWindow):
         #perc=self.bbox                           # 1.0:       percent of median for background
 
         self.myim.search_for_peaks(self.peaks, 100, 10, [50., 50.], 1.0)
+        # if the fit CB is checked, then do the 2d gaussian
+        # need to evaluate the quality of fit here.
+        if self.myim.fitFlag :
+            self.myim.fitPeaks (self.peaks, 16)
+
         self.updatePeakNumberLE()
         self.imageWidget.repaint()
         self.zoomWidget.repaint()
@@ -1557,6 +1572,23 @@ class Atrex(QtGui.QMainWindow):
         else :
             dir = 1
         return dir
+
+    def getPeakSearchFitParams (self) :
+        gradadd = self.ui.ps_gradAddLE.text().toInt()[0]
+        maxcount = self.ui.ps_maxCountLE.text().toInt()[0]
+        mincount = self.ui.ps_minCountLE.text().toInt()[0]
+        smoothwin = self.ui.ps_smoothWinLE.text().toInt()[0]
+        locBcgr = self.ui.ps_locBcgrLE.text().toInt()[0]
+        fitB = self.ui.ps_fitPeaksCB.isChecked()
+        self.myim.setFitParams (fitB, gradadd, maxcount, mincount, smoothwin, locBcgr)
+
+
+    def setValToControl (self, control, val) :
+        str = QtCore.QString ("%1").arg(val)
+        control.setText(str)
+
+
+
 
 app = QtGui.QApplication(sys.argv)
 atrex = Atrex()

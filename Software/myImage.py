@@ -13,6 +13,7 @@ from ctypes import *
 from numpy.ctypeslib import ndpointer
 from platform import *
 import h5py
+from peakFit import *
 
 
 class myImage :
@@ -43,6 +44,13 @@ class myImage :
 
         self.CalcTheta.integrate_cake.argtypes= [ndpointer(np.int32), ndpointer(np.float32), ndpointer(np.uint16), \
             ndpointer (np.float32), ndpointer(np.float32), ndpointer(np.float32)]
+        self.locBcgr = 50
+        self.gradAdd = 2
+        self.maxCount = 40000
+        self.smoothWin = 2
+        self.minCount = 50
+        self.fitFlag = True ;
+
 
     def readTiffRaw (self, infile) :
         self.imFileName = infile
@@ -139,6 +147,15 @@ class myImage :
         return True
 
 
+    def setFitParams (self, fFlag, grad, maxc, minc, smoothw, locb) :
+        self.gradAdd = grad
+        self.maxCount = maxc
+        self.minCount = minc
+        self.smoothWin = smoothw
+        self.locBcgr = locb
+        self.fitFlag = fFlag
+
+
     def estimate_local_background (self, img, nbinx, nbiny, thr, perc):
         n0x=len(img)
         n0y=len(img[0])
@@ -203,7 +220,7 @@ class myImage :
         topX=sxy[1]
         topY=sxy[0]
         img1=cgd.congrid(arr, [1000,1000])
-        bg=self.estimate_local_background (img1, 50, 50, 100, 1.0)
+        bg=self.estimate_local_background (img1, self.locBcgr, self.locBcgr, 100, 1.0)
 
         w=np.where(img1-bg > thr)
         for i in range(len(w[0])):
@@ -231,7 +248,7 @@ class myImage :
         topX=self.imArraySize[0]
         topY=self.imArraySize[1]
         img1=cgd.congrid(self.imArray, [1000,1000])
-        bg=self.estimate_local_background (img1, 50, 50, 100, 1.0)
+        bg=self.estimate_local_background (img1, self.locBcgr, self.locBcgr, 100, 1.0)
 
         w=np.where(img1-bg > thr)
         for i in range(len(w[0])):
@@ -261,8 +278,28 @@ class myImage :
         #print, 'Computation time: ',systime(/seconds)-t0
         #end
 
-        
-        
+
+
+    def fitPeaks (self, peaks, bxsize) :
+        nnn = peaks.getpeakno()
+        #return
+
+        print nnn
+        for pk in peaks.peaks :
+            xy = pk.DetXY
+            subImg = self.imArray[xy[1]-bxsize:xy[1]+bxsize,xy[0]-bxsize:xy[0]+bxsize]
+            pf = peakFit (subImg)
+            fitarr = pf.fitArr()
+            print fitarr
+
+
+    def fitPeak (self, peak, bxsize) :
+        xy = peak.DetXY
+        subimg = peak.self.imArray[xy[1]-bxsize:xy[1]+bxsize,xy[0]-bxsize:xy[0]+bxsize]
+        pf = peakFit (subImg)
+        fitarr = pf.fitArr()
+        print fitarr
+
     # applies the mask to imgArray, mask must be same shape as imgArray
     def applyMask (self, arr):
         self.imArray = self.imArray_orig * arr

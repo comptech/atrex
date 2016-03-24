@@ -29,6 +29,7 @@ class peakFit :
         print 'width_x : ',self.fitpars[4]
         print 'width_y : ',self.fitpars[5]
         print 'rotate : ',self.fitpars[6]
+        return self.fitpars
 
 
     def fitArray (self, myArr) :
@@ -45,6 +46,7 @@ class peakFit :
         print 'width_x : ',self.fitpars[4]
         print 'width_y : ',self.fitpars[5]
         print 'rotate : ',self.fitpars[6]
+        return self.fitpars
 
 
     def returnFitArray (self, myArr) :
@@ -65,7 +67,7 @@ class peakFit :
         inarrcpx[:].real = inarr
         iff = np.fft.fft2 (inarrcpx)
         iffshift = np.fft.fftshift(iff)
-        iffshift.tofile("/home/harold/workdir/ifftarr")
+        #iffshift.tofile("/home/harold/workdir/ifftarr")
 
         nx_zm = x * zmfac
         ny_zm = y * zmfac
@@ -84,7 +86,7 @@ class peakFit :
 
 
 
-        iffzm.tofile("/home/harold/workdir/ifftarrzm")
+        #iffzm.tofile("/home/harold/workdir/ifftarrzm")
         fzm = np.abs(np.fft.ifft2(iffzm))
         #fzm = fzm.astype(np.int16)
         return fzm
