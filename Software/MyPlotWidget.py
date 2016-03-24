@@ -1,7 +1,10 @@
 from PyQt4 import QtCore, QtGui
 
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
-from matplotlib.backends.backend_qt4agg import NavigationToolbar2QTAgg as NavigationToolbar
+#from matplotlib.backends.backend_qt4agg import NavigationToolbar2QTAgg as NavigationToolbar
+from matplotlib.backends.backend_qt4agg import NavigationToolbar2QT as NavigationToolbar
+
+
 from matplotlib.figure import Figure
 import numpy as np
 from matplotlib import rcParams
@@ -124,11 +127,11 @@ class MyPlotWidget (QtGui.QWidget) :
         sfcn = interpolate.interp1d (xarr, yarr, kind='cubic')
         self.yarrSpline = sfcn(self.x10)
 
-        ftest = open ("/home/harold/cosxy.txt", 'w')
-        for i in range (npts10) :
-            line = "%f %f\n"%(self.x10[i], self.yarrSpline[i])
-            ftest.write (line)
-        ftest.close()
+        #ftest = open ("/home/harold/cosxy.txt", 'w')
+        #for i in range (npts10) :
+        #   line = "%f %f\n"%(self.x10[i], self.yarrSpline[i])
+        #  ftest.write (line)
+        #ftest.close()
 
 
     def setpType (self, type):
