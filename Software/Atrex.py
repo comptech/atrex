@@ -957,6 +957,7 @@ class Atrex(QtGui.QMainWindow):
         self.myim.search_for_peaks(self.peaks, 100, 10, [50., 50.], 1.0)
         # if the fit CB is checked, then do the 2d gaussian
         # need to evaluate the quality of fit here.
+        #
         if self.myim.fitFlag :
             self.myim.fitPeaks (self.peaks, 16)
 
