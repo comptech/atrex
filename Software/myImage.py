@@ -49,7 +49,7 @@ class myImage :
         self.maxCount = 40000
         self.smoothWin = 2
         self.minCount = 50
-        self.fitFlag = True ;
+        self.fitFlag = False  ;
 
 
     def readTiffRaw (self, infile) :
