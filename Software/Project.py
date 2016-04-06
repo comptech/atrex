@@ -86,8 +86,9 @@ class Project :
         self.numImages = self.maxImageNum - self.minImageNum + 1
         print 'num images : ',self.numImages
         if (self.base != newbase) :
-            self.checkForFiles()
             self.base = QtCore.QString (newbase)
+            self.checkForFiles()
+
         else :
             setfile = filename+'.txt'
             qf = QtCore.QFile (setfile)
