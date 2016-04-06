@@ -39,7 +39,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>4</number>
     </property>
     <widget class="QWidget" name="FileTab">
      <attribute name="title">
@@ -1048,7 +1048,7 @@
        <string>Fit Peaks</string>
       </property>
      </widget>
-     <widget class="QWidget" name="">
+     <widget class="QWidget" name="layoutWidget">
       <property name="geometry">
        <rect>
         <x>159</x>
@@ -2304,7 +2304,7 @@
     </widget>
     <widget class="QWidget" name="tab_3">
      <attribute name="title">
-      <string>Detector</string>
+      <string>Calibration</string>
      </attribute>
      <widget class="QLabel" name="label_13">
       <property name="geometry">
@@ -4377,7 +4377,7 @@
      <x>0</x>
      <y>0</y>
      <width>1485</width>
-     <height>27</height>
+     <height>20</height>
     </rect>
    </property>
   </widget>
