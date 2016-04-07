@@ -59,7 +59,7 @@ class Project :
             imstringFilt = '*.h5'%newbase
         curimage = filename
         self.filenum = self.getFileNumber (filename)
-        print 'Debug : %s'%self.filenum
+        #print 'Debug : %s'%self.filenum
         qfinfo = QtCore.QFileInfo (filename)
         apath = qfinfo.absolutePath()
         fileonly = qfinfo.fileName ()
@@ -69,6 +69,8 @@ class Project :
         qd.setNameFilters (QtCore.QStringList()<<imstringFilt)
         imfiles = qd.entryList()
         n = imfiles.count()
+        self.minImageNum = 1E10
+        self.maxImageNum = -1
         for i in imfiles :
             if (i.contains(tmpbase) == False) :
                 continue
