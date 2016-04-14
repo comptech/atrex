@@ -1,7 +1,7 @@
 import numpy as np
 from math import *
 from struct import *
-import pickle
+import cPickle as pickle
 from PyQt4 import QtCore
 import myDetector
 
@@ -23,7 +23,7 @@ class myPeak:
         self.IntAD    = np.zeros(2,dtype=np.float)   # Intensity from area detector with e.s.d
         self.position = np.zeros(3,dtype=np.float)   # Intensity from area detector with e.s.d
         self.IntSSD   = np.zeros(2,dtype=np.float)   # Will now be used to store individualized peak fitting box size
-        self.Adp      = myDetector.myDetector()                 # Area detector parameters
+        self.Adp      = myDetector.myDetector()      # Area detector parameters
         self.clickSelected = False
 
     def setDetxy(self, XY):
@@ -42,6 +42,27 @@ class myPeak:
         x2=xy[0]
         y2=xy[1]
         return pow(pow(x1-x2,2)+pow(y1-y2,2),0.5)
+
+    def writePeak (self, file, ind) :
+        str = "%d %d %f %f %f %f %f"%(ind, self.Stat, self.DetXY[0], self.DetXY[1], self.XYZ[0], self.XYZ[1], self.XYZ[2])
+        strout = "%s %d %d %d\r\n"%(str, self.HKL[0], self.HKL[1], self.HKL[2])
+        file.write (strout)
+
+    def parsePeak (self, str) :
+        s = str.split()
+        self.Stat = int(s[1])
+        self.DetXY[0] = float(s[2])
+        self.DetXY[1] = float(s[3])
+        self.XYZ[0]=float(s[4])
+        self.XYZ[1]=float(s[5])
+        self.XYZ[2]=float(s[6])
+        self.HKL[0]=float(s[7])
+        self.HKL[1]=float(s[8])
+        self.HKL[2]=float(s[9])
+
+
+
+
 
 #--------------------------------------------------------------------------
 
@@ -167,6 +188,38 @@ class myPeakTable:
         self.truncate()
         f=open(filename, "wb")
         pickle.dump(self, f)
+        f.close()
+
+    # ASCII file write , pickle not seeming to work for class...
+    def write_to_fileA (self, filename) :
+        npks = self.getpeakno()
+        if npks < 1 :
+            return
+        str = "%d\r\n"%npks
+        f = open (filename, "w")
+        f.write (str)
+        count = 0
+        for p in self.peaks :
+            p.writePeak (f, count)
+            count+=1
+        f.close()
+
+
+    def read_from_fileA (self,filename) :
+        f = open (filename, "r")
+        self.peaks = []
+        count = -1
+        for line in f :
+            if count == -1 :
+                npeaks = int (line)
+                count += 1
+            else :
+
+                m = myPeak ()
+                m.parsePeak (line)
+                self.addPeak (m)
+                count += 1
+
 
     def read_from_file(self, filename):
         a=pickle.load( open( filename, "rb" ) )   

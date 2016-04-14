@@ -1059,13 +1059,14 @@ class Atrex(QtGui.QMainWindow):
         print 'write PT'
         wdir = self.ui.imDirLE.text()
         PTFile = QtGui.QFileDialog.getSaveFileName(self, 'Save Peak Table', wdir)
-        self.peaks.write_to_file(PTFile)
+        self.peaks.write_to_fileA(PTFile)
 
     def OpenPeakTable(self):
         print 'read PT'
         wdir = self.ui.imDirLE.text()
         PTFile = QtGui.QFileDialog.getOpenFileName(self, 'Open Peak Table', wdir)
-        self.peaks.read_from_file(PTFile)
+        #self.peaks.read_from_file(PTFile)
+        self.peaks.read_from_fileA(PTFile)
         self.updatePeakNumberLE()
         self.updatePeakList()
         self.ui.imageWidget.repaint()
