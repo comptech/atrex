@@ -739,8 +739,14 @@ class Atrex(QtGui.QMainWindow):
         pf.fitArr()
         self.fitarr = pf.returnFit ()
         resids = subdat - self.fitarr
-        rms_std= np.std(resids)
-        str = '%5.1f'%rms_std
+
+        # calculate the correlation coefficient
+        #corrcoef = np.corrcoef (self.fitarr, subdat)
+        corrcoef = np.corrcoef (self.fitarr.ravel(), subdat.ravel())
+        #resids = resids * resids
+        rms_std = corrcoef[0][1]
+        #rms_std= np.std(resids)
+        str = '%5.3f'%rms_std
         self.ui.peakRMSLE.setText(str)
         self.ui.peakZoomCalcWidget.calcHisto (self.fitarr)
         self.ui.peakZoomCalcWidget.arrayToQImage(self.fitarr, startx, starty)

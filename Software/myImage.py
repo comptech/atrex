@@ -245,6 +245,7 @@ class myImage :
         #num_of_segments = [self.pbox,self.pbox]  # [50.,50.]: number of segments in X and Y for local labckground estimation
         #perc=self.bbox                           # 1.0:       percent of median for background
 
+        #need to add intssd, gonio and any other parameters for the peak.
         topX=self.imArraySize[0]
         topY=self.imArraySize[1]
         img1=cgd.congrid(self.imArray, [1000,1000])
