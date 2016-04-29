@@ -20,7 +20,7 @@ class simulateDlg (QtGui.QDialog) :
     def __init__(self) :
         QtGui.QDialog.__init__(self)
         self.ui = uic.loadUi("simulateDlg.ui", self)
-        self.fillUp()
+
         self.sim_inc_omchiphi.clicked.connect (self.incVal)
         self.sim_dec_omchiphi.clicked.connect (self.decVal)
         self.sim_genBButton.clicked.connect (self.genB)
@@ -33,7 +33,7 @@ class simulateDlg (QtGui.QDialog) :
         self.ui.sim_openUB.clicked.connect (self.openUB)
         self.ui.sim_saveUB.clicked.connect (self.saveUB)
         self.myDetect = myDetector.myDetector()
-        self.dacOpen = self.myDetect.dacopen
+        self.dacOpen = 18.
         self.ub = np.zeros ((3,3),dtype=np.float64)
         self.myPredict = myPredict()
         self.myPeaks = myPeakTable.myPeakTable()
@@ -42,6 +42,7 @@ class simulateDlg (QtGui.QDialog) :
         self.workdir = ''
         self.base = ''
         self.projFlag = False
+        self.fillUp()
 
 
     def setWorkDir (self, d) :
@@ -61,6 +62,7 @@ class simulateDlg (QtGui.QDialog) :
 
     def setPredict (self, myPredict) :
         self.myPredict = myPredict
+        self.dacOpen = myPredict.dac_open
 
     def setProject (self, p) :
         self.project = p

@@ -12,3 +12,4 @@ class myPredict :
     k2 = 25
     l1 = -25
     l2 = 25
+    dac_open = 18.
