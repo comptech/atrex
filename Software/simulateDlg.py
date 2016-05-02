@@ -8,6 +8,7 @@ from crystallography import *
 from myPredict import *
 from Project import *
 import vector_math
+import subprocess
 
 
 
@@ -287,7 +288,25 @@ class simulateDlg (QtGui.QDialog) :
         if npeaks < 1 :
             return
 
+        # get the location of the cell_now executable
+        cell_now_dir,ok = QtGui.QInputDialog.getText (self, "Path to cell_now executable",  "Enter directory")
+        if not ok :
+            return
+        cell_now = cell_now_dir + '/run_cellnow.cmd'
+
+        status = QtCore.QFile.exists(cell_now)
+        if not status :
+            print 'could not file cell_now executable'
+            return
+
+        # need to save the peak table in .p4p format
+        p4pfil = cell_now_dir+'/xxx.p4p'
+        self.myPeaks.save_p4p (p4pfil)
+
+
         #ab = cell_now_solution_n(1)
+
+        subprocess.call (cell_now)
 
 
 
