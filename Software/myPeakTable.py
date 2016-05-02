@@ -198,6 +198,103 @@ class myPeakTable:
             count += 1
         f.close()
 
+
+
+
+    def read_from_fileA(self, filename):
+        f = open(filename, "r")
+        self.peaks = []
+        count = -1
+        for line in f:
+            if count == -1:
+                npeaks = int(line)
+                count += 1
+            else:
+
+                m = myPeak()
+                m.parsePeak(line)
+                self.addPeak(m)
+                count += 1
+
+
+    def read_from_file(self, filename):
+        a = pickle.load(open(filename, "rb"))
+        self.peaks[0:a.peakno - 1] = a.peaks
+        self.peakno = a.peakno
+        self.selectedno = a.selectedno
+
+
+    def truncate(self):
+        self.peaks = self.peaks[0:self.peakno - 1]
+
+
+    def remove_all_peaks(self):
+        self.peakno = 0
+        del self.peaks[:]
+
+
+    def remove_peaks_outside_aa(self, detect):
+        for p in self.peaks:
+            xy = p.getDetxy()
+
+            x = xy[0] - detect.nopixx / 2.
+            y = xy[1] - detect.nopixy / 2.
+            dist = sqrt(x ** 2 + y ** 2)
+            if (dist > detect.nopixx / 2 - 10.):
+                p.selected[0] = 1
+            else:
+                p.selected[0] = 0
+        self.deleteSelected()
+
+
+    def find_closest_peak(self, peak, START_NO):
+        tab = np.zeros([self.peakno - START_NO, 2], dtype=np.float)
+        for i in range(START_NO, self.peakno):
+            disti = peak.distance(self.getonepeak(i))
+            tab[i - START_NO, 0] = disti
+            tab[i - START_NO, 1] = i
+        return tab
+
+
+    def find_multiple_peak_copies(self):
+        i = 0
+        while (i < self.peakno - 2):
+            p = self.getonepeak(i)
+            di = self.find_closest_peak(p, i + 1)
+            b = di[:, 0]
+            w = np.where(b < 3)
+            #w1=w.tolist()
+            #if len(w) > 0:
+            #     di=[[di],transpose([0,i])]
+            #     w=[w,n_elements(di2)/2]
+            #m=max(self.peaks[di[w,1]].intAD[0],kk)
+            for j in w: self.selectPeaks((di[j, 1]))
+            #self.unselect_peak, di[w[kk],1]
+            # self.deleteSelected()
+            #     pn=self->peakno()
+            #     if kk ne i then i=i+1
+            # else:
+            i = i + 1
+        self.deleteSelected()
+
+
+    def select_close_overlaps(self, far):
+        npeaks = self.peakno
+        for i in range(npeaks - 3):
+            xy1 = self.peaks[i].getDet()
+            for j in range(i + 1, npeaks - 2):
+                xy2 = self.peaks[j].getDetxy()
+                dist = self.getDist(xy1, xy2)
+                if (dist < far):
+                    self.peaks[i].selected[0] = 1
+                    self.peaks[j].selected[0] = 1
+
+
+    def getDist(self, xy1, xy2):
+        xdiff = xy1[0] - xy2[0]
+        ydiff = xy1[1] - xy2[1]
+        return sqrt(xdiff ** 2 + ydiff ** 2)
+
     def save_p4p(self, fname):
         f = open(fname, "w")
         str = 'FILEID Seattle      ?             4.00        08/20/08 14:27:16 C8H8Se3\r\n'
@@ -244,106 +341,11 @@ class myPeakTable:
         st0 = 'REF1K H      -1  -4   2 -30.000 180.000   0.150  54.736   15.40  166.45 1691.26    158'
         z = 0.0
         for p in self.peaks:
-            str = '%s%11.6f%11.6f%11.6f%11.6f%11.6f%11.6f%11.6f\r\n' % (st0, p.xyz[0], p.xyz[1], p.xyz[2], z, z, z, z)
-        f.write(str)
+            str = '%s%11.6f%11.6f%11.6f%11.6f%11.6f%11.6f%11.6f\r\n'%(st0, p.xyz[0], p.xyz[1], p.xyz[2], z, z, z, z)
+            f.write(str)
+
         str = 'DATA  SPATIAL linear          linear          3.0  512.00  512.00   17.000   3136 1024\r\n'
         f.write(str)
         f.close()
 
 
-
-
-
-def read_from_fileA(self, filename):
-    f = open(filename, "r")
-    self.peaks = []
-    count = -1
-    for line in f:
-        if count == -1:
-            npeaks = int(line)
-            count += 1
-        else:
-
-            m = myPeak()
-            m.parsePeak(line)
-            self.addPeak(m)
-            count += 1
-
-
-def read_from_file(self, filename):
-    a = pickle.load(open(filename, "rb"))
-    self.peaks[0:a.peakno - 1] = a.peaks
-    self.peakno = a.peakno
-    self.selectedno = a.selectedno
-
-
-def truncate(self):
-    self.peaks = self.peaks[0:self.peakno - 1]
-
-
-def remove_all_peaks(self):
-    self.peakno = 0
-    del self.peaks[:]
-
-
-def remove_peaks_outside_aa(self, detect):
-    for p in self.peaks:
-        xy = p.getDetxy()
-
-        x = xy[0] - detect.nopixx / 2.
-        y = xy[1] - detect.nopixy / 2.
-        dist = sqrt(x ** 2 + y ** 2)
-        if (dist > detect.nopixx / 2 - 10.):
-            p.selected[0] = 1
-        else:
-            p.selected[0] = 0
-    self.deleteSelected()
-
-
-def find_closest_peak(self, peak, START_NO):
-    tab = np.zeros([self.peakno - START_NO, 2], dtype=np.float)
-    for i in range(START_NO, self.peakno):
-        disti = peak.distance(self.getonepeak(i))
-        tab[i - START_NO, 0] = disti
-        tab[i - START_NO, 1] = i
-    return tab
-
-
-def find_multiple_peak_copies(self):
-    i = 0
-    while (i < self.peakno - 2):
-        p = self.getonepeak(i)
-        di = self.find_closest_peak(p, i + 1)
-        b = di[:, 0]
-        w = np.where(b < 3)
-        #w1=w.tolist()
-        #if len(w) > 0:
-        #     di=[[di],transpose([0,i])]
-        #     w=[w,n_elements(di2)/2]
-        #m=max(self.peaks[di[w,1]].intAD[0],kk)
-        for j in w: self.selectPeaks((di[j, 1]))
-        #self.unselect_peak, di[w[kk],1]
-        # self.deleteSelected()
-        #     pn=self->peakno()
-        #     if kk ne i then i=i+1
-        # else:
-        i = i + 1
-    self.deleteSelected()
-
-
-def select_close_overlaps(self, far):
-    npeaks = self.peakno
-    for i in range(npeaks - 3):
-        xy1 = self.peaks[i].getDet()
-        for j in range(i + 1, npeaks - 2):
-            xy2 = self.peaks[j].getDetxy()
-            dist = self.getDist(xy1, xy2)
-            if (dist < far):
-                self.peaks[i].selected[0] = 1
-                self.peaks[j].selected[0] = 1
-
-
-def getDist(self, xy1, xy2):
-    xdiff = xy1[0] - xy2[0]
-    ydiff = xy1[1] - xy2[1]
-    return sqrt(xdiff ** 2 + ydiff ** 2)
