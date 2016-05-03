@@ -341,7 +341,7 @@ class myPeakTable:
         st0 = 'REF1K H      -1  -4   2 -30.000 180.000   0.150  54.736   15.40  166.45 1691.26    158'
         z = 0.0
         for p in self.peaks:
-            str = '%s%11.6f%11.6f%11.6f%11.6f%11.6f%11.6f%11.6f\r\n'%(st0, p.xyz[0], p.xyz[1], p.xyz[2], z, z, z, z)
+            str = '%s%11.6f%11.6f%11.6f%11.6f%11.6f%11.6f%11.6f\r\n'%(st0, p.XYZ[0], p.XYZ[1], p.XYZ[2], z, z, z, z)
             f.write(str)
 
         str = 'DATA  SPATIAL linear          linear          3.0  512.00  512.00   17.000   3136 1024\r\n'
