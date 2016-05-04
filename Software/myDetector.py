@@ -177,6 +177,8 @@ class myDetector (QtCore.QObject):
 
 
     def write_to_text_file(self, filename):
+        if (len(filename)< 1) :
+            return
         fil = open(filename, 'w')
         fil.write(str(self.psizex) + '\n')
         fil.write(str(self.psizey) + '\n')
@@ -745,7 +747,7 @@ class myDetector (QtCore.QObject):
         # then back in 100 space
         xy = self.xy_from_ind (11,11,maxsub)
         maxrow = maxrow + (xy[0] - 5)/5.
-        maxcol = maxcol + (xy[1] - 5)/5.
+        maxcol = maxcol + (xy[1] - 5) / 5.
         xy0 = [maxrow, maxcol]
         self.eqproxfine[0]=maxrow/100.
         self.eqproxfine[1]=maxcol/100.

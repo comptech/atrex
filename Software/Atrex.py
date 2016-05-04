@@ -262,6 +262,8 @@ class Atrex(QtGui.QMainWindow):
                 self.detectFile = str
                 self.detector.read_from_text_file(str.toLatin1().data())
                 self.Display_Detector_calibration(self.detector)
+            else :
+                print 'no last cal file found'
 
     ## closeEvent
     #  shut down the program cleanly
@@ -303,6 +305,17 @@ class Atrex(QtGui.QMainWindow):
         #return
 
         self.base = self.myproj.getImageBase (self.imageFile)
+
+        calfile = self.base+'.cal'
+        fi = QtCore.QFileInfo (calfile)
+        if (fi.exists()):
+            self.detector.read_from_text_file(calfile)
+            self.Display_Detector_calibration(self.detector)
+        else :
+            str = "No cal file found\r\nYou may want to save current cal to series\r\nSee cal->save"
+            msgBox = QtGui.QMessageBox ()
+            msgBox.setText (str)
+            msgBox.exec_()
 
         # get the path and put it in imDirLE
         # z = QtCore.QDir.separator()
@@ -387,6 +400,17 @@ class Atrex(QtGui.QMainWindow):
         str = "%d"%self.myproj.numImages
         self.ui.scan_numImagesLE.setText(str)
 
+        calfile = self.base+'.cal'
+        fi = QtCore.QFileInfo (calfile)
+        if (fi.exists()):
+            self.detector.read_from_text_file(calfile)
+            self.Display_Detector_calibration(self.detector)
+            self.detectFile = calfile
+        else :
+            str = "No cal file found\r\nYou may want to save current cal to series\r\nSee cal->save"
+            msgBox = QtGui.QMessageBox ()
+            msgBox.setText (str)
+            msgBox.exec_()
 
 
 

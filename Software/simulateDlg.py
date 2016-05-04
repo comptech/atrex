@@ -5,6 +5,7 @@ import myDetector
 import myPeakTable
 import numpy as np
 from crystallography import *
+import cellPathDlg
 from myPredict import *
 from Project import *
 import vector_math
@@ -289,11 +290,17 @@ class simulateDlg (QtGui.QDialog) :
             return
 
         # get the location of the cell_now executable
-        cell_now_dir,ok = QtGui.QInputDialog.getText (self, "Path to cell_now executable",  "Enter directory")
-        if not ok :
+        cellpathdlg = cellPathDlg.cellPathDlg ()
+        status = cellpathdlg.exec_()
+        if status != QtGui.QDialog.Accepted :
             return
-        cell_now = cell_now_dir + '/run_cellnow.cmd'
 
+        cell_now_dir = os.path.normpath(cellpathdlg.path.toLatin1().data())
+        #cell_now_dir,ok = QtGui.QInputDialog.getText (self, "Path to cell_now executable",  "Enter directory")
+        #if not ok :
+        #    return
+        cell_now = cell_now_dir + '/run_cellnow.cmd'
+        print "Cell now command is : %s"%cell_now
         status = QtCore.QFile.exists(cell_now)
         if not status :
             print 'could not file cell_now executable'

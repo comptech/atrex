@@ -13,23 +13,27 @@ class Project :
     """
 
 
-    filenum = 0
-    curimage = QtCore.QString('')
-    projFlag = False
-    ubFlag = False
-    projFile = ''
-    ubFile = ''
-    settingsArray = [0.,0.,0.,0.,0.,0.,0]
-    numDigits = 3
-    imFile = ''
-    omega0 = 0
-    omegaR = 15
-    expos = 10.
-    chi = 0.
-    detector = 0.
+
+
 
 
     def __init__(self):
+        self.ubFlag = False
+        self.calFlag = False
+        self.projFile = ''
+        self.ubFile = ''
+        self.calFile = ''
+        self.settingsArray = [0.,0.,0.,0.,0.,0.,0]
+        self.filenum = 0
+        self.curimage = QtCore.QString('')
+        self.projFlag = False
+        self.numDigits = 3
+        self.imFile =''
+        self.omega0 = 0
+        self.omegaR = 15
+        self.expos = 10.
+        self.chi = 0.
+        self.detector = 0.
         self.base = ""
         self.h5Flag = False
         self.minImageNum =1E9
@@ -119,6 +123,7 @@ class Project :
     def checkForFiles (self) :
         self.prjFile = QtCore.QString ('%1_projset.txt').arg (self.base)
         self.ubFile = QtCore.QString ('%1_ub.txt').arg (self.base)
+        cFile = QtCore.QString ('%1.cal').arg (self.base)
         qfil = QtCore.QFile (self.prjFile)
         if (qfil.exists()==False) :
             print 'Debug : project settings file does not exist'
@@ -133,6 +138,15 @@ class Project :
         else :
             self.ubFlag = True
         print 'UB flag is : %r'%self.ubFlag
+
+        qfil = QtCore.QFile (cFile)
+
+        if (qfil.exists()):
+            self.calFile = cFile
+            self.calFlag = True
+        else :
+            self.calFlag = False
+
 
         imsettingsFile = QtCore.QString ('%1.txt').arg (self.imFile)
         qfil = QtCore.QFile (imsettingsFile)

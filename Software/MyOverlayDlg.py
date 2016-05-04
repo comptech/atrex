@@ -11,6 +11,7 @@ class MyOverlayDlg (QtGui.QDialog) :
         self.ui = uic.loadUi("uiPlotOverlayDlg.ui", self)
         self.ui.overlayBrowseButton.clicked.connect (self.browseFile)
 
+
     def setParams (self, infl, sflag) :
         self.ui.useSecondAxisCB.setChecked (sflag)
         self.ui.overlayFileLE.setText(infl)
