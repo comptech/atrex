@@ -324,6 +324,7 @@ class simulateDlg (QtGui.QDialog) :
 
 
     def generate_laue (self) :
+        self.myPeaks.remove_all_peaks()
         en0 = self.ui.sim_incidRangeLowLE.text().toFloat()[0]
         en1 = self.ui.sim_incidRangeHighLE.text().toFloat()[0]
         DAC_open = self.ui.sim_DACOpenLE.text().toFloat()[0]

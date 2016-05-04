@@ -70,6 +70,10 @@ class myPeakTable:
         #for i in range(10000):
         #    self.peaks.append(myPeak())
 
+    def zero (self) :
+        self.peakno = 0
+        del self.peaks[:]
+
     def setSelected(self, rectCoords):
         for p in self.peaks[:]:
             point = QtCore.QPoint(p.DetXY[0], p.DetXY[1])

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>717</width>
-    <height>541</height>
+    <height>555</height>
    </rect>
   </property>
   <property name="font">
@@ -25,7 +25,7 @@
      <x>0</x>
      <y>10</y>
      <width>361</width>
-     <height>161</height>
+     <height>201</height>
     </rect>
    </property>
    <property name="title">
@@ -201,13 +201,25 @@
      <rect>
       <x>81</x>
       <y>90</y>
-      <width>178</width>
+      <width>111</width>
       <height>33</height>
      </rect>
     </property>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
       <widget class="QPushButton" name="sim_dec_omchiphi">
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>23</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>52</width>
+         <height>16777215</height>
+        </size>
+       </property>
        <property name="text">
         <string>&lt;</string>
        </property>
@@ -215,6 +227,18 @@
      </item>
      <item>
       <widget class="QPushButton" name="sim_inc_omchiphi">
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>23</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>51</width>
+         <height>16777215</height>
+        </size>
+       </property>
        <property name="text">
         <string>&gt;</string>
        </property>
@@ -602,7 +626,7 @@
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>92</y>
+     <y>80</y>
      <width>261</width>
      <height>113</height>
     </rect>
@@ -706,7 +730,7 @@
    <property name="geometry">
     <rect>
      <x>384</x>
-     <y>500</y>
+     <y>490</y>
      <width>291</width>
      <height>31</height>
     </rect>
@@ -721,18 +745,24 @@
     <string>Close</string>
    </property>
   </widget>
-  <widget class="QWidget" name="">
+  <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
      <x>11</x>
-     <y>501</y>
+     <y>493</y>
      <width>341</width>
-     <height>33</height>
+     <height>31</height>
     </rect>
    </property>
    <layout class="QHBoxLayout" name="horizontalLayout_4">
     <item>
      <widget class="QPushButton" name="sim_indexButton">
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>23</height>
+       </size>
+      </property>
       <property name="font">
        <font>
         <weight>75</weight>
@@ -746,6 +776,12 @@
     </item>
     <item>
      <widget class="QPushButton" name="sim_genButton">
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>23</height>
+       </size>
+      </property>
       <property name="font">
        <font>
         <weight>75</weight>

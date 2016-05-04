@@ -500,10 +500,11 @@ class myDetector (QtCore.QObject):
                                     refpeak = myPeakTable.myPeak()
                                     refpeak.DetXY = pix
                                     refpeak.gonio = gonio
-                                    refpeak.xyz = xyz
+                                    refpeak.XYZ = xyz
                                     refpeak.energies[0] =Ene
                                     refpeak.hkl = hkl
                                     optable.addPeak (refpeak)
+
 
 
 
@@ -624,6 +625,7 @@ class myDetector (QtCore.QObject):
         return y
 
     def generate_all_peaks (self, ub, pktable, wv, pred, exti, dac_open, box):
+        pktable.zero()
         kt = self.read_kappa_and_ttheta()
         gonio = np.zeros(6, dtype=np.float32)
         # 2theta
