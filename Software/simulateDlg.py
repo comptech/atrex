@@ -313,7 +313,8 @@ class simulateDlg (QtGui.QDialog) :
 
         #ab = cell_now_solution_n(1)
 
-        subprocess.call (cell_now)
+        #subprocess.call (cell_now)
+        subprocess.Popen ([cell_now],shell=True)
 
 
 
