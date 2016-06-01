@@ -14,6 +14,7 @@ from numpy.ctypeslib import ndpointer
 from platform import *
 import h5py
 from peakFit import *
+from scipy import signal
 
 
 class myImage :
@@ -154,6 +155,50 @@ class myImage :
         self.smoothWin = smoothw
         self.locBcgr = locb
         self.fitFlag = fFlag
+
+    def calculate_local_background (self, corners, nregions=50):
+        # calculates the local background using median value in rectangular regions
+        Nx = nregions
+        Ny = nregions
+        sy = len(self.imArray)
+        sx = len(self.imArray[0])
+        Sx = sx / Nx
+        Sy = sy / Ny
+
+        out = np.zeros((sy,sx), dtype=np.float32)
+        for i in range (Ny - 1) :
+            for j in range (Nx - 1) :
+                subIm = self.imArray [i * Sy:(i+1)*Sy,j*Sx:(j+1)*Sx]
+                subs = subIm [np.where (subIm> 10)]
+                if (len(subs)==0) :
+                    continue
+                out[i*Sy:(i+1)*Sy,j*Sx:(j+1)*Sx] = np.median(subs)
+        i+=1
+        j+=1
+        a1 = sy - 1 - (i) * Sy
+        a2 = sx - 1 - (j) * Sx
+        if (a1 > 0) :
+            for k in range (sx):
+                out[(i)*Sy:sy,k] = out[i*Sy-1,k]
+        if (a2 > 0) :
+            for k in range (sy):
+                out[k, (j)*Sx:sx] = out[k, j*Sx-1]
+        return out
+
+
+    def smooth2 (self, im, win) :
+        w = win if win >= 2 else 2
+        w2 = w/2 if w/2 >= 2 else 2
+        val0 = 1. / (w * w)
+        arr0 = np.ones ((w,w), dtype=np.float32) * val0
+        val1 = 1. / (w2 * w2)
+        arr1 = np.ones ((w2,w2), dtype=np.float32) * val1
+        tarr = signal.convolve2d (im, arr0, mode='same')
+        tarr = signal.convolve2d (tarr, arr0, mode='same')
+        tarr1 = signal.convolve2d (tarr, arr1, mode='same')
+        tarr1 = signal.convolve2d (tarr1, arr1, mode='same')
+
+        return tarr1
 
 
     def estimate_local_background (self, img, nbinx, nbiny, thr, perc):
@@ -297,7 +342,7 @@ class myImage :
     def fitPeak (self, peak, bxsize) :
         xy = peak.DetXY
         subimg = peak.self.imArray[xy[1]-bxsize:xy[1]+bxsize,xy[0]-bxsize:xy[0]+bxsize]
-        pf = peakFit (subImg)
+        pf = peakFit (subimg)
         fitarr = pf.fitArr()
         print fitarr
 

@@ -84,6 +84,7 @@ class Atrex(QtGui.QMainWindow):
         self.ui.pushButton_Detector_Save_calibration.clicked.connect(self.saveDetectorCalibration)
 
         self.ui.Peaks_Button_Search.clicked.connect(self.SearchForPeaks)
+        self.ui.ps_peak_search_button.clicked.connect (self.SearchForPeaks)
 
         self.ui.updateImageDispButton.clicked.connect(self.updateImage)
         self.ui.maxDNSlider.valueChanged.connect(self.maxSliderUpdate)
@@ -979,11 +980,30 @@ class Atrex(QtGui.QMainWindow):
 
         print 'Search for peaks'
 
+        # get the values from controls on peak search tab
+        gradadd = self.ui.ps_gradAddLE.text().toFloat()[0]
+        maxcount = self.ui.ps_maxCountLE.text().toInt()[0]
+        smoothwin = self.ui.ps_smoothWinLE.text().toInt()[0]
+        mincount = self.ui.ps_minCountLE.text().toInt()[0]
+        locwin = self.ui.ps_locBcgrLE.text().toInt()[0]
+
+        # get num of images, and related Omega info
+        ni = self.ui.scan_numImagesLE.text().toInt()[0]
+        i0 = self.ui.scan_startImageLE.text().toInt()[0]
+        om0 = self.ui.scan_startAngLE.text().toFloat()[0]
+        omD = self.ui.scan_stepAngLE.text().toFloat()[0]
+
+        # check for box size (8) do we need this here??
+        lcbgr = self.myim.calculate_local_background (0, locwin)
+        smoothedArr = self.myim.smooth2 (self.myim.imArray-lcbgr, smoothwin)
+
+
         # thr=self.threshold                       # 100:       raw counts threshold for locating peaks
         #max_peak_size=self.mindist               # 10:        max allowed peak size with pixels above local background + Imin
         #num_of_segments = [self.pbox,self.pbox]  # [50.,50.]: number of segments in X and Y for local labckground estimation
         #perc=self.bbox                           # 1.0:       percent of median for background
 
+        # need to initialize self.peaks
         self.myim.search_for_peaks(self.peaks, 100, 10, [50., 50.], 1.0)
         # if the fit CB is checked, then do the 2d gaussian
         # need to evaluate the quality of fit here.
