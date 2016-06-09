@@ -17,6 +17,7 @@ from peakFit import *
 from myPredict import *
 from myPeakAdjustDlg import *
 from Project import *
+from locmax import *
 import simulateDlg
 
 ##
@@ -975,7 +976,11 @@ class Atrex(QtGui.QMainWindow):
         self.detector.setbeamXY([bx, by])
         self.detector.setpsizeXY([px, py])
 
-    def SearchForPeaks(self):
+
+    def SearchForPeaks(self) :
+        self.PS (0., 3., 1)
+
+    def PS(self, om, axis, prog):
         self.detector.genTiltMtx ()
 
         print 'Search for peaks'
@@ -993,9 +998,32 @@ class Atrex(QtGui.QMainWindow):
         om0 = self.ui.scan_startAngLE.text().toFloat()[0]
         omD = self.ui.scan_stepAngLE.text().toFloat()[0]
 
-        # check for box size (8) do we need this here??
+        # check for box size (8) do we need this here?
+        bx = self.ui.p2_boxSizeLE.text().toInt()[0]
         lcbgr = self.myim.calculate_local_background (0, locwin)
         smoothedArr = self.myim.smooth2 (self.myim.imArray-lcbgr, smoothwin)
+        self.peaks.zero()
+        #smoothedArr.tofile ("/home/harold/smoothed")
+        #self.myim.imArray.tofile ("/home/harold/orig")
+        ixarr=[]
+        iyarr=[]
+        maxelems = locmax (smoothedArr, gradadd, ixarr, iyarr)
+        if (maxelems.size > 0) :
+            a0 = np.logical_and(maxelems>= mincount, maxelems <= maxcount)
+            f1a = np.where (a0 == True)
+
+            if (f1a[0].size > 0) :
+                gonio=np.zeros((6),dtype=np.float32)
+                gonio [axis] = om
+                for f in f1a[0]:
+                    newpeak = myPeakTable.myPeak ()
+                    newpeak.setDetxy((ixarr[f], iyarr[f]))
+                    newpeak.Gonio[:] = gonio
+                    newpeak.IntSSD[:]=[bx, bx]
+                    self.peaks.addPeak (newpeak)
+
+
+
 
 
         # thr=self.threshold                       # 100:       raw counts threshold for locating peaks
@@ -1004,7 +1032,7 @@ class Atrex(QtGui.QMainWindow):
         #perc=self.bbox                           # 1.0:       percent of median for background
 
         # need to initialize self.peaks
-        self.myim.search_for_peaks(self.peaks, 100, 10, [50., 50.], 1.0)
+        #self.myim.search_for_peaks(self.peaks, 100, 10, [50., 50.], 1.0)
         # if the fit CB is checked, then do the 2d gaussian
         # need to evaluate the quality of fit here.
         #
