@@ -1048,6 +1048,24 @@ class Atrex(QtGui.QMainWindow):
         print 'number of peaks received', self.peaks.getpeakno()
 
     def SearchForPeaksSeries(self):
+
+        # get the values from controls on peak search tab
+        gradadd = self.ui.ps_gradAddLE.text().toFloat()[0]
+        maxcount = self.ui.ps_maxCountLE.text().toInt()[0]
+        smoothwin = self.ui.ps_smoothWinLE.text().toInt()[0]
+        mincount = self.ui.ps_minCountLE.text().toInt()[0]
+        locwin = self.ui.ps_locBcgrLE.text().toInt()[0]
+
+        # get num of images, and related Omega info
+        ni = self.ui.scan_numImagesLE.text().toInt()[0]
+        i0 = self.ui.scan_startImageLE.text().toInt()[0]
+        om0 = self.ui.scan_startAngLE.text().toFloat()[0]
+        omD = self.ui.scan_stepAngLE.text().toFloat()[0]
+
+        # check for box size (8) do we need this here?
+        bx = self.ui.p2_boxSizeLE.text().toInt()[0]
+
+
         self.detector.genTiltMtx ()
         self.peaks.remove_all_peaks()
         z = QtCore.QChar('0')
@@ -1056,7 +1074,26 @@ class Atrex(QtGui.QMainWindow):
             #newimage = QtCore.QString("%1%2.tif").arg(self.imageFilePref).arg(i, 3, 10, z)
             newimage = self.myproj.getFileNameFromNum (i)
             tempimg.readTiff(newimage)
-            self.myim.search_for_peaks_arr(tempimg.imArray, self.peaks, 100, 10, [50, 50], 1.0)
+            lcbgr = tempimg.calculate_local_background (0, locwin)
+            smoothedArr = tempimg.smooth2 (tempimg.imArray-lcbgr, smoothwin)
+            ixarr=[]
+            iyarr=[]
+            maxelems = locmax (smoothedArr, gradadd, ixarr, iyarr)
+
+            if (maxelems.size > 0) :
+                a0 = np.logical_and(maxelems>= mincount, maxelems <= maxcount)
+                f1a = np.where (a0 == True)
+
+            if (f1a[0].size > 0) :
+                gonio=np.zeros((6),dtype=np.float32)
+                gonio [axis] = om
+                for f in f1a[0]:
+                    newpeak = myPeakTable.myPeak ()
+                    newpeak.setDetxy((ixarr[f], iyarr[f]))
+                    newpeak.Gonio[:] = gonio
+                    newpeak.IntSSD[:]=[bx, bx]
+                    self.peaks.addPeak (newpeak)
+
         self.updatePeakNumberLE()
         self.imageWidget.repaint()
         self.zoomWidget.repaint()

@@ -16,9 +16,21 @@ class peakFit :
         self.fitpars =[0.,0.,0.,0.,0.,0.,0.]
 
     def fitArr (self) :
-
+        bxsize = self.inarr.shape
         usemom=[True, True, True, True, True, True, True, True]
-        self.fitpars = gaussfit (self.inarr, usemoment=usemom)
+        # estimate fit parameters before fitting
+        self.fitpars[0] = np.median (self.inarr)
+        self.fitpars[1] = np.max (self.inarr)
+        #find maximum location in inarr
+        locmax = np.unravel_index(np.argmax (self.inarr), self.inarr.shape)
+
+
+        self.fitpars[2] = locmax[1]
+        self.fitpars[3] = locmax[0]
+        self.fitpars[4] = 4
+        self.fitpars[5] = 4
+
+        self.fitpars = gaussfit (self.inarr, params=self.fitpars, usemoment=usemom)
         c='\t'
         print '***************Parameters **************'
         print '\tActual\tFitted'
