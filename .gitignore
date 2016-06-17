@@ -1,3 +1,4 @@
 *.pyc
 .idea
 Software/*.pyc
+Software/*.idea
