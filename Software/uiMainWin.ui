@@ -1035,7 +1035,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="QCheckBox" name="checkBox_16">
+     <widget class="QCheckBox" name="ps_fitPeaksCB">
       <property name="geometry">
        <rect>
         <x>410</x>
@@ -1818,7 +1818,7 @@
      <widget class="QLineEdit" name="p2_boxSizeLE">
       <property name="geometry">
        <rect>
-        <x>80</x>
+        <x>100</x>
         <y>80</y>
         <width>31</width>
         <height>27</height>
@@ -2072,40 +2072,40 @@
        <rect>
         <x>20</x>
         <y>490</y>
-        <width>120</width>
+        <width>161</width>
         <height>101</height>
        </rect>
       </property>
       <property name="title">
        <string>Apply :</string>
       </property>
-      <widget class="QCheckBox" name="checkBox_10">
+      <widget class="QRadioButton" name="p2_currentImgCB">
        <property name="geometry">
         <rect>
-         <x>0</x>
+         <x>20</x>
+         <y>30</y>
+         <width>121</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Current Image</string>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+      </widget>
+      <widget class="QRadioButton" name="radioButton_5">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
          <y>60</y>
-         <width>96</width>
-         <height>26</height>
+         <width>103</width>
+         <height>21</height>
         </rect>
        </property>
        <property name="text">
         <string>Series</string>
-       </property>
-      </widget>
-      <widget class="QCheckBox" name="checkBox_9">
-       <property name="geometry">
-        <rect>
-         <x>0</x>
-         <y>30</y>
-         <width>111</width>
-         <height>26</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Current img</string>
-       </property>
-       <property name="checked">
-        <bool>true</bool>
        </property>
       </widget>
      </widget>

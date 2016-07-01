@@ -50,8 +50,13 @@ class myImage :
         self.maxCount = 40000
         self.smoothWin = 2
         self.minCount = 50
-        self.fitFlag = False  ;
+        self.fitFlag = False
+        self.curImgFlag = True
 
+    # toggles based upon whether the current image or series rb is changed (exclusive buttons)
+    def setSeriesFlag (self,ival):
+        self.curImgFlag = ival
+        print ival
 
     def readTiffRaw (self, infile) :
         self.imFileName = infile
@@ -324,6 +329,20 @@ class myImage :
         #print, 'Computation time: ',systime(/seconds)-t0
         #end
 
+    def fitAllPeaks (self, peaks, bxsize) :
+        axis = 3
+        nnn = peaks.getpeakno()
+        lcbgr = self.calculate_local_background(0)
+        for pn in range (nnn-1, 0, -1) :
+            pk = peaks.peaks[pn]
+            if self.curImgFlag :
+                bOverPks = peaks.find_close_overlaps (pn, 10)
+                if (bOverPks[0] > 0) :
+                    re = self.two_profile_fitting(peaks, bOverPks[1], bOverPks[2])
+                else :
+                    re = self.one_profile_fitting (peaks.peaks[pn])
+
+
 
 
     def fitPeaks (self, peaks, bxsize) :
@@ -333,7 +352,8 @@ class myImage :
         print nnn
         for pk in peaks.peaks :
             xy = pk.DetXY
-            subImg = self.imArray[xy[1]-bxsize:xy[1]+bxsize,xy[0]-bxsize:xy[0]+bxsize]
+            # get the pixels surrounding the peak
+            subImg = self.imArray[xy[1]-bxsize:xy[1]+bxsize,xy[0]-bxsize:xy[0]+bxsize ]
             pf = peakFit (subImg)
             fitarr = pf.fitArr()
             print fitarr
@@ -350,6 +370,83 @@ class myImage :
     def applyMask (self, arr):
         self.imArray = self.imArray_orig * arr
 
+
+
+    def two_profile_fitting (self, img, peaks, n1, n2) :
+        xy1 = self.peaks.peaks[n1].getDetxy()
+        xy2 = self.peaks.peaks[n2].getDetxy()
+        dxy = np.subtract (xy1, xy2)
+        sub0 = self.getZoomIm (xy1, n1, n2)
+        sub1 = self.getZoomIm (xy2, n1, n2)
+        j1 = np.argmax (sub0)
+        j2 = np.argmax (sub1)
+        j1ind = np.unravel_index(j1,self.imArray.shape)
+        j2ind = np.unravel_index(j2,self.imArray.shape)
+        xy1 = xy1 + j1ind - [2,2]
+        xy2 = xy2 + j2ind - [2,2]
+        # recenter one more time
+        sub0 = self.getZoomIm (xy1, n1, n2)
+        sub1 = self.getZoomIm (xy2, n1, n2)
+        j1 = np.argmax (sub0)
+        j2 = np.argmax (sub1)
+        j1ind = np.unravel(j1,self.imArray.shape)
+        j2ind = np.unravel(j2,self.imArray.shape)
+        xy1 = xy1 + j1ind - [2,2]
+        xy2 = xy2 + j2ind - [2,2]
+
+        self.peaks.peaks [n1].setDetxy(xy1)
+        self.peaks.peaks [n2].setDetxy(xy2)
+
+        dx2 = np.subtract (xy1,xy2)
+        middle = (xy1 + xy2)/2.
+        d= xy1 - middle
+        d= sqrt(d[0]**2+d[1]**2)
+        xr1 = xy1 - middle
+        xr2 = xy2 - middle
+
+        pic = self.getZoomIm (middle, [d,d])
+        ####
+        ####
+        # needs testing....
+        # and then deployment
+        aaa = self.two2DGaussians (pic, xr1, xr2)
+
+	
+    def one_profile_fitting (self, peak) :
+        xy1 = peak.getDetxy()
+        print 'One profile fitting'
+        print xy1
+        sub = self.getZoomIm (xy1, 2, 2)
+        j1 = np.unravel_index (np.argmax (sub),sub.shape)
+
+        print j1
+
+
+
+
+
+    def getZoomIm (self, xytup, bx_y, bx_x) :
+        xyshape = self.imArray.shape
+        y_0 = xytup[0]-bx_y
+        y_1 = xytup[0]+bx_y + 1
+        if (y_0 < 0 ) :
+            y_0 = 0
+            y_1 = 2 * bx_y + 2
+        elif y_1 >=  xyshape[0] :
+            y_1 = xyshape[0]
+            y_0 = xyshape[0] - bx_y*2 - 1
+
+        x_0 = xytup[1]-bx_x
+        x_1 = xytup[1]+bx_x + 1
+        if (x_0 < 0 ) :
+            x_0 = 0
+            x_1 = 2 * bx_x + 2
+        elif x_1 >=  xyshape[1] :
+            x_1 = xyshape[1]
+            x_0 = xyshape[1] - bx_x*2 - 1
+
+        sub = self.imArray_orig[y_0:y_1, x_0:x_1]
+        return sub
 
     def integrate (self, beam, tthetaArr) :
 

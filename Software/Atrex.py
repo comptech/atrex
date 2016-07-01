@@ -133,6 +133,7 @@ class Atrex(QtGui.QMainWindow):
         self.ui.Peaks_Button_Open_PT.clicked.connect(self.OpenPeakTable)
         self.ui.Peaks_Button_Save_PT.clicked.connect(self.SavePeakTable)
 
+
         self.ui.zoomWidget.zmRectSignal.connect(self.newZmBox)
         self.ui.maxDNSlider.setRange(0, 65535)
         self.ui.minDNSlider.setRange(0, 65535)
@@ -149,6 +150,7 @@ class Atrex(QtGui.QMainWindow):
         self.imageFile = QtCore.QString('')
         self.detectFile = QtCore.QString('')
         self.myim = myImage()
+        self.ui.p2_currentImgCB.toggled.connect (self.myim.setSeriesFlag)
         self.zmCentLoc = [500, 500]
         self.activeList = 0
         self.peaks = myPeakTable.myPeakTable()  # This is the active PeakTable
@@ -982,6 +984,8 @@ class Atrex(QtGui.QMainWindow):
 
     def PS(self, om, axis, prog):
         self.detector.genTiltMtx ()
+        fitFlag = self .ui.ps_fitPeaksCB.isChecked()
+        self.myim.fitFlag = fitFlag
 
         print 'Search for peaks'
 
@@ -1000,6 +1004,7 @@ class Atrex(QtGui.QMainWindow):
 
         # check for box size (8) do we need this here?
         bx = self.ui.p2_boxSizeLE.text().toInt()[0]
+
         lcbgr = self.myim.calculate_local_background (0, locwin)
         smoothedArr = self.myim.smooth2 (self.myim.imArray-lcbgr, smoothwin)
         self.peaks.zero()
@@ -1037,7 +1042,8 @@ class Atrex(QtGui.QMainWindow):
         # need to evaluate the quality of fit here.
         #
         if self.myim.fitFlag :
-            self.myim.fitPeaks (self.peaks, 16)
+            #self.myim.fitPeaks (self.peaks, 16)
+            self.myim.fitAllPeaks (self.peaks, 16)
 
         self.updatePeakNumberLE()
         self.imageWidget.repaint()

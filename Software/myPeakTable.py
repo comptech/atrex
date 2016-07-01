@@ -260,6 +260,23 @@ class myPeakTable:
         return tab
 
 
+    def find_close_overlaps (self, pn, farval) :
+
+        noverlaps = [0,pn]
+        xy1 = self.peaks[pn].getDetxy()
+        for j in range (self.peakno-1) :
+            if j != pn :
+                xy2 = self.peaks[j].getDetxy()
+                dxy = np.asarray(xy1) - np.asarray(xy2)
+                dst = sqrt (dxy[0]**2 + dxy[1]**2)
+                if dst < farval :
+                    noverlaps[0] = noverlaps[0] + 1
+                    noverlaps.append(j)
+        return noverlaps
+
+
+
+
     def find_multiple_peak_copies(self):
         i = 0
         while (i < self.peakno - 2):

@@ -16,15 +16,22 @@ def locmax (img, mtp,  ix, iy, noedge=False, sort=False) :
     fuzz = 1.E-8
     #fuzz = 300
 
-    dx1 = np.roll(img, 1, 1) + mtp
-    dx2 = np.roll(img, -1, 1) + mtp
-    dy1 = np.roll(img, 1, 0) + mtp
-    dy2 = np.roll(img, -1, 0) + mtp
-    landx = np.logical_and(img>dx1, img>dx2)
-    landy = np.logical_and(img>dy1, img>dy2)
-    land = np.logical_and (landx, landy)
+    #dx1 = np.roll(img, 1, 1) + mtp
+    #dx2 = np.roll(img, -1, 1) + mtp
+    dx1 = np.roll (img, 1,1)
+    dx2 = np.roll (img, -1,1)
+    dy1 = np.roll(img, 1, 0)
+    dy2 = np.roll(img, -1, 0)
+    i0 = img > (dx1+mtp)
+    i1 = img > (dx2+mtp)
+    i2 = img > (dy1+mtp)
+    i3 = img > (dy2+mtp)
+    land = i0 * i1 * i2 * i3
+    #landx = np.logical_and(img>dx1, img>dx2)
+    #landy = np.logical_and(img>dy1, img>dy2)
+    #land = np.logical_and (landx, landy)
 
-    w = np.where (land == True)
+    w = np.where (land > 0)
     nMax = w[0].size
     print "number of maxima : ",w[0].size
 
