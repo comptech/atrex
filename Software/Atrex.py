@@ -1004,12 +1004,15 @@ class Atrex(QtGui.QMainWindow):
 
         # check for box size (8) do we need this here?
         bx = self.ui.p2_boxSizeLE.text().toInt()[0]
-
         lcbgr = self.myim.calculate_local_background (0, locwin)
-        smoothedArr = self.myim.smooth2 (self.myim.imArray-lcbgr, smoothwin)
+        medsub = np.subtract(self.myim.imArray,lcbgr)
+        #lcbgr.tofile ("/home/harold/lcbgr")
+
+        #smoothedArr = self.myim.smooth2 (medsub, smoothwin)
+        smoothedArr = self.myim.smoothGauss (medsub, smoothwin, 2)
         self.peaks.zero()
+
         #smoothedArr.tofile ("/home/harold/smoothed")
-        #self.myim.imArray.tofile ("/home/harold/orig")
         ixarr=[]
         iyarr=[]
         maxelems = locmax (smoothedArr, gradadd, ixarr, iyarr)

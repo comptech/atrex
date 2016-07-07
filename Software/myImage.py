@@ -15,6 +15,7 @@ from platform import *
 import h5py
 from peakFit import *
 from scipy import signal
+from scipy import mgrid
 
 
 class myImage :
@@ -169,15 +170,23 @@ class myImage :
         sx = len(self.imArray[0])
         Sx = sx / Nx
         Sy = sy / Ny
-
+        #temparr = self.imArray.copy()
         out = np.zeros((sy,sx), dtype=np.float32)
+        reg = np.zeros ((Sy,Sx), dtype=np.float32)
         for i in range (Ny - 1) :
             for j in range (Nx - 1) :
-                subIm = self.imArray [i * Sy:(i+1)*Sy,j*Sx:(j+1)*Sx]
-                subs = subIm [np.where (subIm> 10)]
-                if (len(subs)==0) :
-                    continue
-                out[i*Sy:(i+1)*Sy,j*Sx:(j+1)*Sx] = np.median(subs)
+                reg[:,:] = self.imArray [i * Sy:(i+1)*Sy,j*Sx:(j+1)*Sx]
+                f = np.where (reg> 10)
+                if len(f[0])!=0 :
+                    a = np.median(reg[f])
+                    reg[f] = a
+                    out[i*Sy:(i+1)*Sy,j*Sx:(j+1)*Sx] = reg
+                    #reg[f] = a
+                else :
+                    out[i*Sy:(i+1)*Sy,j*Sx:(j+1)*Sx] = 0.
+                    #reg[:,:]=0.
+
+
         i+=1
         j+=1
         a1 = sy - 1 - (i) * Sy
@@ -204,6 +213,14 @@ class myImage :
         tarr1 = signal.convolve2d (tarr1, arr1, mode='same')
 
         return tarr1
+
+    def smoothGauss (self, im, win, ndups) :
+        g = self.gauss_kernel(win)
+        sm_im = signal.convolve (im, g, mode='same')
+        for i in range (ndups) :
+            sm_im = signal.convolve (sm_im, g, mode='same')
+
+        return sm_im
 
 
     def estimate_local_background (self, img, nbinx, nbiny, thr, perc):
@@ -417,9 +434,12 @@ class myImage :
         print 'One profile fitting'
         print xy1
         sub = self.getZoomIm (xy1, 2, 2)
+        temp = np.argmax (sub)
         j1 = np.unravel_index (np.argmax (sub),sub.shape)
 
         print j1
+        x1 = xy1 + j1
+        print x1
 
 
 
@@ -427,8 +447,8 @@ class myImage :
 
     def getZoomIm (self, xytup, bx_y, bx_x) :
         xyshape = self.imArray.shape
-        y_0 = xytup[0]-bx_y
-        y_1 = xytup[0]+bx_y + 1
+        y_0 = xytup[1]-bx_y
+        y_1 = xytup[1]+bx_y + 1
         if (y_0 < 0 ) :
             y_0 = 0
             y_1 = 2 * bx_y + 2
@@ -436,8 +456,8 @@ class myImage :
             y_1 = xyshape[0]
             y_0 = xyshape[0] - bx_y*2 - 1
 
-        x_0 = xytup[1]-bx_x
-        x_1 = xytup[1]+bx_x + 1
+        x_0 = xytup[0]-bx_x
+        x_1 = xytup[0]+bx_x + 1
         if (x_0 < 0 ) :
             x_0 = 0
             x_1 = 2 * bx_x + 2
@@ -507,3 +527,13 @@ class myImage :
 
         self.CalcTheta.integrate_cake (np.array(imsize, dtype=np.int32), np.array(beam,dtype=np.float32),  self.imArray_orig.astype(np.uint16), tthetaArr, self.cakeArr, histoParams)
         self.cakeParams = [mintth, maxtth, histoParams[2],-180., 180., 360./self.nbinsAz]
+
+    def gauss_kernel (self, size) :
+        size = int(size)
+        fsize = float (size)
+        x,y = mgrid [-size:size+1, -size:size+1]
+        x2 = x**2 / fsize
+        y2 = y**2 / fsize
+        z = x2 + y2
+        g = numpy.exp (-z)
+        return g/g.sum()
