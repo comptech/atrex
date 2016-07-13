@@ -1708,7 +1708,8 @@ class Atrex(QtGui.QMainWindow):
         locBcgr = self.ui.ps_locBcgrLE.text().toInt()[0]
         fitB = self.ui.ps_fitPeaksCB.isChecked()
         self.myim.setFitParams (fitB, gradadd, maxcount, mincount, smoothwin, locBcgr)
-
+        bs2 = self.ui.ps2_boxSizeLE.text().toInt()[0]
+        self.myim.setBS2 (bs2)
 
     def setValToControl (self, control, val) :
         str = QtCore.QString ("%1").arg(val)

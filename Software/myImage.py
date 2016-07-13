@@ -53,6 +53,7 @@ class myImage :
         self.minCount = 50
         self.fitFlag = False
         self.curImgFlag = True
+        self.bs2 = 8
 
     # toggles based upon whether the current image or series rb is changed (exclusive buttons)
     def setSeriesFlag (self,ival):
@@ -161,6 +162,9 @@ class myImage :
         self.smoothWin = smoothw
         self.locBcgr = locb
         self.fitFlag = fFlag
+
+    def setBS2(self, bs) :
+        self.bs2 = bs
 
     def calculate_local_background (self, corners, nregions=50):
         # calculates the local background using median value in rectangular regions
@@ -438,9 +442,33 @@ class myImage :
         j1 = np.unravel_index (np.argmax (sub),sub.shape)
 
         print j1
-        x1 = xy1 + j1
+        #recenter on the maxima
+        x1 = xy1 + np.asarray(j1) - np.asarray((2,2))
         print x1
 
+        sub = self.getZoomIm (x1, 2, 2)
+        temp = np.argmax (sub)
+        j1 = np.unravel_index (np.argmax (sub),sub.shape)
+
+        print j1
+        x1 = xy1 + np.asarray(j1) - np.asarray((2,2))
+        peak.setDetxy (x1)
+
+        # now do the gaussian fit...
+        pic = self.getZoomIm (x1, self.bs2, self.bs2)
+        print pic.shape
+        pf =  peakFit (pic)
+        fitarr = pf.fitArr()
+        ang = radians(-pf.fitpars[6])
+        cosang = cos(ang)
+        sinang = sin(ang)
+        # get the xy shift from the bs2 center
+        xyshift = np.asarray([pf.fitpars[2] - self.bs2,pf.fitpars[3]-self.bs2])
+        x1 = x1 + xyshift
+        peak.setDetxy (x1)
+        mtx = np.asarray([[cosang, sinang],[-sinang, cosang]])
+        newxy = np.dot (mtx, xyshift)
+        print fitarr
 
 
 

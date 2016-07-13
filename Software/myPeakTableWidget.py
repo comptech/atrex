@@ -47,13 +47,13 @@ class myPeakTableWidget (QtGui.QTableWidget) :
         self.setRowCount (len(peaks))
         for p in peaks :
             xy = p.DetXY
-            str = '%d'%xy[0]
+            str = '%.2f'%xy[0]
             self.setItem (count, 0, QtGui.QTableWidgetItem(str))
-            str = '%d'%xy[1]
+            str = '%.2f'%xy[1]
             self.setItem (count, 1, QtGui.QTableWidgetItem(str))
             tthval = self.myDet.calculate_tth_from_pixels(xy, self.myDet.gonio)
            # xyz = self.myDet.calculate_xyz_from_pixels (xy, self.myDet.gonio)
-            str = '%f'%tthval
+            str = '%.3f'%tthval
             self.setItem (count, 2, QtGui.QTableWidgetItem(str))
             count = count + 1
         self.numPeaks = count
