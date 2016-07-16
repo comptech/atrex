@@ -39,7 +39,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>5</number>
     </property>
     <widget class="QWidget" name="FileTab">
      <attribute name="title">
@@ -3132,7 +3132,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QComboBox" name="comboBox_2">
+        <widget class="QComboBox" name="pred_omega_or_energyCB">
          <item>
           <property name="text">
            <string>Omega</string>

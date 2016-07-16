@@ -1048,6 +1048,17 @@ class Atrex(QtGui.QMainWindow):
             #self.myim.fitPeaks (self.peaks, 16)
             self.myim.fitAllPeaks (self.peaks, 16)
 
+        # update calibration and then update peaks
+        self.Update_Detector_calibration()
+        kappa = self.ui.LE_Detector_kappa.text().toFloat()[0]
+        theta = self.ui.LE_Detector_2theta.text().toFloat()[0]
+        omind = self.ui.pred_omega_or_energyCB.getIndex()
+        if omind == 1 :
+            omegaFlag = 0
+        else :
+            omegaFlag = 1
+        self.peaks.calculate_all_xyz_from_pix (self.detector, kappa,theta, omegaFlag)
+
         self.updatePeakNumberLE()
         self.imageWidget.repaint()
         self.zoomWidget.repaint()

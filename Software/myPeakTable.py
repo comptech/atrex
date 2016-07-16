@@ -236,6 +236,19 @@ class myPeakTable:
         self.peakno = 0
         del self.peaks[:]
 
+    def calculate_all_xyz_from_pix (self, det, kappa,theta,omegaFlag) :
+
+        for p in self.peaks :
+            pix = p.getDetxy()
+            gonio = p.Gonio
+            gonio[0] = kappa
+            gonio[1] = theta
+
+
+
+
+
+
 
     def remove_peaks_outside_aa(self, detect):
         for p in self.peaks:
