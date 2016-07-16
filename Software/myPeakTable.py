@@ -237,12 +237,16 @@ class myPeakTable:
         del self.peaks[:]
 
     def calculate_all_xyz_from_pix (self, det, kappa,theta,omegaFlag) :
-
+        wv = det.wavelength
         for p in self.peaks :
             pix = p.getDetxy()
             gonio = p.Gonio
             gonio[0] = kappa
             gonio[1] = theta
+        if (omegaFlag == True) :
+            det.calculate_XYZ_from_pixels_mono (pix, gonio, wv)
+        else :
+            det.calculate_XYZ_from_pixels_mono (pix, gonio, kev_to_a(p.energies[0]))
 
 
 
