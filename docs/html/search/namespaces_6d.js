@@ -1,19 +1,4 @@
 var searchData=
 [
-  ['mainpeaks',['MainPeaks',['../namespace_main_peaks.html',1,'']]],
-  ['mpfit',['mpfit',['../namespacempfit.html',1,'']]],
-  ['mydetector',['myDetector',['../namespacemy_detector.html',1,'']]],
-  ['mygensettingsdlg',['myGenSettingsDlg',['../namespacemy_gen_settings_dlg.html',1,'']]],
-  ['myimage',['myImage',['../namespacemy_image.html',1,'']]],
-  ['myimdisplay',['myImDisplay',['../namespacemy_im_display.html',1,'']]],
-  ['mymask',['myMask',['../namespacemy_mask.html',1,'']]],
-  ['myoverlaydlg',['MyOverlayDlg',['../namespace_my_overlay_dlg.html',1,'']]],
-  ['mypeakadjustdlg',['myPeakAdjustDlg',['../namespacemy_peak_adjust_dlg.html',1,'']]],
-  ['mypeaks',['myPeaks',['../namespacemy_peaks.html',1,'']]],
-  ['mypeaktable',['myPeakTable',['../namespacemy_peak_table.html',1,'']]],
-  ['mypeaktablewidget',['myPeakTableWidget',['../namespacemy_peak_table_widget.html',1,'']]],
-  ['myplotwidget',['MyPlotWidget',['../namespace_my_plot_widget.html',1,'']]],
-  ['mypredict',['myPredict',['../namespacemy_predict.html',1,'']]],
-  ['myzmdisplay',['myZmDisplay',['../namespacemy_zm_display.html',1,'']]],
-  ['myzmpeakdisplay',['myZmPeakDisplay',['../namespacemy_zm_peak_display.html',1,'']]]
+  ['mpfit',['mpfit',['../namespacempfit.html',1,'']]]
 ];

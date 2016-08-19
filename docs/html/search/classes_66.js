@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['filehandle',['FileHandle',['../classtifffile_1_1_file_handle.html',1,'tifffile']]]
+  ['filehandle',['FileHandle',['../classtifffile_1_1FileHandle.html',1,'tifffile']]]
 ];

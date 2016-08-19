@@ -1,0 +1,213 @@
+\hypertarget{classtifffile_1_1FileHandle}{\section{tifffile.\-File\-Handle Class Reference}
+\label{classtifffile_1_1FileHandle}\index{tifffile.\-File\-Handle@{tifffile.\-File\-Handle}}
+}
+Inheritance diagram for tifffile.\-File\-Handle\-:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classtifffile_1_1FileHandle}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+def \hyperlink{classtifffile_1_1FileHandle_a256d28d56fa26bdc5a54056626dba06b}{\-\_\-\-\_\-init\-\_\-\-\_\-}
+\item 
+def \hyperlink{classtifffile_1_1FileHandle_aed5fb2120f32ee43f63a74e51ee19014}{open}
+\item 
+def \hyperlink{classtifffile_1_1FileHandle_a11284915485b77b0666fab6c13ff3052}{read}
+\item 
+def \hyperlink{classtifffile_1_1FileHandle_a57407ec5af06d23c9bad8c8b94a4c1e4}{memmap\-\_\-array}
+\item 
+def \hyperlink{classtifffile_1_1FileHandle_ae9a3b8d51a50d9cac82f80a33e3c9887}{read\-\_\-array}
+\item 
+def \hyperlink{classtifffile_1_1FileHandle_ace4a33bbf8c889940fea17f043042ce3}{read\-\_\-record}
+\item 
+def \hyperlink{classtifffile_1_1FileHandle_ac6a2ba4f361ef961cb206c2199513c70}{tell}
+\item 
+def \hyperlink{classtifffile_1_1FileHandle_a88d4b64db22c7a55afae0428b5e0200a}{seek}
+\item 
+def \hyperlink{classtifffile_1_1FileHandle_a8c345933b2368352aa97ee72aaeda596}{close}
+\item 
+\hypertarget{classtifffile_1_1FileHandle_af0dcfc3f144e9ab96946cf8063142574}{def {\bfseries \-\_\-\-\_\-enter\-\_\-\-\_\-}}\label{classtifffile_1_1FileHandle_af0dcfc3f144e9ab96946cf8063142574}
+
+\item 
+\hypertarget{classtifffile_1_1FileHandle_a7a59eb04f16fee7fafead1200bb4871b}{def {\bfseries \-\_\-\-\_\-exit\-\_\-\-\_\-}}\label{classtifffile_1_1FileHandle_a7a59eb04f16fee7fafead1200bb4871b}
+
+\item 
+def \hyperlink{classtifffile_1_1FileHandle_a4ab2bf69b0a273e2ee43db2d9f2536b5}{\-\_\-\-\_\-getattr\-\_\-\-\_\-}
+\item 
+\hypertarget{classtifffile_1_1FileHandle_a65426db83982602cb1e3e301eddf9fd6}{def {\bfseries name}}\label{classtifffile_1_1FileHandle_a65426db83982602cb1e3e301eddf9fd6}
+
+\item 
+\hypertarget{classtifffile_1_1FileHandle_a1816f4d0d7568ebb37e4b473e527e106}{def {\bfseries dirname}}\label{classtifffile_1_1FileHandle_a1816f4d0d7568ebb37e4b473e527e106}
+
+\item 
+\hypertarget{classtifffile_1_1FileHandle_a23b95cb72e478e26496e6d3d7527a3a3}{def {\bfseries path}}\label{classtifffile_1_1FileHandle_a23b95cb72e478e26496e6d3d7527a3a3}
+
+\item 
+\hypertarget{classtifffile_1_1FileHandle_a8fc096aaf40c918ccfc6f61304c63384}{def {\bfseries size}}\label{classtifffile_1_1FileHandle_a8fc096aaf40c918ccfc6f61304c63384}
+
+\item 
+\hypertarget{classtifffile_1_1FileHandle_ac35c2f69232e3c539f7b5859db1239c4}{def {\bfseries closed}}\label{classtifffile_1_1FileHandle_ac35c2f69232e3c539f7b5859db1239c4}
+
+\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classtifffile_1_1FileHandle_a965cb7fae14d9f259b2197072da2cf2e}{{\bfseries is\-\_\-file}}\label{classtifffile_1_1FileHandle_a965cb7fae14d9f259b2197072da2cf2e}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\begin{DoxyVerb}Binary file handle.
+
+* Handle embedded files (for CZI within CZI files).
+* Allow to re-open closed files (for multi file formats such as OME-TIFF).
+* Read numpy arrays and records from file like objects.
+
+Only binary read, seek, tell, and close are supported on embedded files.
+When initialized from another file handle, do not use it unless this
+FileHandle is closed.
+
+Attributes
+----------
+name : str
+    Name of the file.
+path : str
+    Absolute path to file.
+size : int
+    Size of file in bytes.
+is_file : bool
+    If True, file has a filno and can be memory mapped.
+
+All attributes are read-only.\end{DoxyVerb}
+ 
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classtifffile_1_1FileHandle_a256d28d56fa26bdc5a54056626dba06b}{\index{tifffile\-::\-File\-Handle@{tifffile\-::\-File\-Handle}!\-\_\-\-\_\-init\-\_\-\-\_\-@{\-\_\-\-\_\-init\-\_\-\-\_\-}}
+\index{\-\_\-\-\_\-init\-\_\-\-\_\-@{\-\_\-\-\_\-init\-\_\-\-\_\-}!tifffile::FileHandle@{tifffile\-::\-File\-Handle}}
+\subsubsection[{\-\_\-\-\_\-init\-\_\-\-\_\-}]{\setlength{\rightskip}{0pt plus 5cm}def tifffile.\-File\-Handle.\-\_\-\-\_\-init\-\_\-\-\_\- (
+\begin{DoxyParamCaption}
+\item[{}]{self, }
+\item[{}]{arg, }
+\item[{}]{mode = {\ttfamily 'rb'}, }
+\item[{}]{name = {\ttfamily None}, }
+\item[{}]{offset = {\ttfamily None}, }
+\item[{}]{size = {\ttfamily None}}
+\end{DoxyParamCaption}
+)}}\label{classtifffile_1_1FileHandle_a256d28d56fa26bdc5a54056626dba06b}
+\begin{DoxyVerb}Initialize file handle from file name or another file handle.
+
+Parameters
+----------
+arg : str, File, or FileHandle
+    File name or open file handle.
+mode : str
+    File open mode in case 'arg' is a file name.
+name : str
+    Optional name of file in case 'arg' is a file handle.
+offset : int
+    Optional start position of embedded file. By default this is
+    the current file position.
+size : int
+    Optional size of embedded file. By default this is the number
+    of bytes from the 'offset' to the end of the file.\end{DoxyVerb}
+ 
+
+\subsection{Member Function Documentation}
+\hypertarget{classtifffile_1_1FileHandle_a4ab2bf69b0a273e2ee43db2d9f2536b5}{\index{tifffile\-::\-File\-Handle@{tifffile\-::\-File\-Handle}!\-\_\-\-\_\-getattr\-\_\-\-\_\-@{\-\_\-\-\_\-getattr\-\_\-\-\_\-}}
+\index{\-\_\-\-\_\-getattr\-\_\-\-\_\-@{\-\_\-\-\_\-getattr\-\_\-\-\_\-}!tifffile::FileHandle@{tifffile\-::\-File\-Handle}}
+\subsubsection[{\-\_\-\-\_\-getattr\-\_\-\-\_\-}]{\setlength{\rightskip}{0pt plus 5cm}def tifffile.\-File\-Handle.\-\_\-\-\_\-getattr\-\_\-\-\_\- (
+\begin{DoxyParamCaption}
+\item[{}]{self, }
+\item[{}]{name}
+\end{DoxyParamCaption}
+)}}\label{classtifffile_1_1FileHandle_a4ab2bf69b0a273e2ee43db2d9f2536b5}
+\begin{DoxyVerb}Return attribute from underlying file object.\end{DoxyVerb}
+ \hypertarget{classtifffile_1_1FileHandle_a8c345933b2368352aa97ee72aaeda596}{\index{tifffile\-::\-File\-Handle@{tifffile\-::\-File\-Handle}!close@{close}}
+\index{close@{close}!tifffile::FileHandle@{tifffile\-::\-File\-Handle}}
+\subsubsection[{close}]{\setlength{\rightskip}{0pt plus 5cm}def tifffile.\-File\-Handle.\-close (
+\begin{DoxyParamCaption}
+\item[{}]{self}
+\end{DoxyParamCaption}
+)}}\label{classtifffile_1_1FileHandle_a8c345933b2368352aa97ee72aaeda596}
+\begin{DoxyVerb}Close file.\end{DoxyVerb}
+ \hypertarget{classtifffile_1_1FileHandle_a57407ec5af06d23c9bad8c8b94a4c1e4}{\index{tifffile\-::\-File\-Handle@{tifffile\-::\-File\-Handle}!memmap\-\_\-array@{memmap\-\_\-array}}
+\index{memmap\-\_\-array@{memmap\-\_\-array}!tifffile::FileHandle@{tifffile\-::\-File\-Handle}}
+\subsubsection[{memmap\-\_\-array}]{\setlength{\rightskip}{0pt plus 5cm}def tifffile.\-File\-Handle.\-memmap\-\_\-array (
+\begin{DoxyParamCaption}
+\item[{}]{self, }
+\item[{}]{dtype, }
+\item[{}]{shape, }
+\item[{}]{offset = {\ttfamily 0}, }
+\item[{}]{mode = {\ttfamily 'r'}, }
+\item[{}]{order = {\ttfamily 'C'}}
+\end{DoxyParamCaption}
+)}}\label{classtifffile_1_1FileHandle_a57407ec5af06d23c9bad8c8b94a4c1e4}
+\begin{DoxyVerb}Return numpy.memmap of data stored in file.\end{DoxyVerb}
+ \hypertarget{classtifffile_1_1FileHandle_aed5fb2120f32ee43f63a74e51ee19014}{\index{tifffile\-::\-File\-Handle@{tifffile\-::\-File\-Handle}!open@{open}}
+\index{open@{open}!tifffile::FileHandle@{tifffile\-::\-File\-Handle}}
+\subsubsection[{open}]{\setlength{\rightskip}{0pt plus 5cm}def tifffile.\-File\-Handle.\-open (
+\begin{DoxyParamCaption}
+\item[{}]{self}
+\end{DoxyParamCaption}
+)}}\label{classtifffile_1_1FileHandle_aed5fb2120f32ee43f63a74e51ee19014}
+\begin{DoxyVerb}Open or re-open file.\end{DoxyVerb}
+ \hypertarget{classtifffile_1_1FileHandle_a11284915485b77b0666fab6c13ff3052}{\index{tifffile\-::\-File\-Handle@{tifffile\-::\-File\-Handle}!read@{read}}
+\index{read@{read}!tifffile::FileHandle@{tifffile\-::\-File\-Handle}}
+\subsubsection[{read}]{\setlength{\rightskip}{0pt plus 5cm}def tifffile.\-File\-Handle.\-read (
+\begin{DoxyParamCaption}
+\item[{}]{self, }
+\item[{}]{size = {\ttfamily -\/1}}
+\end{DoxyParamCaption}
+)}}\label{classtifffile_1_1FileHandle_a11284915485b77b0666fab6c13ff3052}
+\begin{DoxyVerb}Read 'size' bytes from file, or until EOF is reached.\end{DoxyVerb}
+ \hypertarget{classtifffile_1_1FileHandle_ae9a3b8d51a50d9cac82f80a33e3c9887}{\index{tifffile\-::\-File\-Handle@{tifffile\-::\-File\-Handle}!read\-\_\-array@{read\-\_\-array}}
+\index{read\-\_\-array@{read\-\_\-array}!tifffile::FileHandle@{tifffile\-::\-File\-Handle}}
+\subsubsection[{read\-\_\-array}]{\setlength{\rightskip}{0pt plus 5cm}def tifffile.\-File\-Handle.\-read\-\_\-array (
+\begin{DoxyParamCaption}
+\item[{}]{self, }
+\item[{}]{dtype, }
+\item[{}]{count = {\ttfamily -\/1}, }
+\item[{}]{sep = {\ttfamily \char`\"{}\char`\"{}}}
+\end{DoxyParamCaption}
+)}}\label{classtifffile_1_1FileHandle_ae9a3b8d51a50d9cac82f80a33e3c9887}
+\begin{DoxyVerb}Return numpy array from file.
+
+Work around numpy issue #2230, "numpy.fromfile does not accept
+StringIO object" https://github.com/numpy/numpy/issues/2230.\end{DoxyVerb}
+ \hypertarget{classtifffile_1_1FileHandle_ace4a33bbf8c889940fea17f043042ce3}{\index{tifffile\-::\-File\-Handle@{tifffile\-::\-File\-Handle}!read\-\_\-record@{read\-\_\-record}}
+\index{read\-\_\-record@{read\-\_\-record}!tifffile::FileHandle@{tifffile\-::\-File\-Handle}}
+\subsubsection[{read\-\_\-record}]{\setlength{\rightskip}{0pt plus 5cm}def tifffile.\-File\-Handle.\-read\-\_\-record (
+\begin{DoxyParamCaption}
+\item[{}]{self, }
+\item[{}]{dtype, }
+\item[{}]{shape = {\ttfamily 1}, }
+\item[{}]{byteorder = {\ttfamily None}}
+\end{DoxyParamCaption}
+)}}\label{classtifffile_1_1FileHandle_ace4a33bbf8c889940fea17f043042ce3}
+\begin{DoxyVerb}Return numpy record from file.\end{DoxyVerb}
+ \hypertarget{classtifffile_1_1FileHandle_a88d4b64db22c7a55afae0428b5e0200a}{\index{tifffile\-::\-File\-Handle@{tifffile\-::\-File\-Handle}!seek@{seek}}
+\index{seek@{seek}!tifffile::FileHandle@{tifffile\-::\-File\-Handle}}
+\subsubsection[{seek}]{\setlength{\rightskip}{0pt plus 5cm}def tifffile.\-File\-Handle.\-seek (
+\begin{DoxyParamCaption}
+\item[{}]{self, }
+\item[{}]{offset, }
+\item[{}]{whence = {\ttfamily 0}}
+\end{DoxyParamCaption}
+)}}\label{classtifffile_1_1FileHandle_a88d4b64db22c7a55afae0428b5e0200a}
+\begin{DoxyVerb}Set file's current position.\end{DoxyVerb}
+ \hypertarget{classtifffile_1_1FileHandle_ac6a2ba4f361ef961cb206c2199513c70}{\index{tifffile\-::\-File\-Handle@{tifffile\-::\-File\-Handle}!tell@{tell}}
+\index{tell@{tell}!tifffile::FileHandle@{tifffile\-::\-File\-Handle}}
+\subsubsection[{tell}]{\setlength{\rightskip}{0pt plus 5cm}def tifffile.\-File\-Handle.\-tell (
+\begin{DoxyParamCaption}
+\item[{}]{self}
+\end{DoxyParamCaption}
+)}}\label{classtifffile_1_1FileHandle_ac6a2ba4f361ef961cb206c2199513c70}
+\begin{DoxyVerb}Return file's current position.\end{DoxyVerb}
+ 
+
+The documentation for this class was generated from the following file\-:\begin{DoxyCompactItemize}
+\item 
+/home/harold/workdir/atrex/\-Software/tifffile.\-py\end{DoxyCompactItemize}

@@ -1,27 +1,5 @@
 var searchData=
 [
-  ['paintevent',['paintEvent',['../classmy_im_display_1_1my_im_display.html#a4c809a5912d974d2d819b5b1937638cd',1,'myImDisplay.myImDisplay.paintEvent()'],['../classmy_zm_display_1_1my_zm_display.html#a4abf307925064f63612b392ba2b5f0e3',1,'myZmDisplay.myZmDisplay.paintEvent()'],['../classmy_zm_peak_display_1_1my_zm_peak_display.html#a45a5009c5ecc96d9a6ff350600478b37',1,'myZmPeakDisplay.myZmPeakDisplay.paintEvent()']]],
-  ['parinfo',['parinfo',['../classmpfit_1_1mpfit.html#a4044ca5a6e332785b83426fec482dcf9',1,'mpfit::mpfit']]],
-  ['parsevals',['parseVals',['../class_j_c_p_d_s_1_1_reflection.html#a60f239e7b0dc01ae22859aab4ce15958',1,'JCPDS::Reflection']]],
-  ['parsevalsxpow',['parseValsXPOW',['../class_j_c_p_d_s_1_1_reflection.html#a5b0c369390f0f6c9d4f43f79451666ad',1,'JCPDS::Reflection']]],
-  ['path',['path',['../classtifffile_1_1_file_handle.html#a23b95cb72e478e26496e6d3d7527a3a3',1,'tifffile::FileHandle']]],
-  ['peakadd',['peakAdd',['../classmy_im_display_1_1my_im_display.html#ae60543e0ec298c4a15e385f11091b675',1,'myImDisplay.myImDisplay.peakAdd()'],['../classmy_zm_display_1_1my_zm_display.html#ae19086d7b292cb945ef88264dcb239e8',1,'myZmDisplay.myZmDisplay.peakAdd()']]],
-  ['peakboxsizeset',['peakBoxSizeSet',['../class_atrex_1_1_atrex.html#ab96f78f24269b2608673faa9cec31ad8',1,'Atrex::Atrex']]],
-  ['peakedit',['peakEdit',['../classmy_peak_table_widget_1_1my_peak_table_widget.html#ac06c362f6d4a47181fbcc0fe2e78a2cb',1,'myPeakTableWidget::myPeakTableWidget']]],
-  ['peakfilebrowse',['peakFileBrowse',['../class_atrex_1_1_atrex.html#a4d6871d5055309cbbaddb62e00bfbea5',1,'Atrex::Atrex']]],
-  ['peakfind',['peakFind',['../classmy_im_display_1_1my_im_display.html#a5ef52021cb9f418ed66ef0d8ba064430',1,'myImDisplay::myImDisplay']]],
-  ['peaklistbrowse',['PeakListBrowse',['../class_atrex_1_1_atrex.html#aa996a3132c9ace217efe5826349df1df',1,'Atrex::Atrex']]],
-  ['peaklistclicked',['peakListClicked',['../class_atrex_1_1_atrex.html#a2452575598eb0088e452b2160610da4f',1,'Atrex::Atrex']]],
-  ['peakproforientationset',['peakProfOrientationSet',['../class_atrex_1_1_atrex.html#a31041eb876dff6083a13777f44d09274',1,'Atrex::Atrex']]],
-  ['peaksavetofile',['peakSaveToFile',['../class_atrex_1_1_atrex.html#aaa23b7529d44f3cbbeedfd8434c8bce9',1,'Atrex::Atrex']]],
-  ['peaksearch',['peakSearch',['../class_main_peaks_1_1_main_peaks.html#af353c28f582d469588714fa90f5cefd3',1,'MainPeaks::MainPeaks']]],
-  ['plotdata',['plotData',['../class_my_plot_widget_1_1_my_plot_widget.html#a51f5c70ea2dd4024e4c56a0a73925164',1,'MyPlotWidget::MyPlotWidget']]],
-  ['plotdataxy2',['plotDataXY2',['../class_my_plot_widget_1_1_my_plot_widget.html#aa715ad5a13d60bef1d1d8f35d17a128d',1,'MyPlotWidget::MyPlotWidget']]],
-  ['plotpeakprof',['plotPeakProf',['../class_atrex_1_1_atrex.html#a3a5f2aee5b962e1615c54395d9edd172',1,'Atrex::Atrex']]],
-  ['plotxyfromfile',['plotXYFromFile',['../class_atrex_1_1_atrex.html#a51c8994be54b7062fd0b7cc077783f52',1,'Atrex::Atrex']]],
-  ['print_5flp',['print_LP',['../classsimulate_dlg_1_1simulate_dlg.html#a541dcb68081dc45190cf99d019e34abb',1,'simulateDlg::simulateDlg']]],
-  ['product',['product',['../namespacetifffile.html#a24832f8d5156d2f4ae169811f860cd66',1,'tifffile']]],
-  ['py_5fdecref',['Py_DECREF',['../tifffile_8c.html#a4e8b3957d01187e25089b5b3059fbb2c',1,'tifffile.c']]],
-  ['pydict_5fsetitemstring',['PyDict_SetItemString',['../tifffile_8c.html#acc6553a24e9714f460e704ab3046a7e9',1,'tifffile.c']]],
-  ['pymem_5ffree',['PyMem_Free',['../tifffile_8c.html#aa994374ebb925b7688feae0d5c891c7a',1,'tifffile.c']]]
+  ['peaklistclicked',['peakListClicked',['../classAtrex_1_1Atrex.html#a2452575598eb0088e452b2160610da4f',1,'Atrex::Atrex']]],
+  ['plotpeakprof',['plotPeakProf',['../classAtrex_1_1Atrex.html#a3a5f2aee5b962e1615c54395d9edd172',1,'Atrex::Atrex']]]
 ];

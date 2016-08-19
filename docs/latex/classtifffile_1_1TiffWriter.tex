@@ -1,0 +1,179 @@
+\hypertarget{classtifffile_1_1TiffWriter}{\section{tifffile.\-Tiff\-Writer Class Reference}
+\label{classtifffile_1_1TiffWriter}\index{tifffile.\-Tiff\-Writer@{tifffile.\-Tiff\-Writer}}
+}
+Inheritance diagram for tifffile.\-Tiff\-Writer\-:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classtifffile_1_1TiffWriter}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+def \hyperlink{classtifffile_1_1TiffWriter_af9fb37461e229375ed0b7c7aa56fcf2a}{\-\_\-\-\_\-init\-\_\-\-\_\-}
+\item 
+def \hyperlink{classtifffile_1_1TiffWriter_a7879708dbcc972bda2148374bddbec0d}{save}
+\item 
+\hypertarget{classtifffile_1_1TiffWriter_a579dd794187e65874987990058ba70aa}{def {\bfseries close}}\label{classtifffile_1_1TiffWriter_a579dd794187e65874987990058ba70aa}
+
+\item 
+\hypertarget{classtifffile_1_1TiffWriter_aeb1a99b0e609acf41b4a96029397724d}{def {\bfseries \-\_\-\-\_\-enter\-\_\-\-\_\-}}\label{classtifffile_1_1TiffWriter_aeb1a99b0e609acf41b4a96029397724d}
+
+\item 
+\hypertarget{classtifffile_1_1TiffWriter_a9a746e2cea3adaab40913a74fb56ca60}{def {\bfseries \-\_\-\-\_\-exit\-\_\-\-\_\-}}\label{classtifffile_1_1TiffWriter_a9a746e2cea3adaab40913a74fb56ca60}
+
+\end{DoxyCompactItemize}
+\subsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+dictionary {\bfseries T\-Y\-P\-E\-S}
+\item 
+dictionary {\bfseries T\-A\-G\-S}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\begin{DoxyVerb}Write image data to TIFF file.
+
+TiffWriter instances must be closed using the close method, which is
+automatically called when using the 'with' statement.
+
+Examples
+--------
+>>> data = numpy.random.rand(2, 5, 3, 301, 219)
+>>> with TiffWriter('temp.tif', bigtiff=True) as tif:
+...     for i in range(data.shape[0]):
+...         tif.save(data[i], compress=6)\end{DoxyVerb}
+ 
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classtifffile_1_1TiffWriter_af9fb37461e229375ed0b7c7aa56fcf2a}{\index{tifffile\-::\-Tiff\-Writer@{tifffile\-::\-Tiff\-Writer}!\-\_\-\-\_\-init\-\_\-\-\_\-@{\-\_\-\-\_\-init\-\_\-\-\_\-}}
+\index{\-\_\-\-\_\-init\-\_\-\-\_\-@{\-\_\-\-\_\-init\-\_\-\-\_\-}!tifffile::TiffWriter@{tifffile\-::\-Tiff\-Writer}}
+\subsubsection[{\-\_\-\-\_\-init\-\_\-\-\_\-}]{\setlength{\rightskip}{0pt plus 5cm}def tifffile.\-Tiff\-Writer.\-\_\-\-\_\-init\-\_\-\-\_\- (
+\begin{DoxyParamCaption}
+\item[{}]{self, }
+\item[{}]{filename, }
+\item[{}]{bigtiff = {\ttfamily False}, }
+\item[{}]{byteorder = {\ttfamily None}, }
+\item[{}]{software = {\ttfamily 'tifffile.py'}}
+\end{DoxyParamCaption}
+)}}\label{classtifffile_1_1TiffWriter_af9fb37461e229375ed0b7c7aa56fcf2a}
+\begin{DoxyVerb}Create a new TIFF file for writing.
+
+Use bigtiff=True when creating files greater than 2 GB.
+
+Parameters
+----------
+filename : str
+    Name of file to write.
+bigtiff : bool
+    If True, the BigTIFF format is used.
+byteorder : {'<', '>'}
+    The endianness of the data in the file.
+    By default this is the system's native byte order.
+software : str
+    Name of the software used to create the image.
+    Saved with the first page only.\end{DoxyVerb}
+ 
+
+\subsection{Member Function Documentation}
+\hypertarget{classtifffile_1_1TiffWriter_a7879708dbcc972bda2148374bddbec0d}{\index{tifffile\-::\-Tiff\-Writer@{tifffile\-::\-Tiff\-Writer}!save@{save}}
+\index{save@{save}!tifffile::TiffWriter@{tifffile\-::\-Tiff\-Writer}}
+\subsubsection[{save}]{\setlength{\rightskip}{0pt plus 5cm}def tifffile.\-Tiff\-Writer.\-save (
+\begin{DoxyParamCaption}
+\item[{}]{self, }
+\item[{}]{data, }
+\item[{}]{photometric = {\ttfamily None}, }
+\item[{}]{planarconfig = {\ttfamily None}, }
+\item[{}]{resolution = {\ttfamily None}, }
+\item[{}]{description = {\ttfamily None}, }
+\item[{}]{volume = {\ttfamily False}, }
+\item[{}]{writeshape = {\ttfamily False}, }
+\item[{}]{compress = {\ttfamily 0}, }
+\item[{}]{extratags = {\ttfamily ()}}
+\end{DoxyParamCaption}
+)}}\label{classtifffile_1_1TiffWriter_a7879708dbcc972bda2148374bddbec0d}
+\begin{DoxyVerb}Write image data to TIFF file.
+
+Image data are written in one stripe per plane.
+Dimensions larger than 2 to 4 (depending on photometric mode, planar
+configuration, and SGI mode) are flattened and saved as separate pages.
+The 'sample_format' and 'bits_per_sample' TIFF tags are derived from
+the data type.
+
+Parameters
+----------
+data : array_like
+    Input image. The last dimensions are assumed to be image depth,
+    height, width, and samples.
+photometric : {'minisblack', 'miniswhite', 'rgb'}
+    The color space of the image data.
+    By default this setting is inferred from the data shape.
+planarconfig : {'contig', 'planar'}
+    Specifies if samples are stored contiguous or in separate planes.
+    By default this setting is inferred from the data shape.
+    'contig': last dimension contains samples.
+    'planar': third last dimension contains samples.
+resolution : (float, float) or ((int, int), (int, int))
+    X and Y resolution in dots per inch as float or rational numbers.
+description : str
+    The subject of the image. Saved with the first page only.
+compress : int
+    Values from 0 to 9 controlling the level of zlib compression.
+    If 0, data are written uncompressed (default).
+volume : bool
+    If True, volume data are stored in one tile (if applicable) using
+    the SGI image_depth and tile_depth tags.
+    Image width and depth must be multiple of 16.
+    Few software can read this format, e.g. MeVisLab.
+writeshape : bool
+    If True, write the data shape to the image_description tag
+    if necessary and no other description is given.
+extratags: sequence of tuples
+    Additional tags as [(code, dtype, count, value, writeonce)].
+
+    code : int
+The TIFF tag Id.
+    dtype : str
+Data type of items in 'value' in Python struct format.
+One of B, s, H, I, 2I, b, h, i, f, d, Q, or q.
+    count : int
+Number of data values. Not used for string values.
+    value : sequence
+'Count' values compatible with 'dtype'.
+    writeonce : bool
+If True, the tag is written to the first page only.\end{DoxyVerb}
+ 
+
+\subsection{Member Data Documentation}
+\hypertarget{classtifffile_1_1TiffWriter_a59306b1d4123917f8ef19b622932be69}{\index{tifffile\-::\-Tiff\-Writer@{tifffile\-::\-Tiff\-Writer}!T\-A\-G\-S@{T\-A\-G\-S}}
+\index{T\-A\-G\-S@{T\-A\-G\-S}!tifffile::TiffWriter@{tifffile\-::\-Tiff\-Writer}}
+\subsubsection[{T\-A\-G\-S}]{\setlength{\rightskip}{0pt plus 5cm}dictionary tifffile.\-Tiff\-Writer.\-T\-A\-G\-S\hspace{0.3cm}{\ttfamily [static]}}}\label{classtifffile_1_1TiffWriter_a59306b1d4123917f8ef19b622932be69}
+{\bfseries Initial value\-:}
+\begin{DoxyCode}
+1 = \{
+2         \textcolor{stringliteral}{'new\_subfile\_type'}: 254, \textcolor{stringliteral}{'subfile\_type'}: 255,
+3         \textcolor{stringliteral}{'image\_width'}: 256, \textcolor{stringliteral}{'image\_length'}: 257, \textcolor{stringliteral}{'bits\_per\_sample'}: 258,
+4         \textcolor{stringliteral}{'compression'}: 259, \textcolor{stringliteral}{'photometric'}: 262, \textcolor{stringliteral}{'fill\_order'}: 266,
+5         \textcolor{stringliteral}{'document\_name'}: 269, \textcolor{stringliteral}{'image\_description'}: 270, \textcolor{stringliteral}{'strip\_offsets'}: 273,
+6         \textcolor{stringliteral}{'orientation'}: 274, \textcolor{stringliteral}{'samples\_per\_pixel'}: 277, \textcolor{stringliteral}{'rows\_per\_strip'}: 278,
+7         \textcolor{stringliteral}{'strip\_byte\_counts'}: 279, \textcolor{stringliteral}{'x\_resolution'}: 282, \textcolor{stringliteral}{'y\_resolution'}: 283,
+8         \textcolor{stringliteral}{'planar\_configuration'}: 284, \textcolor{stringliteral}{'page\_name'}: 285, \textcolor{stringliteral}{'resolution\_unit'}: 296,
+9         \textcolor{stringliteral}{'software'}: 305, \textcolor{stringliteral}{'datetime'}: 306, \textcolor{stringliteral}{'predictor'}: 317, \textcolor{stringliteral}{'color\_map'}: 320,
+10         \textcolor{stringliteral}{'tile\_width'}: 322, \textcolor{stringliteral}{'tile\_length'}: 323, \textcolor{stringliteral}{'tile\_offsets'}: 324,
+11         \textcolor{stringliteral}{'tile\_byte\_counts'}: 325, \textcolor{stringliteral}{'extra\_samples'}: 338, \textcolor{stringliteral}{'sample\_format'}: 339,
+12         \textcolor{stringliteral}{'image\_depth'}: 32997, \textcolor{stringliteral}{'tile\_depth'}: 32998\}
+\end{DoxyCode}
+\hypertarget{classtifffile_1_1TiffWriter_aae9c1bc9345c95fe80d2d31188e6e23d}{\index{tifffile\-::\-Tiff\-Writer@{tifffile\-::\-Tiff\-Writer}!T\-Y\-P\-E\-S@{T\-Y\-P\-E\-S}}
+\index{T\-Y\-P\-E\-S@{T\-Y\-P\-E\-S}!tifffile::TiffWriter@{tifffile\-::\-Tiff\-Writer}}
+\subsubsection[{T\-Y\-P\-E\-S}]{\setlength{\rightskip}{0pt plus 5cm}dictionary tifffile.\-Tiff\-Writer.\-T\-Y\-P\-E\-S\hspace{0.3cm}{\ttfamily [static]}}}\label{classtifffile_1_1TiffWriter_aae9c1bc9345c95fe80d2d31188e6e23d}
+{\bfseries Initial value\-:}
+\begin{DoxyCode}
+1 = \{\textcolor{stringliteral}{'B'}: 1, \textcolor{stringliteral}{'s'}: 2, \textcolor{stringliteral}{'H'}: 3, \textcolor{stringliteral}{'I'}: 4, \textcolor{stringliteral}{'2I'}: 5, \textcolor{stringliteral}{'b'}: 6,
+2              \textcolor{stringliteral}{'h'}: 8, \textcolor{stringliteral}{'i'}: 9, \textcolor{stringliteral}{'f'}: 11, \textcolor{stringliteral}{'d'}: 12, \textcolor{stringliteral}{'Q'}: 16, \textcolor{stringliteral}{'q'}: 17\}
+\end{DoxyCode}
+
+
+The documentation for this class was generated from the following file\-:\begin{DoxyCompactItemize}
+\item 
+/home/harold/workdir/atrex/\-Software/tifffile.\-py\end{DoxyCompactItemize}

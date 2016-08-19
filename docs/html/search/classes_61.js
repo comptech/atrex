@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['atrex',['Atrex',['../class_atrex_1_1_atrex.html',1,'Atrex']]]
+  ['atrex',['Atrex',['../classAtrex_1_1Atrex.html',1,'Atrex']]]
 ];

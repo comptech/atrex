@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['simulatedlg',['simulateDlg',['../classsimulate_dlg_1_1simulate_dlg.html',1,'simulateDlg']]]
+  ['simulatedlg',['simulateDlg',['../classsimulateDlg_1_1simulateDlg.html',1,'simulateDlg']]]
 ];

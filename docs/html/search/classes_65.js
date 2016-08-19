@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['error',['Error',['../classtifffile_1_1_tiff_tag_1_1_error.html',1,'tifffile::TiffTag']]]
+  ['error',['Error',['../classtifffile_1_1TiffTag_1_1Error.html',1,'tifffile::TiffTag']]]
 ];
