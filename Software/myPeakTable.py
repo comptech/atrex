@@ -4,6 +4,7 @@ from struct import *
 import cPickle as pickle
 from PyQt4 import QtCore
 import myDetector
+from crystallography import *
 
 
 class myPeak:
@@ -243,10 +244,13 @@ class myPeakTable:
             gonio = p.Gonio
             gonio[0] = kappa
             gonio[1] = theta
-        if (omegaFlag == True) :
-            det.calculate_XYZ_from_pixels_mono (pix, gonio, wv)
-        else :
-            det.calculate_XYZ_from_pixels_mono (pix, gonio, kev_to_a(p.energies[0]))
+            # det.calculate_XYZ_from_pixels_mono not present....
+            if (omegaFlag == True) :
+                xyz = det.calculate_XYZ_from_pixels_mono (pix, gonio, wv)
+                p.XYZ [:] = xyz [:]
+            else :
+                xyz= det.calculate_XYZ_from_pixels_mono (pix, gonio, kev_to_A (p.energies[0]))
+                p.XYZ[:] = xyz[:]
 
 
 

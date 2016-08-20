@@ -1,6 +1,13 @@
+"""
+@package crystallography
+module with numerous standard functions for x-ray crystallography. 
+
+"""
+
 import math
 import numpy as np
 import vector_math
+
 
 DTOR = math.pi / 180.
 radeg = 180. / math.pi

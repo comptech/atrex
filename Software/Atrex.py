@@ -52,7 +52,9 @@ class Atrex(QtGui.QMainWindow):
     def __init__(self):
         ##
         # init - Constructor for the atrex class.
-        # initialize the gui controls, hook signals to slots
+        # Initialize the gui controls, hook signals to slots.
+        # Initialize class attributes. <br>
+        # Called on class instantiation
 
         QtGui.QMainWindow.__init__(self)
         self.ui = uic.loadUi("uiMainWin.ui", self)
@@ -236,13 +238,16 @@ class Atrex(QtGui.QMainWindow):
 
         #detector calibration ready...
         self.detector.calPeaks.connect (self.getCalPeaks)
-    ## getHome
+    ## getHome :
     #   get the user's home directory
+    #   This is used to then look for the atrex_params.txt file.
+    #   If this file is found, the file is read to find the last image loaded, and the last calibration file.
     def getHome(self):
 
         homedir = os.path.expanduser("~")
         self.paramFile = QtCore.QString("%1/atrex_params.txt").arg(homedir)
         # then check to see if the atrex_params.txt file exists
+        # if so, the file is then read to find the last image loaded, and the last calibration file
         status = os.path.isfile(self.paramFile)
         str = QtCore.QString("")
         if (status):
@@ -1052,12 +1057,13 @@ class Atrex(QtGui.QMainWindow):
         self.Update_Detector_calibration()
         kappa = self.ui.LE_Detector_kappa.text().toFloat()[0]
         theta = self.ui.LE_Detector_2theta.text().toFloat()[0]
-        omind = self.ui.pred_omega_or_energyCB.getIndex()
+        omind = self.ui.pred_omega_or_energyCB.currentIndex()
         if omind == 1 :
             omegaFlag = 0
         else :
             omegaFlag = 1
         self.peaks.calculate_all_xyz_from_pix (self.detector, kappa,theta, omegaFlag)
+
 
         self.updatePeakNumberLE()
         self.imageWidget.repaint()

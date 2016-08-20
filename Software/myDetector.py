@@ -15,6 +15,7 @@ import congrid as cgd
 from gaussfitter import *
 from peakFit1 import *
 from scipy.misc import imresize
+from vector_math import *
 #import Atrex
 
 import myPeakTable
@@ -198,6 +199,37 @@ class myDetector (QtCore.QObject):
         ang = ang_between_vecs (sd, sd0)
         return ang
 
+    def calculate_hl_from_sd (self, sd, wv):
+        s0 = np.zeros((1,3))
+        s0[0]=1.
+        hl = sd - s0
+        hl = hl / wv
+        return hl
+
+    def calculate_XYZ_from_pixels_mono (self, pix, gonio, wv) :
+        vec1 = np.asarray ([0.,0.,0.])
+        vec2 = vec1
+        sd=vec1
+        hl=vec1
+        gonio0=np.zeros ((6), dtype=np.float32)
+        gonio0[0:2] = gonio[0:2]
+        sd = self.calculate_sd_from_pixels (pix, gonio0)
+        tth = self.calculate_tth_from_pixels (pix, gonio0)
+        d = d_from_tth_and_en(tth, A_to_kev(wv))
+        hl = self.calculate_hl_from_sd(sd, wv)
+
+        om = generate_rot_mat (3, -gonio[3])
+        ch = generate_rot_mat (1, -gonio[4])
+        ph = generate_rot_mat (3, -gonio[5])
+
+        ve0 = np.dot (ch,ph)
+        ve1 = np.dot (om, ve0)
+        vec2 = np.dot (hl, ve1)
+
+        return vec2
+
+
+
     def calculate_pixels_from_sd(self, sd, gonio):
         vec1 = [1.,0.,0]
         vec2 = [1.,0.,0]
@@ -291,7 +323,8 @@ class myDetector (QtCore.QObject):
         sd = np.transpose (vec3)
         #sd0 = vec3 / vlength(vec3)
 
-        return sd
+        #return sd
+        return vec3
 
     def calculate_sd_from_pixels_arr(self, pix, gonio):
         xpix = pix[0]

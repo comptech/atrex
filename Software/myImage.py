@@ -167,7 +167,8 @@ class myImage :
         self.bs2 = bs
 
     def calculate_local_background (self, corners, nregions=50):
-        # calculates the local background using median value in rectangular regions
+        """ calculates the local background using median value in rectangular regions
+		"""
         Nx = nregions
         Ny = nregions
         sy = len(self.imArray)
@@ -350,6 +351,9 @@ class myImage :
         #print, 'Computation time: ',systime(/seconds)-t0
         #end
 
+
+    """ fitAllPeaks - Peak fitting for all peaks
+    """
     def fitAllPeaks (self, peaks, bxsize) :
         axis = 3
         nnn = peaks.getpeakno()
