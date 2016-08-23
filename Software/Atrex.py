@@ -1070,8 +1070,16 @@ class Atrex(QtGui.QMainWindow):
         self.zoomWidget.repaint()
         self.updatePeakList()
         self.ui.imageWidget.repaint()
+        str = 'Number of peaks found : %d'%self.peaks.getpeakno()
+        msg = QtGui.QMessageBox()
+        msg.setIcon (QtGui.QMessageBox.Information)
+        msg.setInformativeText (str)
+        str = 'Image : %s'%self.imageFile
+        #msg.setText (str)
+        msg.setWindowTitle ("ATREX : Peak Search")
+        msg.exec_()
+        print str
 
-        print 'number of peaks received', self.peaks.getpeakno()
 
     def SearchForPeaksSeries(self):
 

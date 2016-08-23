@@ -473,6 +473,8 @@ class myImage :
         mtx = np.asarray([[cosang, sinang],[-sinang, cosang]])
         newxy = np.dot (mtx, xyshift)
         print fitarr
+        # note that in GSE_ADA, the one2dGaussian can return 0 if the fit fails
+        return fitarr
 
 
 
