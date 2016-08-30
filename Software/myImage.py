@@ -166,9 +166,13 @@ class myImage :
     def setBS2(self, bs) :
         self.bs2 = bs
 
+    ## calculates the local background using median value in rectangular regions
+	#@param: int corners
+	#@param: int nregions : break up the input image into nregions with
+	#calculations done for each region
+	#@return:  Returns the background image which is the same size of
+	#the image it was calculated upon.
     def calculate_local_background (self, corners, nregions=50):
-        """ calculates the local background using median value in rectangular regions
-		"""
         Nx = nregions
         Ny = nregions
         sy = len(self.imArray)
@@ -205,6 +209,10 @@ class myImage :
         return out
 
 
+    ## calculates the smoothed image using a kernel operation
+	#@param: array im : input image to smooth
+	#@param: win : Window size in pixels
+	#@return : smoothed image with same dimensions as im
     def smooth2 (self, im, win) :
         w = win if win >= 2 else 2
         w2 = w/2 if w/2 >= 2 else 2

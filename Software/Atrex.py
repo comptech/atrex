@@ -987,6 +987,8 @@ class Atrex(QtGui.QMainWindow):
     def SearchForPeaks(self) :
         self.PS (0., 3., 1)
 
+    ##
+    # The peak search method for the displayed image.
     def PS(self, om, axis, prog):
         self.detector.genTiltMtx ()
         fitFlag = self .ui.ps_fitPeaksCB.isChecked()
@@ -1137,6 +1139,9 @@ class Atrex(QtGui.QMainWindow):
     def mergeCancel (self) :
         self.cancelMerge = True
 
+
+    ## merge images in the image series
+    #   This is a simple pixel by pixel summing of the images.
     def mergeImageRange(self):
         # get the output tif file name....
         tempimg = myImage()
