@@ -360,8 +360,11 @@ class myImage :
         #end
 
 
-    """ fitAllPeaks - Peak fitting for all peaks
-    """
+    ##
+    # Function called to fit all peaks returned by peak search.
+    # <br>
+    # if find_close_overlaps returns a peak - use two_profile_fitting (not implemented)
+    # otherwise - use one_profile_fitting
     def fitAllPeaks (self, peaks, bxsize) :
         axis = 3
         nnn = peaks.getpeakno()
@@ -404,7 +407,9 @@ class myImage :
         self.imArray = self.imArray_orig * arr
 
 
-
+    ##
+    # used for peak fitting when there are deemed to be possibly two peaks too close to each other
+    # not fully implemented and used yet as the two2DGaussian function not present.
     def two_profile_fitting (self, img, peaks, n1, n2) :
         xy1 = self.peaks.peaks[n1].getDetxy()
         xy2 = self.peaks.peaks[n2].getDetxy()
@@ -444,8 +449,12 @@ class myImage :
         # and then deployment
         aaa = self.two2DGaussians (pic, xr1, xr2)
 
-	
+    ##
+    # Function used for fitting of an input peak
+    # When a good fit is achieved, the function will shift the DetXY coordinates on the input peak.
+    #  @param: peak is peak to fit
     def one_profile_fitting (self, peak) :
+
         xy1 = peak.getDetxy()
         print 'One profile fitting'
         print xy1
