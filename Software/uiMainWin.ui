@@ -39,7 +39,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>5</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="FileTab">
      <attribute name="title">
@@ -913,6 +913,21 @@
       </property>
       <property name="text">
        <string>Zoom Display </string>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="tab_8">
+     <attribute name="title">
+      <string>SessionLog</string>
+     </attribute>
+     <widget class="mySessionLogWidget" name="sessionLogWidget">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>10</y>
+        <width>661</width>
+        <height>541</height>
+       </rect>
       </property>
      </widget>
     </widget>
@@ -4445,6 +4460,11 @@
    <class>myPeakTableWidget</class>
    <extends>QTableWidget</extends>
    <header>myPeakTableWidget.h</header>
+  </customwidget>
+  <customwidget>
+   <class>mySessionLogWidget</class>
+   <extends>QListWidget</extends>
+   <header>mySessionLogWidget.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

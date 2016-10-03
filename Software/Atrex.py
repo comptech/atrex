@@ -58,6 +58,7 @@ class Atrex(QtGui.QMainWindow):
 
         QtGui.QMainWindow.__init__(self)
         self.ui = uic.loadUi("uiMainWin.ui", self)
+        self.myLogWidget = self.ui.sessionLogWidget
         self.ui.refSampleTabWidget.setColumnWidth (1, 250)
         self.ui.refSampleTabWidget.setHorizontalHeaderLabels (QtCore.QStringList()<< "Name" << "Value")
         self.ui.sampleReflectTabWidget.setHorizontalHeaderLabels \
@@ -238,6 +239,8 @@ class Atrex(QtGui.QMainWindow):
 
         #detector calibration ready...
         self.detector.calPeaks.connect (self.getCalPeaks)
+
+
     ## getHome :
     #   get the user's home directory
     #   This is used to then look for the atrex_params.txt file.
@@ -309,6 +312,7 @@ class Atrex(QtGui.QMainWindow):
         self.imtypeCB.setCurrentIndex(0)
         wdir = self.ui.imDirLE.text()
         self.imageFile = QtGui.QFileDialog.getOpenFileName(self, 'Open Image', wdir)
+        self.myLogWidget.addEvent ("Opening image file %s".self.imageFile.toLatin1().data())
         extension = os.path.splitext(self.imageFile.toLatin1().data())[1]
 
         #return
@@ -365,6 +369,7 @@ class Atrex(QtGui.QMainWindow):
     def openImageFile(self, filename):
         self.imageFile = filename
         fi = QtCore.QFileInfo (self.imageFile)
+        self.myLogWidget.addEvent ("Opening image file %s"%self.imageFile.toLatin1().data())
         self.base = self.myproj.getImageBase (self.imageFile)
         basename = fi.baseName()
         wdir = self.imageFile.left(self.imageFile.lastIndexOf(basename))
@@ -1000,7 +1005,7 @@ class Atrex(QtGui.QMainWindow):
         self.detector.genTiltMtx ()
         fitFlag = self .ui.ps_fitPeaksCB.isChecked()
         self.myim.fitFlag = fitFlag
-
+        self.myLogWidget.addEvent ("Start of peak search for displayed image")
         print 'Search for peaks'
 
         # get the values from controls on peak search tab
@@ -1059,6 +1064,7 @@ class Atrex(QtGui.QMainWindow):
         # need to evaluate the quality of fit here.
         #
         if self.myim.fitFlag :
+            self.myLogWidget ("Starting of peak fitting")
             #self.myim.fitPeaks (self.peaks, 16)
             self.myim.fitAllPeaks (self.peaks, 16)
 
@@ -1081,6 +1087,7 @@ class Atrex(QtGui.QMainWindow):
         self.updatePeakList()
         self.ui.imageWidget.repaint()
         str = 'Number of peaks found : %d'%self.peaks.getpeakno()
+        self.myLogWidget.addEvent (str)
         msg = QtGui.QMessageBox()
         msg.setIcon (QtGui.QMessageBox.Information)
         msg.setInformativeText (str)
