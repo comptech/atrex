@@ -8,7 +8,7 @@ from peakEditDlg import *
 class myPeakTableWidget (QtGui.QTableWidget) :
 
     numPeaks = 0
-    headList = QtCore.QString("Num;H;K;L;X;Y;2-theta;d-spacing;rot. angle").split(";")
+    headList = QtCore.QString("Num;H;K;L;len(XYZ)^-1;2-theta;Gonio[5];nu").split(";")
     myDet = 0
     peaks = 0
     imname =''
@@ -55,17 +55,21 @@ class myPeakTableWidget (QtGui.QTableWidget) :
             self.setItem (count, 2, QtGui.QTableWidgetItem(str))
             str = '%d'%p.HKL[2]
             self.setItem (count, 3, QtGui.QTableWidgetItem(str))
-
+            val = vlength (p.XYZ)
             xy = p.DetXY
-            str = '%.2f'%xy[0]
+            str = '%.2f'%(1./val)
             self.setItem (count, 4, QtGui.QTableWidgetItem(str))
-            str = '%.2f'%xy[1]
+            str = '%.2f'%p.tth
             self.setItem (count, 5, QtGui.QTableWidgetItem(str))
-            tthval = self.myDet.calculate_tth_from_pixels(xy, self.myDet.gonio)
-           # xyz = self.myDet.calculate_xyz_from_pixels (xy, self.myDet.gonio)
-            str = '%.3f'%tthval
+            #tthval = self.myDet.calculate_tth_from_pixels(xy, self.myDet.gonio)
+            # xyz = self.myDet.calculate_xyz_from_pixels (xy, self.myDet.gonio)
+            str = '%.3f'%p.Gonio[5]
             self.setItem (count, 6, QtGui.QTableWidgetItem(str))
+            str = '%.3f'%p.nu
+            self.setItem (count, 7, QtGui.QTableWidgetItem(str))
             count = count + 1
+
+
         self.numPeaks = count
         self.resizeColumnsToContents()
 

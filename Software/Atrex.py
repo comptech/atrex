@@ -1071,6 +1071,7 @@ class Atrex(QtGui.QMainWindow):
             omegaFlag = 0
         else :
             omegaFlag = 1
+        # get the xyz from pixel vals
         self.peaks.calculate_all_xyz_from_pix (self.detector, kappa,theta, omegaFlag)
 
 

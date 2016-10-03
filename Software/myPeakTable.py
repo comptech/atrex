@@ -239,6 +239,10 @@ class myPeakTable:
         self.peakno = 0
         del self.peaks[:]
 
+
+    ##
+    # calculate a peaks xyz from pixel coordinates and Gonio and wavelengths
+    # calls myDetector.calculate_XYZ_from_pixels_mono
     def calculate_all_xyz_from_pix (self, det, kappa,theta,omegaFlag) :
         wv = det.wavelength
         for p in self.peaks :
