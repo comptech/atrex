@@ -23,6 +23,8 @@ class myPeak:
         self.IntSSD = np.zeros(2, dtype=np.float)  # Will now be used to store individualized peak fitting box size
         self.Adp = myDetector.myDetector()  # Area detector parameters
         self.clickSelected = False
+        self.nu = 0. 
+        self.tth = 0. # two theta
 
     def setDetxy(self, XY):
         self.DetXY = XY
@@ -391,3 +393,13 @@ class myPeakTable:
         f.close()
 
 
+    ##
+    # update peaks by calculating nu from detector xy
+    #
+    def updatePeaks(self, detect):
+        print 'getting nu'
+        for p in self.peaks :
+            xy = p.getDetxy()
+            p.nu = detect.get_nu_from_xyz (xy)
+            print p.nu
+            p.tth = detect.calculate_tth_from_pixels (xy,p.Gonio)

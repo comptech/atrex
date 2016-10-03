@@ -1274,7 +1274,15 @@ class myDetector (QtCore.QObject):
                 y[i]*= (-1.)
         return y
 
+    def get_nu_from_xyz (self, pix) :
+        sd = [0., 0., 0.]
 
+
+        sd = np.asarray([0., pix[0], pix[1]])-np.asarray([0., self.beamx, self.beamx])
+        nu = ang_between_vecs (sd, [0.,-1.,0.])
+        if (sd[2] > 0.) :
+            nu = -nu
+        return nu
 
     def sum_closest_refs (self, rads, dst):
         n = len(rads)

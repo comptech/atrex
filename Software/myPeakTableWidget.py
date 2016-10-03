@@ -8,7 +8,7 @@ from peakEditDlg import *
 class myPeakTableWidget (QtGui.QTableWidget) :
 
     numPeaks = 0
-    headList = QtCore.QString("X;Y;2-theta;d-spacing;h;k;l;rot. angle").split(";")
+    headList = QtCore.QString("Num;H;K;L;X;Y;2-theta;d-spacing;rot. angle").split(";")
     myDet = 0
     peaks = 0
     imname =''
@@ -46,17 +46,28 @@ class myPeakTableWidget (QtGui.QTableWidget) :
         count = 0
         self.setRowCount (len(peaks))
         for p in peaks :
+            # redo this to match IDL routine
+            str = '%d'%count
+            self.setItem (count, 0, QtGui.QTableWidgetItem(str))
+            str = '%d'%p.HKL[0]
+            self.setItem (count, 1, QtGui.QTableWidgetItem(str))
+            str = '%d'%p.HKL[1]
+            self.setItem (count, 2, QtGui.QTableWidgetItem(str))
+            str = '%d'%p.HKL[2]
+            self.setItem (count, 3, QtGui.QTableWidgetItem(str))
+
             xy = p.DetXY
             str = '%.2f'%xy[0]
-            self.setItem (count, 0, QtGui.QTableWidgetItem(str))
+            self.setItem (count, 4, QtGui.QTableWidgetItem(str))
             str = '%.2f'%xy[1]
-            self.setItem (count, 1, QtGui.QTableWidgetItem(str))
+            self.setItem (count, 5, QtGui.QTableWidgetItem(str))
             tthval = self.myDet.calculate_tth_from_pixels(xy, self.myDet.gonio)
            # xyz = self.myDet.calculate_xyz_from_pixels (xy, self.myDet.gonio)
             str = '%.3f'%tthval
-            self.setItem (count, 2, QtGui.QTableWidgetItem(str))
+            self.setItem (count, 6, QtGui.QTableWidgetItem(str))
             count = count + 1
         self.numPeaks = count
+        self.resizeColumnsToContents()
 
     def addPeak (self, peak) :
         xy = peak.DetXY

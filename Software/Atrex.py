@@ -720,7 +720,10 @@ class Atrex(QtGui.QMainWindow):
         self.zoomWidget.repaint()
 
 
-
+    ##
+    # updatePeakList
+    # after a peak is added or modified, the entire peak list is updated and then readied for display in
+    # the appropriate peaklist widget
     def updatePeakList(self):
         self.ui.peakListWidget.clear()
         # curList = self.peaks.peakLists[self.peaks.activeList]
@@ -729,10 +732,14 @@ class Atrex(QtGui.QMainWindow):
         #   y=self.peaks.getPeaklistDetY()
         #  lstr = QtCore.QString(" %1\t%2").arg(x[i]).arg(y[i])
         #   self.ui.peakListWidget.addItem (lstr)
-        for p in self.peaks.peaks:
-            xy = p.DetXY
-            lstr = QtCore.QString(" %1\t%2").arg(xy[0]).arg(xy[1])
-            self.ui.peakListWidget.addItem(lstr)
+        self.peaks.updatePeaks(self.detector)
+        count = 0
+        # note that the peakListWidget is minimized, not really using.....
+        #for p in self.peaks.peaks:
+        #    xy = p.DetXY
+        #    lstr = QtCore.QString ("%1\t%2\t%3\t%4\t%5 ").arg(count).arg(p.HKL[0]).arg(p.HKL[1]).arg(p.HKL[2])
+        #    #lstr = QtCore.QString(" %1\t%2").arg(xy[0]).arg(xy[1])
+        #    self.ui.peakListWidget.addItem(lstr)
         self.ui.peaks_peakListWidgetTable.setPeaks (self.peaks.peaks)
         self.ui.peaks_peakListWidgetTable.setImageFileName (self.imageFile)
     ##
