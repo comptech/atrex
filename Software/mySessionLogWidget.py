@@ -1,6 +1,10 @@
 from PyQt4 import QtCore, QtGui
 
-
+##
+# mySessionLogWidget
+# This class inherits QListWidget.
+# The QListWidget on the "Session Log" tab is promoted to the class
+# The add Event method is used to add a timestamped string to that list widget
 class mySessionLogWidget (QtGui.QListWidget) :
     def __init__(self, parent):
         QtGui.QListWidget.__init__(self,parent)

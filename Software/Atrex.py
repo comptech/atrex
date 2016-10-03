@@ -1121,9 +1121,12 @@ class Atrex(QtGui.QMainWindow):
         self.peaks.remove_all_peaks()
         z = QtCore.QChar('0')
         tempimg = myImage()
+        self.myLogWidget.addEvent ("Start of peak search for series")
+
         for i in range(self.minRange, self.maxRange):
             #newimage = QtCore.QString("%1%2.tif").arg(self.imageFilePref).arg(i, 3, 10, z)
             newimage = self.myproj.getFileNameFromNum (i)
+            self.myLogWidget.addEvent ("Reading in %s for series peak search")
             tempimg.readTiff(newimage)
             lcbgr = tempimg.calculate_local_background (0, locwin)
             smoothedArr = tempimg.smooth2 (tempimg.imArray-lcbgr, smoothwin)
