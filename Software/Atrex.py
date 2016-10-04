@@ -249,6 +249,7 @@ class Atrex(QtGui.QMainWindow):
 
         homedir = os.path.expanduser("~")
         self.paramFile = QtCore.QString("%1/atrex_params.txt").arg(homedir)
+        self.myLogWidget.addSubEvent ("Reading param file : %s"%self.paramFile)
         # then check to see if the atrex_params.txt file exists
         # if so, the file is then read to find the last image loaded, and the last calibration file
         status = os.path.isfile(self.paramFile)
@@ -274,8 +275,10 @@ class Atrex(QtGui.QMainWindow):
                 self.detectFile = str
                 self.detector.read_from_text_file(str.toLatin1().data())
                 self.Display_Detector_calibration(self.detector)
+                self.myLogWidget.addSubEvent ('Read detector file : %s'%(str.toLatin1().data()) )
             else :
                 print 'no last cal file found'
+                self.myLogWidget.addSubEvent ("No last cal file found")
 
     ## closeEvent
     #  shut down the program cleanly
@@ -301,6 +304,7 @@ class Atrex(QtGui.QMainWindow):
         else:
             qts << "\r\n"
         qf.close()
+        self.myLogWidget.addEvent ("Session Ends")
 
 
 
