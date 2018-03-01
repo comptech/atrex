@@ -1,17 +1,18 @@
-from PyQt4 import QtCore, QtGui
-
+from PyQt5.QtWidgets import *
+from PyQt5.QtGui import *
+from PyQt5.QtCore import *
 ##
 # mySessionLogWidget
 # This class inherits QListWidget.
 # The QListWidget on the "Session Log" tab is promoted to the class
 # The add Event method is used to add a timestamped string to that list widget
-class mySessionLogWidget (QtGui.QListWidget) :
+class mySessionLogWidget (QListWidget) :
 
     ##
     # init fcn, upon startup will write to the widget todays date and the current time as the session start time
     def __init__(self, parent):
-        QtGui.QListWidget.__init__(self,parent)
-        date = QtCore.QDate.currentDate().toString()
+        QListWidget.__init__(self,parent)
+        date = QDate.currentDate().toString()
         time = self.getTimeString()
         str = "%s\r\n%s : Session start time"%(date,time)
         self.addItem (str)
@@ -20,7 +21,7 @@ class mySessionLogWidget (QtGui.QListWidget) :
     ##
     # gets current time and returns in standard format as a QString
     def getTimeString (self) :
-        t= QtCore.QTime.currentTime()
+        t= QTime.currentTime()
         s = t.toString ()
         return s
 

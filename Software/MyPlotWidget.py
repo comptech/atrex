@@ -1,4 +1,8 @@
-from PyQt4 import QtCore, QtGui
+
+from PyQt5.QtWidgets import *
+from PyQt5.QtGui import *
+from PyQt5.QtCore import *
+from PyQt5.uic import *
 
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
 #from matplotlib.backends.backend_qt4agg import NavigationToolbar2QTAgg as NavigationToolbar
@@ -14,9 +18,9 @@ import math
 rcParams['font.size'] = 9
 
 
-class MyPlotWidget (QtGui.QWidget) :
+class MyPlotWidget (QWidget) :
     def __init__(self, parent):
-        QtGui.QWidget.__init__(self,parent)
+        QWidget.__init__(self,parent)
         self.figure = Figure()
         self.canvas = FigureCanvas (self.figure)
         # this is the Navigation widget
@@ -24,7 +28,7 @@ class MyPlotWidget (QtGui.QWidget) :
         self.toolbar = NavigationToolbar(self.canvas, self)
 
         # set the layout
-        layout = QtGui.QVBoxLayout()
+        layout = QVBoxLayout()
         layout.addWidget(self.toolbar)
         layout.addWidget(self.canvas)
         self.setLayout(layout)
@@ -42,10 +46,10 @@ class MyPlotWidget (QtGui.QWidget) :
 
     def sizeHint(self):
         w, h = self.get_width_height()
-        return QtCore.QSize(w, h)
+        return QSize(w, h)
 
     def minimumSizeHint(self):
-        return QtCore.QSize(10, 10)
+        return QSize(10, 10)
 
 
     def plotData (self):

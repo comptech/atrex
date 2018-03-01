@@ -2,14 +2,17 @@
 # python class for Atrex mask images, image will normally be established as the size of the Atrex tif image,
 # and will be either 0 or 1.
 
-from PyQt4 import QtCore, QtGui
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
+
 from PIL import Image
 import numpy as np
 from math import *
 import os.path
 
 
-class myMask (QtCore.QObject):
+class myMask (QObject):
 
     nsamps=0
     nlines=0
@@ -44,7 +47,7 @@ class myMask (QtCore.QObject):
     def saveToFile (self, fname):
         if (not fname.contains('.tif')) and (not fname.contains('.TIF')) :
             print "could not save : need a .tif extension"
-            qinfo = QtGui.QMessageBox.warning (None, "Information", "Output file requires .tif suffix, Please try again")
+            qinfo = QMessageBox.warning (None, "Information", "Output file requires .tif suffix, Please try again")
             return
         Img = Image.fromarray (self.img.astype (np.uint8))
         Img.save (fname.toLatin1().data(), "TIFF")

@@ -1,15 +1,18 @@
-from PyQt4 import QtCore, QtGui, uic
 
+from PyQt5.QtWidgets import *
+from PyQt5.QtGui import *
+from PyQt5.QtCore import *
+from PyQt5.uic import *
 
-class myGenSettingsDlg (QtGui.QDialog) :
+class myGenSettingsDlg (QDialog) :
 
     secondFlag = False
     infile = ""
     status = 0
 
     def __init__(self) :
-        QtGui.QDialog.__init__(self)
-        self.ui = uic.loadUi("genSettingsDlg.ui", self)
+        QDialog.__init__(self)
+        self.ui = loadUi("genSettingsDlg.ui", self)
         self.ui.writeSettingsButton.clicked.connect (self.closeUp)
         self.ui.cancelButton.clicked.connect (self.cancelThis)
 

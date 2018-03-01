@@ -1,14 +1,17 @@
-from PyQt4 import QtCore, QtGui, uic
+from PyQt5.QtWidgets import *
+from PyQt5.QtGui import *
+from PyQt5.QtCore import *
+from PyQt5.uic import *
 
 
-class MyOverlayDlg (QtGui.QDialog) :
+class MyOverlayDlg (QDialog) :
 
     secondFlag = False
     infile = ""
 
     def __init__(self) :
-        QtGui.QDialog.__init__(self)
-        self.ui = uic.loadUi("uiPlotOverlayDlg.ui", self)
+        QDialog.__init__(self)
+        self.ui = loadUi("uiPlotOverlayDlg.ui", self)
         self.ui.overlayBrowseButton.clicked.connect (self.browseFile)
 
 
@@ -20,8 +23,8 @@ class MyOverlayDlg (QtGui.QDialog) :
         str = self.ui.overlayFileLE.text ()
         self.infile = str.toLatin1().data()
         secondFlag = self.ui.useSecondAxisCB.isChecked()
-        QtGui.QDialog.accept(self)
+        QDialog.accept(self)
 
     def browseFile (self) :
-        str = QtGui.QFileDialog.getOpenFileName (self, "Overlay XY ASCII File", self.infile, "Text Files (*.txt *.*)")
+        str = QFileDialog.getOpenFileName (self, "Overlay XY ASCII File", self.infile, "Text Files (*.txt *.*)")
         self.overlayFileLE.setText (str)

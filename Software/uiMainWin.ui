@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1485</width>
+    <width>1534</width>
     <height>955</height>
    </rect>
   </property>
@@ -39,7 +39,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>4</number>
     </property>
     <widget class="QWidget" name="FileTab">
      <attribute name="title">
@@ -1797,6 +1797,89 @@
       </property>
       <property name="text">
        <string>Peaks  (double click to edit)</string>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="tab_9">
+     <attribute name="title">
+      <string>RSV</string>
+     </attribute>
+     <widget class="MyGLWindow" name="openGLWidget">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>10</y>
+        <width>651</width>
+        <height>651</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QGroupBox" name="groupBox_15">
+      <property name="geometry">
+       <rect>
+        <x>50</x>
+        <y>690</y>
+        <width>120</width>
+        <height>101</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>View Axis</string>
+      </property>
+      <widget class="QRadioButton" name="xRadButton">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>20</y>
+         <width>82</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>X- Axis</string>
+       </property>
+      </widget>
+      <widget class="QRadioButton" name="yRadButton">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>40</y>
+         <width>82</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Y - Axis</string>
+       </property>
+      </widget>
+      <widget class="QRadioButton" name="zRadButton">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>60</y>
+         <width>82</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Z- Axis</string>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QPushButton" name="boxOmitButton">
+      <property name="geometry">
+       <rect>
+        <x>580</x>
+        <y>680</y>
+        <width>75</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Box Omit</string>
       </property>
      </widget>
     </widget>
@@ -4424,14 +4507,19 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1485</width>
-     <height>20</height>
+     <width>1534</width>
+     <height>21</height>
     </rect>
    </property>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
  <customwidgets>
+  <customwidget>
+   <class>MyGLWindow</class>
+   <extends>QOpenGLWidget</extends>
+   <header>myglwindow.h</header>
+  </customwidget>
   <customwidget>
    <class>myImDisplay</class>
    <extends>QWidget</extends>

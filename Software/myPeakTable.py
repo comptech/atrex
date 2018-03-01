@@ -2,7 +2,7 @@ import numpy as np
 from math import *
 from struct import *
 import cPickle as pickle
-from PyQt4 import QtCore
+from PyQt5.QtCore import *
 import myDetector
 from crystallography import *
 
@@ -79,7 +79,7 @@ class myPeakTable:
 
     def setSelected(self, rectCoords):
         for p in self.peaks[:]:
-            point = QtCore.QPoint(p.DetXY[0], p.DetXY[1])
+            point = QPoint(p.DetXY[0], p.DetXY[1])
             state = rectCoords.contains(point)
             if (state):
                 p.selected[0] = 1
@@ -87,7 +87,7 @@ class myPeakTable:
 
     def setUnselected(self, rectCoords):
         for p in self.peaks[:]:
-            point = QtCore.QPoint(p.DetXY[0], p.DetXY[1])
+            point = QPoint(p.DetXY[0], p.DetXY[1])
             state = rectCoords.contains(point)
             if (state):
                 p.selected[0] = 0

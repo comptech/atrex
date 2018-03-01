@@ -1,11 +1,13 @@
-from PyQt4 import QtCore, QtGui
 
+from PyQt5.QtWidgets import *
+from PyQt5.QtGui import *
+from PyQt5.QtCore import *
 import numpy as np
 from math import *
 from scipy.misc import imresize
 from scipy.ndimage import zoom
 
-class myZmPeakDisplay (QtGui.QWidget) :
+class myZmPeakDisplay (QWidget) :
     loadImage = 0
     dispMax = 1000
     dispMin = 0
@@ -16,18 +18,18 @@ class myZmPeakDisplay (QtGui.QWidget) :
     nl = 21
     zoomToggle = True
     peakToggle = False
-    zoomRect = QtCore.QRect()
+    zoomRect = QRect()
     barFlag = 1 # set for vertical bar, 2 for horizontal , 0 for none
     barDrag = False # rubber banding of vertical bar becomes true once user presses mouse near current location
     vbarloc = ns / 2
     hbarloc = nl / 2
     startx = 0
     starty = 0
-    slideBarSignal = QtCore.pyqtSignal (int, int, int)
+    slideBarSignal = pyqtSignal (int, int, int)
     rawArr = None
 
     def __init__(self, parent) :
-        QtGui.QWidget.__init__(self, parent)
+        QWidget.__init__(self, parent)
         self.zoomToggle = False
 
     def calcHisto (self, fulldata) :
@@ -71,13 +73,13 @@ class myZmPeakDisplay (QtGui.QWidget) :
         a[:,:]=newarr[0:ysize,0:xsize]
         self.newx = a.shape[0]
         self.newy = a.shape[1]
-        self.qimage = QtGui.QImage (a.data, a.shape[1], a.shape[0],
-                                    QtGui.QImage.Format_Indexed8)
+        self.qimage = QImage (a.data, a.shape[1], a.shape[0],
+                                    QImage.Format_Indexed8)
 
         # generate the lut
 
         for index in range(256) :
-            self.qimage.setColor (index, QtGui.qRgb (index, index, index))
+            self.qimage.setColor (index, qRgb (index, index, index))
 
         self.qimage.ndarray = a
         self.loadImage = 1
@@ -133,13 +135,13 @@ class myZmPeakDisplay (QtGui.QWidget) :
         a[:,:]=newarr[0:ysize,0:xsize]
         self.newx = a.shape[0]
         self.newy = a.shape[1]
-        self.qimage = QtGui.QImage (a.data, a.shape[1], a.shape[0],
-                                    QtGui.QImage.Format_Indexed8)
+        self.qimage = QImage (a.data, a.shape[1], a.shape[0],
+                                    QImage.Format_Indexed8)
 
         # generate the lut
 
         for index in range(256) :
-            self.qimage.setColor (index, QtGui.qRgb (index, index, index))
+            self.qimage.setColor (index, qRgb (index, index, index))
 
         self.qimage.ndarray = a
         self.loadImage = 1
@@ -188,7 +190,7 @@ class myZmPeakDisplay (QtGui.QWidget) :
 
         tempdata = self.fulldata [starty:endy,startx:endx]
         self.rawArr = tempdata
-        zmRect = QtCore.QRect (QtCore.QPoint(startx, starty),QtCore.QPoint(endx,endy))
+        zmRect = QRect (QPoint(startx, starty),QPoint(endx,endy))
 
         self.zoomRect = zmRect
 
@@ -212,15 +214,15 @@ class myZmPeakDisplay (QtGui.QWidget) :
         a[:,:]=newarr[0:ysize,0:xsize]
         self.newx = a.shape[0]
         self.newy = a.shape[1]
-        self.qimage = QtGui.QImage (a.data, a.shape[1], a.shape[0],
-                                    QtGui.QImage.Format_Indexed8)
+        self.qimage = QImage (a.data, a.shape[1], a.shape[0],
+                                    QImage.Format_Indexed8)
         #a[:,:,1]=255-uarr[:,:]
         #a[:,:,0]=255-uarr[:,:]
 
         # generate the lut
 
         for index in range(256) :
-            self.qimage.setColor (index, QtGui.qRgb (index, index, index))
+            self.qimage.setColor (index, qRgb (index, index, index))
 
         self.qimage.ndarray = a
         self.loadImage = 1
@@ -288,8 +290,8 @@ class myZmPeakDisplay (QtGui.QWidget) :
         if (dim >h):
             dim = h
 
-        painter = QtGui.QPainter (self)
-        bound = QtCore.QRect (0, 0, w-1, h-1) ;
+        painter = QPainter (self)
+        bound = QRect (0, 0, w-1, h-1) ;
         painter.drawRect (bound)
 
 
@@ -300,9 +302,9 @@ class myZmPeakDisplay (QtGui.QWidget) :
                 painter.drawImage (0,0, self.qimage, 0.,0.)
                 if (self.barFlag == 1): #vertical bar
                     xloc = self.vbarloc * self.zmFac
-                    painter.setPen (QtGui.QPen (QtCore.Qt.yellow))
+                    painter.setPen (QPen (Qt.yellow))
                     painter.drawLine (xloc, 0, xloc, h-1)
                 if (self.barFlag == 2): #horiz bar
                     yloc = self.hbarloc * self.zmFac
-                    painter.setPen (QtGui.QPen (QtCore.Qt.yellow))
+                    painter.setPen (QPen (Qt.yellow))
                     painter.drawLine (0, yloc, w-1, yloc)

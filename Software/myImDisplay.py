@@ -1,4 +1,6 @@
-from PyQt4 import QtCore, QtGui
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
 
 import numpy as np
 from math import *
@@ -7,19 +9,19 @@ from scipy.ndimage import zoom
 from scipy.ndimage import filters
 from myPeaks import *
 
-class myImDisplay (QtGui.QWidget) :
+class myImDisplay (QWidget) :
     loadImage = 0
     dispMax = 65535
     dispMin = 0
     ind_5 = 0
     zmFac = 3
-    zmRect = QtCore.QRect ()
-    centPt = QtCore.pyqtSignal(QtCore.QPoint)
-    addPeakSignal = QtCore.pyqtSignal (QtCore.QPoint)
-    selectRectSignal = QtCore.pyqtSignal (QtCore.QRect, bool)
-    maskRectSignal = QtCore.pyqtSignal (QtCore.QRect, bool)
-    setButtonModeSignal = QtCore.pyqtSignal (int)
-    imcoordsSelectSignal = QtCore.pyqtSignal (list)
+    zmRect = QRect ()
+    centPt = pyqtSignal(QPoint)
+    addPeakSignal = pyqtSignal (QPoint)
+    selectRectSignal = pyqtSignal (QRect, bool)
+    maskRectSignal = pyqtSignal (QRect, bool)
+    setButtonModeSignal = pyqtSignal (int)
+    imcoordsSelectSignal = pyqtSignal (list)
     dragZm = False
     zoomToggle = True
     peakToggle = False
@@ -38,8 +40,8 @@ class myImDisplay (QtGui.QWidget) :
     #peaks = myPeaks ()
     
     def __init__(self, parent) :
-        QtGui.QWidget.__init__(self, parent)
-        self.setContextMenuPolicy (QtCore.Qt.CustomContextMenu)
+        QWidget.__init__(self, parent)
+        self.setContextMenuPolicy (Qt.CustomContextMenu)
         self.customContextMenuRequested.connect (self.contextMenuKickoff)
         for i in range (256) :
             self.rgb_lut[:,i] = i
@@ -60,7 +62,7 @@ class myImDisplay (QtGui.QWidget) :
 
     def contextMenuKickoff (self, point) :
         gPos = self.mapToGlobal (point)
-        cMenu = QtGui.QMenu ()
+        cMenu = QMenu ()
         cMenu.addAction ("Zoom", self.zoomOn)
         cMenu.addAction ("Add Peak", self.peakAdd)
         cMenu.addAction ("SelectPeaks", self.selectOn)
@@ -186,7 +188,7 @@ class myImDisplay (QtGui.QWidget) :
         a[:,:,1]=255-uarr[:,:]
         a[:,:,0]=255-uarr[:,:]
 
-        self.qimage = QtGui.QImage (a.data, a.shape[1], a.shape[0],QtGui.QImage.Format_ARGB32)
+        self.qimage = QImage (a.data, a.shape[1], a.shape[0],QImage.Format_ARGB32)
         self.qimage.ndarray = a
         self.loadImage = 1
         self.repaint()
@@ -232,8 +234,8 @@ class myImDisplay (QtGui.QWidget) :
         #a = np.zeros ((newarr.shape[0], newarr.shape[1]), dtype=np.uint8)
         #a[:,:]=255-newarr[:,:]
         
-        self.qimage = QtGui.QImage (newarr.data, newarr.shape[1], newarr.shape[0],
-                                    QtGui.QImage.Format_Indexed8)
+        self.qimage = QImage (newarr.data, newarr.shape[1], newarr.shape[0],
+                                    QImage.Format_Indexed8)
 
         #a[:,:,1]=255-uarr[:,:]
         #a[:,:,0]=255-uarr[:,:]
@@ -241,8 +243,8 @@ class myImDisplay (QtGui.QWidget) :
         # generate the lut
         
         for index in range(256) :
-        #    self.qimage.setColor (index, QtGui.qRgb (index, index, index))
-            self.qimage.setColor (index, QtGui.qRgb(self.rgb_lut[0,index], self.rgb_lut[1,index], self.rgb_lut[2,index]))
+        #    self.qimage.setColor (index, qRgb (index, index, index))
+            self.qimage.setColor (index, qRgb(self.rgb_lut[0,index], self.rgb_lut[1,index], self.rgb_lut[2,index]))
         #self.qimage.ndarray = a
         self.loadImage = 1
         self.repaint()
@@ -276,8 +278,8 @@ class myImDisplay (QtGui.QWidget) :
             #self.rgb_lut = temparr.reshape (3,256)
             #self.rgb_lut = temparr.reshape (3,256)
         for i in range(256) :
-        #    self.qimage.setColor (index, QtGui.qRgb (index, index, index))
-            self.qimage.setColor (i, QtGui.qRgb(self.rgb_lut[ 0,i], self.rgb_lut[ 1,i], self.rgb_lut[ 2,i]))
+        #    self.qimage.setColor (index, qRgb (index, index, index))
+            self.qimage.setColor (i, qRgb(self.rgb_lut[ 0,i], self.rgb_lut[ 1,i], self.rgb_lut[ 2,i]))
         self.repaint()
 
 
@@ -294,7 +296,7 @@ class myImDisplay (QtGui.QWidget) :
             y1 = self.selectPointLR.y() / self.zmFac
             x0 = self.selectPointUL.x() / self.zmFac
             y0 = self.selectPointUL.y() / self.zmFac
-            newRect = QtCore.QRect (x0, y0, x1-x0, y1-y0)
+            newRect = QRect (x0, y0, x1-x0, y1-y0)
             smode = True
             if (self.unselectFlag) :
                 smode = False
@@ -308,7 +310,7 @@ class myImDisplay (QtGui.QWidget) :
         xyzvals = [0.,0.,0]
         # if right button, let context menu handlers work
 
-        if (event.button() == QtCore.Qt.RightButton) :
+        if (event.button() == Qt.RightButton) :
             return
 
         # full res coords
@@ -351,7 +353,7 @@ class myImDisplay (QtGui.QWidget) :
             x0 = self.selectPointUL.x() / self.zmFac
             y0 = self.selectPointUL.y() / self.zmFac
             # insert logic here to determine upper left and lower right.... that will then be ul, lr
-            newRect = QtCore.QRect (x0, y0, x1-x0, y1-y0)
+            newRect = QRect (x0, y0, x1-x0, y1-y0)
             smode = True
             if (self.unselectFlag) :
                 smode = False
@@ -381,7 +383,7 @@ class myImDisplay (QtGui.QWidget) :
             else :
                 up_top = y1
                 ht = y0 - y1
-            newRect = QtCore.QRect (up_left, up_top, wid, ht)
+            newRect = QRect (up_left, up_top, wid, ht)
             smode = True
             if (self.unmaskFlag) :
                 smode = False
@@ -407,12 +409,12 @@ class myImDisplay (QtGui.QWidget) :
         
 
         print '(X Y) : ', xloc, yloc
-        newloc = QtCore.QPoint(xloc,yloc)
+        newloc = QPoint(xloc,yloc)
         if (self.zoomToggle) :
             self.centPt.emit (newloc)
         else :
             print 'new peak at ', xloc, yloc
-            self.addPeakSignal.emit (QtCore.QPoint(xloc,yloc))
+            self.addPeakSignal.emit (QPoint(xloc,yloc))
             
             
     #def mouseDoubleClickEvent (self, event) :
@@ -463,75 +465,75 @@ class myImDisplay (QtGui.QWidget) :
             dim = h
         bsize2 = self.peakBoxSize / 2 * self.zmFac
         
-        painter = QtGui.QPainter (self)
+        painter = QPainter (self)
         if (self.loadImage ==1) :
                 painter.drawImage (0, 0, self.qimage, 0., 0., dim, dim)
                 if (self.cakeImageFlag) :
                     return
                 topLeft = self.zmRect.topLeft() * self.zmFac
                 botRight = self.zmRect.bottomRight() * self.zmFac
-                painter.setPen (QtGui.QPen (QtCore.Qt.red))
-                painter.drawRect (QtCore.QRect(topLeft, botRight))
+                painter.setPen (QPen (Qt.red))
+                painter.drawRect (QRect(topLeft, botRight))
                 peakcount = self.peaks.getpeakno()
-                painter.setPen (QtGui.QPen (QtCore.Qt.green))
+                painter.setPen (QPen (Qt.green))
                 for i in range (peakcount) :
                     xloc = self.peaks.peaks[i].DetXY[0]*self.zmFac
                     yloc = self.peaks.peaks[i].DetXY[1]*self.zmFac
-                    upLeft = QtCore.QPoint (xloc-bsize2,yloc-bsize2)
-                    lowRight = QtCore.QPoint (xloc+bsize2+1, yloc+bsize2+1)
-                    newRect = QtCore.QRect (upLeft, lowRight)
-                    painter.setPen (QtGui.QPen (QtCore.Qt.green))
+                    upLeft = QPoint (xloc-bsize2,yloc-bsize2)
+                    lowRight = QPoint (xloc+bsize2+1, yloc+bsize2+1)
+                    newRect = QRect (upLeft, lowRight)
+                    painter.setPen (QPen (Qt.green))
                     if self.peaks.peaks[i].selected[0] :
-                        painter.setPen (QtGui.QPen (QtCore.Qt.magenta))
+                        painter.setPen (QPen (Qt.magenta))
                     if self.peaks.peaks[i].clickSelected :
-                        painter.setPen (QtGui.QPen (QtCore.Qt.yellow))
+                        painter.setPen (QPen (Qt.yellow))
                     painter.drawRect (newRect)
                 if (self.selectFlag and self.dragFlag) :
-                    pen = QtGui.QPen (QtCore.Qt.magenta)
-                    pen.setStyle (QtCore.Qt.DashLine)
+                    pen = QPen (Qt.magenta)
+                    pen.setStyle (Qt.DashLine)
                     painter.setPen (pen)
 
-                    painter.drawRect (QtCore.QRect(self.selectPointUL, self.selectPointLR))
+                    painter.drawRect (QRect(self.selectPointUL, self.selectPointLR))
                 if (self.unselectFlag and self.dragFlag) :
-                    pen = QtGui.QPen (QtCore.Qt.cyan)
-                    pen.setStyle (QtCore.Qt.DashLine)
+                    pen = QPen (Qt.cyan)
+                    pen.setStyle (Qt.DashLine)
                     painter.setPen (pen)
-                    painter.drawRect (QtCore.QRect(self.selectPointUL, self.selectPointLR))
+                    painter.drawRect (QRect(self.selectPointUL, self.selectPointLR))
                 if (self.maskFlag and self.dragFlag) :
-                    pen = QtGui.QPen (QtCore.Qt.darkYellow)
-                    pen.setStyle (QtCore.Qt.DashLine)
+                    pen = QPen (Qt.darkYellow)
+                    pen.setStyle (Qt.DashLine)
                     painter.setPen (pen)
 
-                    painter.drawRect (QtCore.QRect(self.selectPointUL, self.selectPointLR))
+                    painter.drawRect (QRect(self.selectPointUL, self.selectPointLR))
                 if (self.unmaskFlag and self.dragFlag) :
-                    pen = QtGui.QPen (QtCore.Qt.yellow)
-                    pen.setStyle (QtCore.Qt.DashLine)
+                    pen = QPen (Qt.yellow)
+                    pen.setStyle (Qt.DashLine)
                     painter.setPen (pen)
-                    painter.drawRect (QtCore.QRect(self.selectPointUL, self.selectPointLR))
+                    painter.drawRect (QRect(self.selectPointUL, self.selectPointLR))
                 if (self.calPointsFlag) :
-                    pen = QtGui.QPen (QtCore.Qt.magenta)
+                    pen = QPen (Qt.magenta)
                     painter.setPen (pen)
                     npts = len (self.calPoints)
                     for i in range (npts) :
                         xloc = int(self.calPoints[i][0]*h)
                         yloc = int(self.calPoints[i][1]*w)
-                        painter.drawEllipse (QtCore.QPoint(xloc,yloc),5, 5)
-                    pen = QtGui.QPen (QtCore.Qt.green)
+                        painter.drawEllipse (QPoint(xloc,yloc),5, 5)
+                    pen = QPen (Qt.green)
                     painter.setPen (pen)
                     xloc = int(self.proxPoints[0]*h)
                     yloc = int(self.proxPoints[1]*w)
-                    painter.drawEllipse (QtCore.QPoint(xloc,yloc),5, 5)
-                    pen = QtGui.QPen (QtCore.Qt.blue)
+                    painter.drawEllipse (QPoint(xloc,yloc),5, 5)
+                    pen = QPen (Qt.blue)
                     painter.setPen (pen)
                     xloc = int(self.proxPointsF[1]*h)
                     yloc = int(self.proxPointsF[0]*w)
-                    painter.drawEllipse (QtCore.QPoint(xloc,yloc),5, 5)
+                    painter.drawEllipse (QPoint(xloc,yloc),5, 5)
 
                     for i in range (self.nRings) :
                         for j in range (self.ptsPerRing[i]):
                             xloc = int(self.ringsX[i][j]*w)
                             yloc = int (self.ringsY[i][j]*h)
-                            painter.drawEllipse (QtCore.QPoint(xloc,yloc),5, 5)
+                            painter.drawEllipse (QPoint(xloc,yloc),5, 5)
 
 
 
@@ -543,10 +545,10 @@ class myImDisplay (QtGui.QWidget) :
         #newdata[w[0],w[1]] = 0
         newdata = self.curmask * self.imdata
         #newdata[w[0],w[1]] = 0
-        self.qimage = QtGui.QImage (newdata.data, newdata.shape[1], newdata.shape[0],
-                                    QtGui.QImage.Format_Indexed8)
+        self.qimage = QImage (newdata.data, newdata.shape[1], newdata.shape[0],
+                                    QImage.Format_Indexed8)
         for index in range(256) :
-            self.qimage.setColor (index, QtGui.qRgb (index, index, index))
+            self.qimage.setColor (index, qRgb (index, index, index))
 
         self.repaint()
 

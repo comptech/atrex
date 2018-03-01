@@ -1,12 +1,15 @@
-from PyQt4 import QtGui, QtCore, uic
 
-class cellPathDlg (QtGui.QDialog) :
+from PyQt5.QtWidgets import *
+from PyQt5.QtGui import *
+from PyQt5.QtCore import *
+from PyQt5.uic import *
+class cellPathDlg (QDialog) :
 
 
 
     def __init__(self) :
-        QtGui.QDialog.__init__(self)
-        self.ui = uic.loadUi("cellPathDlg.ui", self)
+        QDialog.__init__(self)
+        self.ui = loadUi("cellPathDlg.ui", self)
         self.path = ""
         self.ui.cellPathLE.setText ("")
         self.ui.browseButton.clicked.connect (self.browse)
@@ -18,9 +21,9 @@ class cellPathDlg (QtGui.QDialog) :
     #   browse for the path to cell_now.exe
     ###
     def browse(self):
-        self.path = QtGui.QFileDialog.getExistingDirectory(self, 'Define Cell Now Directory',
+        self.path = QFileDialog.getExistingDirectory(self, 'Define Cell Now Directory',
                                                                      "",
-                                                                     QtGui.QFileDialog.ShowDirsOnly)
+                                                                     QFileDialog.ShowDirsOnly)
         self.ui.cellPathLE.setText (self.path)
 
     def okThis (self) :

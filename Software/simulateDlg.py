@@ -1,6 +1,8 @@
+from PyQt5.QtWidgets import *
+from PyQt5.QtGui import *
+from PyQt5.QtCore import *
+from PyQt5.uic import *
 
-
-from PyQt4 import QtCore, QtGui, uic
 import myDetector
 import myPeakTable
 import numpy as np
@@ -13,15 +15,15 @@ import subprocess
 
 
 
-class simulateDlg (QtGui.QDialog) :
+class simulateDlg (QDialog) :
 
-    updatePeaks = QtCore.pyqtSignal ()
-    updateDisplay = QtCore.pyqtSignal ()
+    updatePeaks = pyqtSignal ()
+    updateDisplay = pyqtSignal ()
 
 
     def __init__(self) :
-        QtGui.QDialog.__init__(self)
-        self.ui = uic.loadUi("simulateDlg.ui", self)
+        QDialog.__init__(self)
+        self.ui = loadUi("simulateDlg.ui", self)
 
         self.sim_inc_omchiphi.clicked.connect (self.incVal)
         self.sim_dec_omchiphi.clicked.connect (self.decVal)
@@ -40,7 +42,7 @@ class simulateDlg (QtGui.QDialog) :
         self.myPredict = myPredict()
         self.myPeaks = myPeakTable.myPeakTable()
         self.bravType = 'P'
-        self.setAttribute (QtCore.Qt.WA_DeleteOnClose, True)
+        self.setAttribute (Qt.WA_DeleteOnClose, True)
         self.workdir = ''
         self.base = ''
         self.projFlag = False
@@ -70,7 +72,7 @@ class simulateDlg (QtGui.QDialog) :
         self.project = p
         self.projFlag = True
         ubf = self.project.base+'.ub'
-        fil = QtCore.QFile (ubf)
+        fil = QFile (ubf)
         if (fil.exists()) :
             fil.close()
             self.loadUB(ubf)
@@ -175,17 +177,17 @@ class simulateDlg (QtGui.QDialog) :
 
 
     def print_LP (self, lp):
-        str=QtCore.QString.number (lp[0])
+        str=QString.number (lp[0])
         self.sim_aLE.setText(str)
-        str=QtCore.QString.number (lp[1])
+        str=QString.number (lp[1])
         self.sim_bLE.setText(str)
-        str=QtCore.QString.number (lp[2])
+        str=QString.number (lp[2])
         self.sim_cLE.setText(str)
-        str=QtCore.QString.number (lp[3])
+        str=QString.number (lp[3])
         self.sim_alphaLE.setText(str)
-        str=QtCore.QString.number (lp[4])
+        str=QString.number (lp[4])
         self.sim_betaLE.setText(str)
-        str=QtCore.QString.number (lp[5])
+        str=QString.number (lp[5])
         self.sim_gammaLE.setText(str)
 
     ### open UB matrix
@@ -194,7 +196,7 @@ class simulateDlg (QtGui.QDialog) :
             suggFile = self.project.base+'.ub'
         else :
             suggFile = self.workdir
-        ubFile = QtGui.QFileDialog.getOpenFileName(self, 'Open UB File for Reading ', suggFile)
+        ubFile = QFileDialog.getOpenFileName(self, 'Open UB File for Reading ', suggFile)
         if (ubFile.length() < 2) :
             return
 
@@ -210,7 +212,7 @@ class simulateDlg (QtGui.QDialog) :
         else :
             suggFile = self.workdir
 
-        ubFile = QtGui.QFileDialog.getSaveFileName(self, 'Open UB File for Reading ', suggFile)
+        ubFile = QFileDialog.getSaveFileName(self, 'Open UB File for Reading ', suggFile)
         if (ubFile.length() < 2) :
             return
         f = open (ubFile , 'w')
@@ -292,16 +294,16 @@ class simulateDlg (QtGui.QDialog) :
         # get the location of the cell_now executable
         cellpathdlg = cellPathDlg.cellPathDlg ()
         status = cellpathdlg.exec_()
-        if status != QtGui.QDialog.Accepted :
+        if status != QDialog.Accepted :
             return
 
         cell_now_dir = os.path.normpath(cellpathdlg.path.toLatin1().data())
-        #cell_now_dir,ok = QtGui.QInputDialog.getText (self, "Path to cell_now executable",  "Enter directory")
+        #cell_now_dir,ok = QInputDialog.getText (self, "Path to cell_now executable",  "Enter directory")
         #if not ok :
         #    return
         cell_now = cell_now_dir + '/run_cellnow.cmd'
         print "Cell now command is : %s"%cell_now
-        status = QtCore.QFile.exists(cell_now)
+        status = QFile.exists(cell_now)
         if not status :
             print 'could not file cell_now executable'
             return

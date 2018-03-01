@@ -1,9 +1,9 @@
-from PyQt4 import QtCore
+from PyQt5.QtCore import *
 
 import math
 from PeakObject import *
 
-class myPeaks (QtCore.QObject) :
+class myPeaks (QObject) :
 
     peaks_0 =[]
     peaks_1 =[]
@@ -29,7 +29,7 @@ class myPeaks (QtCore.QObject) :
         state = True
         curList = self.peakLists[self.activeList]
         for peak in curList:
-            point = QtCore.QPoint (peak.x(), peak.y())
+            point = QPoint (peak.x(), peak.y())
             state = rectCoords.contains (point)
             if state:
                 peak.setSelected (state)

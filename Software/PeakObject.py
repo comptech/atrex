@@ -1,9 +1,9 @@
-from PyQt4 import QtCore
+from PyQt5.QtCore import *
 
 class PeakObject :
     xloc = 0
     yloc = 0
-    ident = QtCore.QString("")
+    ident = ""
     selected = False
 
     def __init__(self, x, y) :

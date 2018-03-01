@@ -5,7 +5,8 @@ import tifffile
 from crystallography import *
 from vector_math import *
 from threading import Thread
-from PyQt4 import QtCore, QtGui
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
 from ctypes import *
 from numpy.ctypeslib import ndpointer
 from platform import *
@@ -21,13 +22,13 @@ from vector_math import *
 import myPeakTable
 
 
-class myDetector (QtCore.QObject):
+class myDetector (QObject):
 
-    tDone = QtCore.pyqtSignal (int)
-    tDoneAll = QtCore.pyqtSignal ()
-    calPeaks = QtCore.pyqtSignal()
+    tDone = pyqtSignal (int)
+    tDoneAll = pyqtSignal ()
+    calPeaks = pyqtSignal()
     def __init__(self):
-        QtCore.QObject.__init__(self)
+        QObject.__init__(self)
         self.dist = 0.0
         self.beamx = 0.0
         self.beamy = 0.0
@@ -151,6 +152,7 @@ class myDetector (QtCore.QObject):
         self.wavelength = a.wavelength
 
     def read_from_text_file(self, filename):
+
         fil = open(filename, 'r')
         flist = []
         linebreak = '\n'
@@ -376,7 +378,7 @@ class myDetector (QtCore.QObject):
         self.calcTthDLL ()
         # get the file name if we are saving 2theta to array
         if saveFlag :
-            outFile = QtGui.QFileDialog.getSaveFileName (None, "Output to Tiff", "",'Tiff File (*.tif)')
+            outFile = QFileDialog.getSaveFileName (None, "Output to Tiff", "",'Tiff File (*.tif)')
             outfl = outFile.toLatin1().data()
             tifffile.imsave (outfl, self.tthetaArr)
             #self.tthetaArr.tofile (outfl)

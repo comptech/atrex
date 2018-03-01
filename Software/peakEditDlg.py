@@ -1,12 +1,16 @@
-from PyQt4 import QtCore, QtGui, uic
+
+from PyQt5.QtWidgets import *
+from PyQt5.QtGui import *
+from PyQt5.QtCore import *
+from PyQt5.uic import *
 from myPeaks import *
 
-class peakEditDlg (QtGui.QDialog) :
+class peakEditDlg (QDialog) :
 
 
     def __init__(self, peak, rownum) :
-        QtGui.QDialog.__init__(self)
-        self.ui = uic.loadUi("peakEditDlg.ui", self)
+        QDialog.__init__(self)
+        self.ui = loadUi("peakEditDlg.ui", self)
         self.peak = peak
         self.textSetD (self.ui.pe_id, rownum)
         self.textSetF (self.ui.pe_detXY_0, peak.DetXY[0])

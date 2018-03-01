@@ -1,11 +1,13 @@
-from PyQt4 import QtCore, QtGui
 
+from PyQt5.QtWidgets import *
+from PyQt5.QtGui import *
+from PyQt5.QtCore import *
 import numpy as np
 from math import *
 from scipy.misc import imresize
 from scipy.ndimage import zoom
 
-class myZmDisplay (QtGui.QWidget) :
+class myZmDisplay (QWidget) :
     loadImage = 0
     dispMax = 65535
     dispMin = 0
@@ -14,14 +16,14 @@ class myZmDisplay (QtGui.QWidget) :
     newy = 0
     zoomToggle = True
     peakToggle = False
-    zoomRect = QtCore.QRect()
+    zoomRect = QRect()
     applyMaskFlag = False
 
     # Class Signals 
-    addPeakSignal = QtCore.pyqtSignal (QtCore.QPoint)
-    setButtonModeSignal = QtCore.pyqtSignal (int)
-    zmRectSignal = QtCore.pyqtSignal(QtCore.QRect)
-    imcoordsSelectSignal = QtCore.pyqtSignal (list)
+    addPeakSignal = pyqtSignal (QPoint)
+    setButtonModeSignal = pyqtSignal (int)
+    zmRectSignal = pyqtSignal(QRect)
+    imcoordsSelectSignal = pyqtSignal (list)
 
     rgb_lut = np.zeros ((3,256), dtype=np.uint8)
 
@@ -29,21 +31,21 @@ class myZmDisplay (QtGui.QWidget) :
         rgb_lut[:,i] = i
 
     def __init__(self, parent) :
-        QtGui.QWidget.__init__(self, parent)
-        self.setContextMenuPolicy (QtCore.Qt.CustomContextMenu)
+        QWidget.__init__(self, parent)
+        self.setContextMenuPolicy (Qt.CustomContextMenu)
         self.customContextMenuRequested.connect (self.contextMenuKickoff)
 
     def setLUT (self, arr):
         self.rgb_lut[:,:] = arr[:,:]
         for i in range(256) :
-        #    self.qimage.setColor (index, QtGui.qRgb (index, index, index))
-            self.qimage.setColor (i, QtGui.qRgb(self.rgb_lut[ 0,i], self.rgb_lut[ 1,i], self.rgb_lut[ 2,i]))
+        #    self.qimage.setColor (index, qRgb (index, index, index))
+            self.qimage.setColor (i, qRgb(self.rgb_lut[ 0,i], self.rgb_lut[ 1,i], self.rgb_lut[ 2,i]))
         self.repaint()
         #self.writeQImage_update()
 
     def contextMenuKickoff (self, point) :
         gPos = self.mapToGlobal (point)
-        cMenu = QtGui.QMenu ()
+        cMenu = QMenu ()
         cMenu.addAction ("Zoom", self.zoomOn)
         cMenu.addAction ("Add Peak", self.peakAdd)
         cMenu.exec_(gPos)
@@ -120,7 +122,7 @@ class myZmDisplay (QtGui.QWidget) :
         else :
             tempdata = self.fulldata [starty:endy, startx: endx] * self.mymask[starty:endy, startx: endx]
 
-        zmRect = QtCore.QRect (QtCore.QPoint(startx, starty),QtCore.QPoint(endx,endy))
+        zmRect = QRect (QPoint(startx, starty),QPoint(endx,endy))
         self.zmRectSignal.emit (zmRect)
         self.zoomRect = zmRect
 
@@ -144,15 +146,15 @@ class myZmDisplay (QtGui.QWidget) :
         a[:,:]=newarr[0:ysize,0:xsize]
         self.newx = a.shape[0]
         self.newy = a.shape[1]
-        self.qimage = QtGui.QImage (a.data, a.shape[1], a.shape[0],
-                                    QtGui.QImage.Format_Indexed8)
+        self.qimage = QImage (a.data, a.shape[1], a.shape[0],
+                                    QImage.Format_Indexed8)
         #a[:,:,1]=255-uarr[:,:]
         #a[:,:,0]=255-uarr[:,:]
 
         # generate the lut
         
         for index in range(256) :
-            self.qimage.setColor (index, QtGui.qRgb (self.rgb_lut[0,index], self.rgb_lut[1,index], self.rgb_lut[2,index]))
+            self.qimage.setColor (index, qRgb (self.rgb_lut[0,index], self.rgb_lut[1,index], self.rgb_lut[2,index]))
             
         self.qimage.ndarray = a
         self.loadImage = 1
@@ -200,7 +202,7 @@ class myZmDisplay (QtGui.QWidget) :
         else :
             tempdata = self.fulldata [starty:endy, startx: endx] * self.mymask [starty:endy, startx: endx]
 
-        zmRect = QtCore.QRect (QtCore.QPoint(startx, starty),QtCore.QPoint(endx,endy))
+        zmRect = QRect (QPoint(startx, starty),QPoint(endx,endy))
         self.zmRectSignal.emit (zmRect)
         self.zoomRect = zmRect
 
@@ -224,17 +226,17 @@ class myZmDisplay (QtGui.QWidget) :
         a[:,:]=newarr[0:ysize,0:xsize]
         self.newx = a.shape[0]
         self.newy = a.shape[1]
-        self.qimage = QtGui.QImage (a.data, a.shape[1], a.shape[0],
-                                    QtGui.QImage.Format_Indexed8)
+        self.qimage = QImage (a.data, a.shape[1], a.shape[0],
+                                    QImage.Format_Indexed8)
         #a[:,:,1]=255-uarr[:,:]
         #a[:,:,0]=255-uarr[:,:]
 
         # generate the lut
 
         #for index in range(256) :
-        #   self.qimage.setColor (index, QtGui.qRgb (index, index, index))
+        #   self.qimage.setColor (index, qRgb (index, index, index))
         for index in range(256) :
-            self.qimage.setColor (index, QtGui.qRgb (self.rgb_lut[0,index], self.rgb_lut[1,index], self.rgb_lut[2,index]))
+            self.qimage.setColor (index, qRgb (self.rgb_lut[0,index], self.rgb_lut[1,index], self.rgb_lut[2,index]))
 
         self.qimage.ndarray = a
         self.loadImage = 1
@@ -248,7 +250,7 @@ class myZmDisplay (QtGui.QWidget) :
         xloc = event.x() / self.zmFac + startPt.x()
         yloc = event.y() / self.zmFac + startPt.y()
         if (self.peakToggle) :
-            self.addPeakSignal.emit (QtCore.QPoint(xloc,yloc))
+            self.addPeakSignal.emit (QPoint(xloc,yloc))
 
         xyzvals [0] = xloc
         xyzvals [1] = yloc
@@ -265,7 +267,7 @@ class myZmDisplay (QtGui.QWidget) :
         if (dim >h):
             dim = h
         
-        painter = QtGui.QPainter (self)
+        painter = QPainter (self)
         
         
         if (self.loadImage ==1) :
@@ -273,29 +275,29 @@ class myZmDisplay (QtGui.QWidget) :
                 painter.drawImage (0,0, self.qimage, 0.,0.)
                 actList = self.peaks.activeList
                 peakcount = self.peaks.getpeakno()
-                painter.setPen (QtGui.QPen (QtCore.Qt.green))
+                painter.setPen (QPen (Qt.green))
                 startPt = self.zoomRect.topLeft()
                 for i in range (peakcount) :
                     xloc = self.peaks.peaks[i].getDetxy()[0]
                     yloc = self.peaks.peaks[i].getDetxy()[1]
                     #check if in zoom window
-                    centpt = QtCore.QPoint(xloc,yloc)
+                    centpt = QPoint(xloc,yloc)
                     inside = self.zoomRect.contains (centpt)
                     if (inside != True):
                         continue ;
                     xloc = (xloc  - startPt.x()) * self.zmFac
                     yloc =  (yloc - startPt.y()) * self.zmFac
-                    upLeft = QtCore.QPoint (xloc-10.,yloc-10.)
-                    lowRight = QtCore.QPoint (xloc+10, yloc+10)
-                    newRect = QtCore.QRect (upLeft, lowRight)
-                    painter.setPen (QtGui.QPen (QtCore.Qt.magenta))
+                    upLeft = QPoint (xloc-10.,yloc-10.)
+                    lowRight = QPoint (xloc+10, yloc+10)
+                    newRect = QRect (upLeft, lowRight)
+                    painter.setPen (QPen (Qt.magenta))
                     if self.peaks.peaks[i].isselected() :
-                        painter.setPen (QtGui.QPen (QtCore.Qt.green))
+                        painter.setPen (QPen (Qt.green))
 
                     painter.drawRect (newRect)
         #outline the widget
-        painter.setPen (QtGui.QPen (QtCore.Qt.black))
-        qrFrame = QtCore.QRect (0,0,w-1,h-1)
+        painter.setPen (QPen (Qt.black))
+        qrFrame = QRect (0,0,w-1,h-1)
         painter.drawRect (qrFrame)
                                 
 

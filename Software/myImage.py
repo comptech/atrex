@@ -2,7 +2,7 @@
 # python class to handle ATREX tiff images, extract image data for display and
 # conversion to a numpy array
 
-from PyQt4 import QtCore
+from PyQt5.QtCore import *
 from PIL import Image
 import numpy as np
 from math import *
@@ -16,6 +16,7 @@ import h5py
 from peakFit import *
 from scipy import signal
 from scipy import mgrid
+from fnmatch import *
 
 
 class myImage :
@@ -54,6 +55,8 @@ class myImage :
         self.fitFlag = False
         self.curImgFlag = True
         self.bs2 = 8
+        self.omega0 =0.
+        self.omegaR =0.
 
     # toggles based upon whether the current image or series rb is changed (exclusive buttons)
     def setSeriesFlag (self,ival):
@@ -80,7 +83,7 @@ class myImage :
     def readTiff (self, infile) :
         self.imFileName = infile
         print 'Loading ',infile
-        im = Image.open (infile.toLatin1().data())
+        im = Image.open (infile)
         (x,y) = im.size
         print x, y
         self.imArraySize=[x,y]
@@ -130,27 +133,27 @@ class myImage :
 
 
     def readText (self, infile) :
-        status = True 
-        tfile = QtCore.QString("%1.txt").arg(infile)
-        qf = QtCore.QFile (tfile)
+        status = True
+        tfile ='%s.txt'%infile
+        qf = QFile (tfile)
         if not qf.exists() :
             return False
-        qf.open (QtCore.QFile.ReadOnly)
-        qts = QtCore.QTextStream(qf)
+        qf.open (QFile.ReadOnly)
+        qts = QTextStream(qf)
         while True :
             str = qts.readLine ()
-            if (str.length() ==0) :
+            if (len(str) ==0) :
                 break
             tokenize = str.split ('=')
-            if tokenize[0].contains('mega0') :
+            if fnmatch(tokenize[0],'mega0') :
                 self.omega0 = tokenize[1].trimmed()
-            if tokenize[0].contains('megaR') :
+            if fnmatch (tokenize[0],'megaR') :
                 self.omegaR = tokenize [1].trimmed()
-            if tokenize[0].contains ('chi') :
+            if fnmatch(tokenize[0], 'chi'):
                 self.chi = tokenize[1].trimmed()
-            if tokenize[0].contains('detector') :
+            if fnmatch(tokenize[0], 'detector'):
                 self.detector = tokenize[1].trimmed()
-            if tokenize[0].contains('exp') :
+            if fnmatch(tokenize[0], 'exp'):
                 self.exposureT = tokenize[1].trimmed()
         return True
 

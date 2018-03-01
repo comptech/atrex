@@ -1,7 +1,13 @@
-from PyQt4 import QtCore, QtGui, uic
+
+from PyQt5.QtWidgets import *
+from PyQt5.QtGui import *
+from PyQt5.QtCore import *
+from PyQt5.uic import *
+
+
 from myZmPeakDisplay import *
 
-class myPeakAdjustDlg (QtGui.QDialog) :
+class myPeakAdjustDlg (QDialog) :
 
     zmPeakRaw = None
     rawMnMx = [0.,0.]
@@ -9,8 +15,8 @@ class myPeakAdjustDlg (QtGui.QDialog) :
     residsMnMx = [0.,0.]
 
     def __init__(self) :
-        QtGui.QDialog.__init__(self)
-        self.ui = uic.loadUi("peakDisplayAdjust.ui", self)
+        QDialog.__init__(self)
+        self.ui = loadUi("peakDisplayAdjust.ui", self)
         self.ui.updateAdjustButton.clicked.connect (self.update)
         self.ui.rawRB.toggled.connect (self.changedType)
         self.ui.fittedRB.toggled.connect (self.changedType)
@@ -39,19 +45,19 @@ class myPeakAdjustDlg (QtGui.QDialog) :
 
     def updateLEFields(self):
         if (self.ui.rawRB.isChecked()) :
-            str = QtCore.QString ("%1").arg(self.rawMnMx[0])
+            str = '%f'%self.rawMnMx[0]
             self.ui.minLE.setText (str)
-            str = QtCore.QString ("%1").arg(self.rawMnMx[1])
+            str = '%f' % self.rawMnMx[1]
             self.ui.maxLE.setText (str)
         if (self.ui.fittedRB.isChecked()) :
-            str = QtCore.QString ("%1").arg(self.fitMnMx[0])
+            str = '%f' % self.fitMnMx[0]
             self.ui.minLE.setText (str)
-            str = QtCore.QString ("%1").arg(self.fitMnMx[1])
+            str = '%f' % self.fitMnMx[1]
             self.ui.maxLE.setText (str)
         if (self.ui.residsRB.isChecked()) :
-            str = QtCore.QString ("%1").arg(self.residsMnMx[0])
+            str = '%f' % self.residsMnMx[0]
             self.ui.minLE.setText (str)
-            str = QtCore.QString ("%1").arg(self.residsMnMx[1])
+            str = '%f' % self.residsMnMx[1]
             self.ui.maxLE.setText (str)
 
 

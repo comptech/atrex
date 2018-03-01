@@ -1,5 +1,5 @@
 from math import *
-from PyQt4 import QtCore
+from PyQt5.QtCore import *
 
 def mySquare (val) :
     return (sqrt(val))
@@ -10,9 +10,9 @@ def getImageRange (imageDir, imstring) :
     # get the index of the start of the .txt suffix then
     # find the start of the _xxx where xxx are the image numbers
     
-    qd = QtCore.QDir (imageDir)
+    qd = QDir (imageDir)
     
-    qd.setNameFilters (QtCore.QStringList()<<"*.tif")
+    qd.setNameFilters (QStringList()<<"*.tif")
     filelist = qd.entryList()
     nfiles = filelist.count()
     min = 1e6
@@ -49,3 +49,12 @@ def getImageRange (imageDir, imstring) :
 
 
 
+def find_last_index_of (s, t) :
+
+    last_pos = -1
+    while True:
+        pos = s.find(t, last_pos + 1)
+        if pos == -1:
+            return last_pos
+        else:
+            last_pos = pos
