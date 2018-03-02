@@ -53,7 +53,7 @@ class MyGLWindow (QOpenGLWidget) :
 
     def initializeGL(self):
         super(MyGLWindow,self).initializeGL()
-        #glClearColor (0,0,.4,0)
+        glClearColor (0,0,.4,.5)
 
 
     def mousePressEvent (self, ev) :
@@ -137,6 +137,7 @@ class MyGLWindow (QOpenGLWidget) :
         
         q = gluNewQuadric()
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+        glClearColor (0.,0.,.3,1.)
         
         if (self.selFlag) :
             ww = self.botright.x() - self.upleft.x()

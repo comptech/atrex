@@ -1,6 +1,8 @@
 #include <math.h>
 #include <stdio.h>
 
+#define __linux__
+
 #ifdef __linux__
 #define PI M_PI
 extern "C" {

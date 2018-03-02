@@ -134,6 +134,7 @@ class Atrex(QMainWindow):
         self.ui.peakProfOrientCB.currentIndexChanged.connect (self.peakProfOrientationSet)
         self.ui.adjustPeakDisplaysButton.clicked.connect(self.adjustPeakDisplays)
         self.ui.peaks_peakListWidgetTable.horizontalHeader().setVisible(True)
+        
 
         # RSV tab opengl
         self.axisGroup = QButtonGroup()
