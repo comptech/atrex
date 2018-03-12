@@ -45,7 +45,7 @@ class myMask (QObject):
         self.img[:,:] = 1
 
     def saveToFile (self, fname):
-        if (not fname.contains('.tif')) and (not fname.contains('.TIF')) :
+        if (fname.find('.tif')==-1) and (fname.find('.TIF')==-1) :
             print "could not save : need a .tif extension"
             qinfo = QMessageBox.warning (None, "Information", "Output file requires .tif suffix, Please try again")
             return

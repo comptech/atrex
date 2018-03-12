@@ -22,6 +22,7 @@ from myPredict import *
 from myPeakAdjustDlg import *
 from Project import *
 from locmax import *
+
 import simulateDlg
 
 ##
@@ -256,6 +257,8 @@ class Atrex(QMainWindow):
 
         #detector calibration ready...
         self.detector.calPeaks.connect (self.getCalPeaks)
+        # init simulateDlg
+        self.mysim = simulateDlg.simulateDlg()
 
 
     ## getHome :
@@ -333,9 +336,12 @@ class Atrex(QMainWindow):
         self.mergeDisplayFlag = False
         self.imtypeCB.setCurrentIndex(0)
         wdir = self.ui.imDirLE.text()
-        self.imageFile = QFileDialog.getOpenFileName(self, 'Open Image', wdir)
-        self.myLogWidget.addEvent ("Opening image file %s".self.imageFile.toLatin1().data())
-        extension = os.path.splitext(self.imageFile.toLatin1().data())[1]
+        imfile = QFileDialog.getOpenFileName(self, 'Open Image', wdir)
+        self.imageFile = imfile[0]
+        print self.imageFile
+        str0 = 'Opening image file %s'%self.imageFile
+        self.myLogWidget.addEvent (str0)
+        extension = os.path.splitext(self.imageFile)[1]
 
         #return
 
@@ -356,7 +362,8 @@ class Atrex(QMainWindow):
         # z = QDir.separator()
         fi = QFileInfo (self.imageFile)
         basename = fi.baseName()
-        wdir = self.imageFile.left(self.imageFile.lastIndexOf(basename))
+        ind = find_last_index_of (self.imageFile,basename)
+        wdir = self.imageFile[0:ind]
         self.ui.imDirLE.setText(wdir)
         # image file prefix will be used to build new images to display
 
@@ -457,7 +464,7 @@ class Atrex(QMainWindow):
         #self.ui.rangeSlider.set
 
     def peakBoxSizeSet (self) :
-        val = self.ui.peakSaveBoxsizeLE.text().toInt()[0]
+        val = int(self.ui.peakSaveBoxsizeLE.text())
         self.ui.imageWidget.setPeakBoxSize (val)
         self.ui.imageWidget.repaint()
 
@@ -486,8 +493,8 @@ class Atrex(QMainWindow):
 
 
     def dispMinPressed (self) :
-        lval = self.imageMinLE.text().toFloat()[0]
-        hval = self.imageMaxLE.text().toFloat()[0]
+        lval = float(self.imageMinLE.text())
+        hval = float(self.imageMaxLE.text())
         if (lval > hval) :
             hval = lval +1.
             hvalstr0 = '%f'%hval
@@ -498,8 +505,8 @@ class Atrex(QMainWindow):
         self.updateImage()
 
     def dispMaxPressed (self) :
-        lval = self.imageMinLE.text().toFloat()[0]
-        hval = self.imageMaxLE.text().toFloat()[0]
+        lval = float(self.imageMinLE.text())
+        hval = float(self.imageMaxLE.text())
         if (hval < lval) :
             lval = hval - 1.
             lvalstr0 = '%f'%lval
@@ -520,9 +527,9 @@ class Atrex(QMainWindow):
         # get the image num and convert to float
         #z = QChar('0')
         tmpstr0 = self.ui.selectedImageLE.text()
-        imnum = tmpstr.toInt()
-        print 'New image number ', imnum[0]
-        newimage = self.myproj.getFileNameFromNum (imnum[0])
+        imnum = int(tmpstr0)
+        print 'New image number ', imnum
+        newimage = self.myproj.getFileNameFromNum (imnum)
 
         #newimage = QString("%1%2.tif").arg(self.imageFilePref).arg(imnum[0], 3, 10, z)
 
@@ -788,7 +795,7 @@ class Atrex(QMainWindow):
         self.oldSelected = itemNumber
 
         self.imageWidget.repaint()
-        bsize = self.ui.peakSaveBoxsizeLE.text().toInt()[0]
+        bsize = int(self.ui.peakSaveBoxsizeLE.text())
         bsize2 = bsize / 2
         startx = xy[0] - bsize2
         starty = xy[1] - bsize2
@@ -1036,20 +1043,20 @@ class Atrex(QMainWindow):
         print 'Search for peaks'
 
         # get the values from controls on peak search tab
-        gradadd = self.ui.ps_gradAddLE.text().toFloat()[0]
-        maxcount = self.ui.ps_maxCountLE.text().toInt()[0]
-        smoothwin = self.ui.ps_smoothWinLE.text().toInt()[0]
-        mincount = self.ui.ps_minCountLE.text().toInt()[0]
-        locwin = self.ui.ps_locBcgrLE.text().toInt()[0]
+        gradadd = float(self.ui.ps_gradAddLE.text())
+        maxcount = int(float(self.ui.ps_maxCountLE.text()))
+        smoothwin = int(float(self.ui.ps_smoothWinLE.text()))
+        mincount = int(float(self.ui.ps_minCountLE.text()))
+        locwin = int(float(self.ui.ps_locBcgrLE.text()))
 
         # get num of images, and related Omega info
-        ni = self.ui.scan_numImagesLE.text().toInt()[0]
-        i0 = self.ui.scan_startImageLE.text().toInt()[0]
-        om0 = self.ui.scan_startAngLE.text().toFloat()[0]
-        omD = self.ui.scan_stepAngLE.text().toFloat()[0]
+        ni = int(float(self.ui.scan_numImagesLE.text()))
+        i0 = int(float(self.ui.scan_startImageLE.text()))
+        om0 = float(self.ui.scan_startAngLE.text())
+        omD = float(self.ui.scan_stepAngLE.text())
 
         # check for box size (8) do we need this here?
-        bx = self.ui.p2_boxSizeLE.text().toInt()[0]
+        bx = int(float(self.ui.p2_boxSizeLE.text()))
         lcbgr = self.myim.calculate_local_background (0, locwin)
         medsub = np.subtract(self.myim.imArray,lcbgr)
         #lcbgr.tofile ("/home/harold/lcbgr")
@@ -1097,8 +1104,8 @@ class Atrex(QMainWindow):
 
         # update calibration and then update peaks
         self.Update_Detector_calibration()
-        kappa = self.ui.LE_Detector_kappa.text().toFloat()[0]
-        theta = self.ui.LE_Detector_2theta.text().toFloat()[0]
+        kappa = float(self.ui.LE_Detector_kappa.text())
+        theta = float(self.ui.LE_Detector_2theta.text())
         omind = self.ui.pred_omega_or_energyCB.currentIndex()
         if omind == 1 :
             omegaFlag = 0
@@ -1128,20 +1135,20 @@ class Atrex(QMainWindow):
     def SearchForPeaksSeries(self):
 
         # get the values from controls on peak search tab
-        gradadd = self.ui.ps_gradAddLE.text().toFloat()[0]
-        maxcount = self.ui.ps_maxCountLE.text().toInt()[0]
-        smoothwin = self.ui.ps_smoothWinLE.text().toInt()[0]
-        mincount = self.ui.ps_minCountLE.text().toInt()[0]
-        locwin = self.ui.ps_locBcgrLE.text().toInt()[0]
+        gradadd = float(self.ui.ps_gradAddLE.text())
+        maxcount = int(self.ui.ps_maxCountLE.text())
+        smoothwin = int(self.ui.ps_smoothWinLE.text())
+        mincount = int(self.ui.ps_minCountLE.text())
+        locwin = int(self.ui.ps_locBcgrLE.text())
 
         # get num of images, and related Omega info
-        ni = self.ui.scan_numImagesLE.text().toInt()[0]
-        i0 = self.ui.scan_startImageLE.text().toInt()[0]
-        om0 = self.ui.scan_startAngLE.text().toFloat()[0]
-        omD = self.ui.scan_stepAngLE.text().toFloat()[0]
+        ni = int(self.ui.scan_numImagesLE.text())
+        i0 = int(self.ui.scan_startImageLE.text())
+        om0 = float(self.ui.scan_startAngLE.text())
+        omD = float(self.ui.scan_stepAngLE.text())
 
         # check for box size (8) do we need this here?
-        bx = self.ui.p2_boxSizeLE.text().toInt()[0]
+        bx = int(self.ui.p2_boxSizeLE.text())
 
 
         self.detector.genTiltMtx ()
@@ -1192,7 +1199,8 @@ class Atrex(QMainWindow):
         tempimg = myImage()
         outname = QFileDialog.getSaveFileName(self, "Merge Filename", self.workDirectory, "Image File (*.tif)")
         self.cancelMerge = False
-        z = QChar('0')
+        #z = QChar('0')
+        z='0'
         self.mergeSumMode = self.ui.sumButton.isChecked()
         self.ui.mergeProgressBar.setValue (0) ;
 
@@ -1523,7 +1531,7 @@ class Atrex(QMainWindow):
 
     def peakSaveToFile (self) :
         startULeft = [0,0]
-        bsize = self.ui.peakSaveBoxsizeLE.text().toInt()
+        bsize = int(self.ui.peakSaveBoxsizeLE.text())
         bsize = bsize[0]
         startULeft[0] = self.selectPeakXY[0]- bsize/2
         startULeft[1] = self.selectPeakXY[1]- bsize/2
@@ -1584,7 +1592,7 @@ class Atrex(QMainWindow):
         ypts=[]
         yptsFit=[]
         #check for vert or horiz flag
-        npts = self.ui.peakSaveBoxsizeLE.text().toInt()[0]
+        npts = int(self.ui.peakSaveBoxsizeLE.text())
         # vert profile
         if (vFlag==1) :
             for i in range(npts):
@@ -1602,7 +1610,7 @@ class Atrex(QMainWindow):
 
     def peakProfOrientationSet (self, index) :
         vFlag = index+1
-        npts = self.ui.peakSaveBoxsizeLE.text().toInt()[0]
+        npts = int(self.ui.peakSaveBoxsizeLE.text())
         self.ui.peakZoomWidget.setBarFlag (vFlag)
         if (vFlag==1) :
             self.newPeakProfLocation (vFlag, self.peakStartx+npts/2, self.peakStarty)
@@ -1611,17 +1619,17 @@ class Atrex(QMainWindow):
 
 
     def readPredictSettings(self):
-        self.mypred.om_range = self.ui.pred_rangeLE.text().toFloat()[0]
-        self.mypred.om_start = self.ui.pred_startLE.text().toFloat()[0]
-        self.mypred.partOverlap =  self.ui.pred_partOverlapLE.text().toFloat()[0]
-        self.mypred.fullOverlap = self.ui.pred_fullOverlapLE.text().toFloat()[0]
-        self.mypred.h1 = self.ui.pred_h0LE.text().toInt()[0]
-        self.mypred.h2 = self.ui.pred_h1LE.text().toInt()[0]
-        self.mypred.k1 = self.ui.pred_k0LE.text().toInt()[0]
-        self.mypred.k2 = self.ui.pred_k1LE.text().toInt()[0]
-        self.mypred.l1 = self.ui.pred_l0LE.text().toInt()[0]
-        self.mypred.l2 = self.ui.pred_l1LE.text().toInt()[0]
-        self.mypred.dacopen = self.ui.scan_dacopenLE.text().toFloat()[0]
+        self.mypred.om_range = float(self.ui.pred_rangeLE.text())
+        self.mypred.om_start = float(self.ui.pred_startLE.text())
+        self.mypred.partOverlap =  float(self.ui.pred_partOverlapLE.text())
+        self.mypred.fullOverlap = float(self.ui.pred_fullOverlapLE.text())
+        self.mypred.h1 = int(self.ui.pred_h0LE.text())
+        self.mypred.h2 = int(self.ui.pred_h1LE.text())
+        self.mypred.k1 = int(self.ui.pred_k0LE.text())
+        self.mypred.k2 = int(self.ui.pred_k1LE.text())
+        self.mypred.l1 = int(self.ui.pred_l0LE.text())
+        self.mypred.l2 = int(self.ui.pred_l1LE.text())
+        self.mypred.dacopen = float(self.ui.scan_dacopenLE.text())
 
     def calibrantChanged (self, ind):
         self.detector.setCalibrant (ind)
@@ -1629,7 +1637,7 @@ class Atrex(QMainWindow):
 
     def startSimulate (self) :
         self.readPredictSettings()
-        self.mysim = simulateDlg.simulateDlg()
+        #self.mysim = simulateDlg.simulateDlg()
         self.mysim.setProject (self.myproj)
         self.mysim.setBSizeControl (self.ui.p2_boxSizeLE)
         self.mysim.setExcludeControl (self.ui.im_excludeCB)
@@ -1695,8 +1703,8 @@ class Atrex(QMainWindow):
         qf = QFile (outfile)
         qf.open(QIODevice.WriteOnly)
         qts = QTextStream(qf)
-        zeroOff = self.ui.scan_zeroOffLE.text().toFloat()[0]
-        dacOpen = self.ui.scan_dacopenLE.text().toFloat()[0]
+        zeroOff = float(self.ui.scan_zeroOffLE.text())
+        dacOpen = float(self.ui.scan_dacopenLE.text())
         #self.detector.dacopen = dacOpen
         corrArr = [0,0,0,0]
         invArr = [0,0,0]
@@ -1728,24 +1736,24 @@ class Atrex(QMainWindow):
             if len(str0) < 1 :
                 break
             strlist = str.split (":")
-            if (str.contains("Zero")) :
-                zeroOff = strlist[1].toFloat()
-            if (str.contains ("Open")) :
-                dacOpen = strlist[1].toFloat()
-            if (str.contains ("Abs")) :
-                dacabs = strlist[1].toInt()
+            if (str.find("Zero")) :
+                zeroOff = float(strlist[1])
+            if (str.find ("Open")>-1) :
+                dacOpen = float(strlist[1])
+            if (str.find ("Abs")>-1) :
+                dacabs = int(strlist[1])
                 if (dacabs ==1) :
                     self.ui.intcor_dacAbsCB.setChecked(True)
-            if (str.contains("Omega")) :
-                omegaRot = strlist[1].toInt()
+            if (str.find("Omega")>-1) :
+                omegaRot = int(strlist[1])
                 if omegaRot <0 :
                     self.ui.scan_omegaRotDirCB.setChecked()
-            if (str.contains("X")) :
-                xinversion = strlist[1].toInt()
-            if (str.contains("Y")) :
-                yinversion = strlist[1].toInt()
-            if (str.contains ("Transpose")):
-                transpose = strlist[1].toInt()
+            if (str.find("X")>-1) :
+                xinversion = int(strlist[1])
+            if (str.find("Y")>-1) :
+                yinversion = int(strlist[1])
+            if (str.find ("Transpose")>-1):
+                transpose = int(strlist[1])
 
         self.set_inversions ([xinversion, yinversion, transpose])
 
@@ -1776,14 +1784,14 @@ class Atrex(QMainWindow):
         return dir
 
     def getPeakSearchFitParams (self) :
-        gradadd = self.ui.ps_gradAddLE.text().toInt()[0]
-        maxcount = self.ui.ps_maxCountLE.text().toInt()[0]
-        mincount = self.ui.ps_minCountLE.text().toInt()[0]
-        smoothwin = self.ui.ps_smoothWinLE.text().toInt()[0]
-        locBcgr = self.ui.ps_locBcgrLE.text().toInt()[0]
+        gradadd = int(self.ui.ps_gradAddLE.text())
+        maxcount = int(self.ui.ps_maxCountLE.text())
+        mincount = int(self.ui.ps_minCountLE.text())
+        smoothwin = int(self.ui.ps_smoothWinLE.text())
+        locBcgr = int(self.ui.ps_locBcgrLE.text())
         fitB = self.ui.ps_fitPeaksCB.isChecked()
         self.myim.setFitParams (fitB, gradadd, maxcount, mincount, smoothwin, locBcgr)
-        bs2 = self.ui.ps2_boxSizeLE.text().toInt()[0]
+        bs2 = int(self.ui.ps2_boxSizeLE.text())
         self.myim.setBS2 (bs2)
 
     def setValToControl (self, control, val) :
@@ -1797,7 +1805,14 @@ class Atrex(QMainWindow):
         self.ui.openGLWidget.setAxis(ival)
 
 
-app = QApplication(sys.argv)
+
+if not QApplication.instance():
+    app = QApplication(sys.argv)
+else:
+    app = QApplication.instance() 
+
+
+#app = QApplication(sys.argv)
 atrex = Atrex()
 atrex.show()
 

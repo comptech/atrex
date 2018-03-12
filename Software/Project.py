@@ -124,7 +124,7 @@ class Project :
             tempfile = '%s%0*d.h5'%(self.base,self.numDigits,number)
             #tempfile = QString('%1%2.h5').arg(self.base).arg(int(number), self.numDigits, 10, QChar('0'))
         else :
-            tempfile = '%s%0*d.h5' % (self.base, self.numDigits,number)
+            tempfile = '%s%0*d.tif' % (self.base, self.numDigits,number)
             #tempfile = QString('%1%2.tif').arg(self.base).arg(int(number), self.numDigits, 10, QChar('0'))
         self.filenum = number
         #print 'debug :', tempfile

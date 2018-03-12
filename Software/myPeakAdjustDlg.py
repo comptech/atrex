@@ -62,8 +62,8 @@ class myPeakAdjustDlg (QDialog) :
 
 
     def update (self):
-        min = self.ui.minLE.text().toFloat()[0]
-        max = self.ui.maxLE.text().toFloat()[0]
+        min = float(self.ui.minLE.text())
+        max = float(self.ui.maxLE.text())
         if (self.ui.rawRB.isChecked()) :
             self.zmPeakRaw.setMinMax (min, max)
         if (self.ui.fittedRB.isChecked()) :

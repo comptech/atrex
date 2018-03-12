@@ -35,19 +35,19 @@ class myGenSettingsDlg (QDialog) :
 
     def getVals (self, array) :
         str = self.ui.startAngLE.text()
-        array[0]=str.toFloat()[0]
+        array[0]=float(str)
         str = self.ui.incAngLE.text ()
-        array[1] = str.toFloat()[0]
+        array[1] = float(str)
         str = self.ui.startNumLE.text ()
-        array[2] = str.toInt()[0]
+        array[2] = int(str)
         str = self.ui.numImagesLE.text ()
-        array[3] = str.toInt()[0]
+        array[3] = int(str)
         str = self.ui.chiLE.text ()
-        array[4] = str.toFloat()[0]
+        array[4] = float(str)
         str = self.ui.detectLE.text ()
-        array[5] = str.toFloat()[0]
+        array[5] = float(str)
         str = self.ui.exposTimeLE.text ()
-        array[6] = str.toFloat()[0]
+        array[6] = float(str)
 
     def setArr (self, array1):
         self.arr = array1

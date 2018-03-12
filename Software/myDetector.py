@@ -699,8 +699,8 @@ class myDetector (QObject):
 
     def read_kappa_and_ttheta(self) :
         a=np.zeros(2,dtype=np.float32)
-        theta = self.topLevel.ui.LE_Detector_2theta.text().toFloat()[0]
-        kappa = self.topLevel.ui.LE_Detector_kappa.text().toFloat()[0]
+        theta = float(self.topLevel.ui.LE_Detector_2theta.text())
+        kappa = float(self.topLevel.ui.LE_Detector_kappa.text())
         a[0] = theta
         a[1] = kappa
         return a
@@ -723,7 +723,7 @@ class myDetector (QObject):
         en = A_to_kev (self.wavelength)
         cut = 30.
         dist_tol = 1.8
-        IovS = self.topLevel.ui.det_snrLE.text().toFloat()[0]
+        IovS = float(self.topLevel.ui.det_snrLE.text())
         start_dist = self.dist - self.dist * 0.5
         end_dist = self.dist + self.dist *.5
         im = myim.imArray.astype(np.int64)
@@ -1017,7 +1017,7 @@ class myDetector (QObject):
         en = 37.077
         cut = 30.
         dist_tol = 1.8
-        IovS = self.topLevel.ui.det_snrLE.text().toFloat()[0]
+        IovS = float(self.topLevel.ui.det_snrLE.text())
         start_dist = self.dist - self.dist * 0.5
         end_dist = self.dist + self.dist *.5
         im = myim.imArray.astype(np.int64)
@@ -1025,7 +1025,7 @@ class myDetector (QObject):
         zarr = np.zeros ((500,500),dtype=np.uint8)
 
         bg = self.local_background (imarr)
-        imarr.tofile ("/home/harold/imarr.dat")
+        #imarr.tofile ("/home/harold/imarr.dat")
         # only for debug
 
         hpf = imarr / bg.astype(np.int64)

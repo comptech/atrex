@@ -97,39 +97,39 @@ class simulateDlg (QDialog) :
         self.ui.sim_scaleIncLE.setText('.002')
 
     def incVal (self):
-        incValue = self.ui.sim_incLE.text().toFloat()[0]
+        incValue = float(self.ui.sim_incLE.text())
         # check for which radiobutton is selected
         valType = self.radState ()
         if (valType == 0) :
-            value = self.ui.sim_omegaLE.text().toFloat()[0] + incValue
+            value = float(self.ui.sim_omegaLE.text()) + incValue
             str = "%f"%value
             self.ui.sim_omegaLE.setText(str)
             return
         if (valType == 1) :
-            value = self.ui.sim_chiLE.text().toFloat()[0] + incValue
+            value = float(self.ui.sim_chiLE.text()) + incValue
             str = "%f"%value
             self.ui.sim_chiLE.setText(str)
         if (valType == 2) :
-            value = self.ui.sim_phiLE.text().toFloat()[0] + incValue
+            value = float(self.ui.sim_phiLE.text()) + incValue
             str = "%f"%value
             self.ui.sim_phiLE.setText(str)
 
 
     def decVal (self):
-        incValue = self.ui.sim_incLE.text().toFloat()[0]
+        incValue = float(self.ui.sim_incLE.text())
         # check for which radiobutton is selected
         valType = self.radState ()
         if (valType == 0) :
-            value = self.ui.sim_omegaLE.text().toFloat()[0] - incValue
+            value = float(self.ui.sim_omegaLE.text()) - incValue
             str = "%f"%value
             self.ui.sim_omegaLE.setText(str)
             return
         if (valType == 1) :
-            value = self.ui.sim_chiLE.text().toFloat()[0] - incValue
+            value = float(self.ui.sim_chiLE.text()) - incValue
             str = "%f"%value
             self.ui.sim_chiLE.setText(str)
         if (valType == 2) :
-            value = self.ui.sim_phiLE.text().toFloat()[0] - incValue
+            value = float(self.ui.sim_phiLE.text()) - incValue
             str = "%f"%value
             self.ui.sim_phiLE.setText(str)
 
@@ -165,12 +165,12 @@ class simulateDlg (QDialog) :
 
 
     def read_LP (self):
-        a = self.sim_aLE.text().toFloat()[0]
-        b = self.sim_bLE.text().toFloat()[0]
-        c = self.sim_cLE.text().toFloat()[0]
-        alpha = self.sim_alphaLE.text().toFloat()[0]
-        gamma = self.sim_gammaLE.text().toFloat()[0]
-        beta = self.sim_betaLE.text().toFloat()[0]
+        a = float(self.sim_aLE.text())
+        b = float(self.sim_bLE.text())
+        c = float(self.sim_cLE.text())
+        alpha = float(self.sim_alphaLE.text())
+        gamma = float(self.sim_gammaLE.text())
+        beta = float(self.sim_betaLE.text())
         lp = [a,b,c,alpha,beta,gamma]
 
         return lp
@@ -328,9 +328,9 @@ class simulateDlg (QDialog) :
 
     def generate_laue (self) :
         self.myPeaks.remove_all_peaks()
-        en0 = self.ui.sim_incidRangeLowLE.text().toFloat()[0]
-        en1 = self.ui.sim_incidRangeHighLE.text().toFloat()[0]
-        DAC_open = self.ui.sim_DACOpenLE.text().toFloat()[0]
+        en0 = float(self.ui.sim_incidRangeLowLE.text())
+        en1 = float(self.ui.sim_incidRangeHighLE.text())
+        DAC_open = float(self.ui.sim_DACOpenLE.text())
         #updates the bravType member
         self.getBravaisType ()
         self.myDetect.generate_peaks_laue(self.ub, self.myPeaks, self.myPredict, [en0,en1],self.bravType, DAC_open)
@@ -341,9 +341,9 @@ class simulateDlg (QDialog) :
 
     def generate_mono (self) :
         self.myPeaks.remove_all_peaks()
-        en0 = self.ui.sim_incidRangeLowLE.text().toFloat()[0]
-        en1 = self.ui.sim_incidRangeHighLE.text().toFloat()[0]
-        DAC_open = self.ui.sim_DACOpenLE.text().toFloat()[0]
+        en0 = float(self.ui.sim_incidRangeLowLE.text())
+        en1 = float(self.ui.sim_incidRangeHighLE.text())
+        DAC_open = float(self.ui.sim_DACOpenLE.text())
         wv = self.myDetect.getwavelength()
         #updates the bravType member
         self.getBravaisType ()
@@ -364,7 +364,7 @@ class simulateDlg (QDialog) :
 
     # from the topLevel Peaks2 tab, get the box size....
     def read_box_size (self):
-        val = self.bsControl.text().toInt()
+        val = int(self.bsControl.text())
         return [val[0],val[0]]
 
 
