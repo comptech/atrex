@@ -312,15 +312,15 @@ class Atrex(QMainWindow):
             qts << self.imageDirectory << "\r\n"
         else:
             qts << "\r\n"
-        if (self.imageFile.size() > 1):
+        if (len(self.imageFile) > 1):
             qts << self.imageFile << "\r\n"
         else:
             qts << "\r\n"
-        if (self.workDirectory.size() > 1):
+        if (len(self.workDirectory) > 1):
             qts << self.workDirectory << "\r\n"
         else:
             qts << "\r\n"
-        if (self.detectFile.size()>1) :
+        if (len(self.detectFile)>1) :
             qts << self.detectFile << "\r\n"
         else:
             qts << "\r\n"
@@ -338,15 +338,32 @@ class Atrex(QMainWindow):
         wdir = self.ui.imDirLE.text()
         imfile = QFileDialog.getOpenFileName(self, 'Open Image', wdir)
         self.imageFile = imfile[0]
+        
         print self.imageFile
         str0 = 'Opening image file %s'%self.imageFile
+        self.openImageFile (self.imageFile)
+        
+        
+        
         self.myLogWidget.addEvent (str0)
         extension = os.path.splitext(self.imageFile)[1]
 
         #return
-
+        # image directory
         self.base = self.myproj.getImageBase (self.imageFile)
+        fi = QFileInfo (self.imageFile)
+        basename = fi.baseName()
+        endn = find_last_index_of (self.imageFile, basename)
+        wdir = self.imageFile[0:endn]
+        #wdir = self.imageFile.left(self.imageFile.lastIndexOf(basename))
+        self.ui.imDirLE.setText(wdir)
+        self.imageFilePref = self.base
+        print 'pref is ', self.imageFilePref
+        self.imfileLE.setText(self.imageFile)
+        
+        
 
+        # calibration file block
         calfile = self.base+'.cal'
         fi = QFileInfo (calfile)
         if (fi.exists()):
@@ -358,21 +375,8 @@ class Atrex(QMainWindow):
             msgBox.setText (str0)
             msgBox.exec_()
 
-        # get the path and put it in imDirLE
-        # z = QDir.separator()
-        fi = QFileInfo (self.imageFile)
-        basename = fi.baseName()
-        ind = find_last_index_of (self.imageFile,basename)
-        wdir = self.imageFile[0:ind]
-        self.ui.imDirLE.setText(wdir)
-        # image file prefix will be used to build new images to display
-
-        #prefind = self.imageFile.lastIndexOf(".tif")
-        #self.imageFilePref = self.imageFile.left(prefind - 3)
-        self.imageFilePref = self.base
-        print 'pref is ', self.imageFilePref
-        self.imfileLE.setText(self.imageFile)
-
+       
+        # image range 
         mnmx = getImageRange(wdir, self.imageFile)
         self.ui.minRangeLabel.setText(str(mnmx[0]))
         self.ui.maxRangeLabel.setText(str(mnmx[1]))
@@ -387,6 +391,24 @@ class Atrex(QMainWindow):
         self.minRange = mnmx[0]
         self.maxRange = mnmx[1]
         self.firstDisplay = True
+        
+        str0 = '%f'%self.myproj.omega0
+        self.ui.omega0Lab.setText(str0)
+        self.ui.pred_startLE.setText (str0)
+        self.ui.scan_startAngLE.setText (str0)
+        str0='%f'%self.myproj.omegaR
+        self.ui.pred_rangeLE.setText (str0)
+        self.ui.scan_stepAngLE.setText (str0)
+        str0 = '%f'%self.myproj.detector
+        self.ui.detectorLab.setText (str0)
+        str0 = '%f'%self.myproj.chi
+        self.ui.chiLab.setText(str0)
+        str0 = '%f'%self.myproj.expos
+        self.ui.expLab.setText(str0)
+        str0 = "%d"%self.myproj.minImageNum
+        self.ui.scan_startImageLE.setText(str0)
+        str0 = "%d"%self.myproj.numImages
+        self.ui.scan_numImagesLE.setText(str0)
 
 
 
@@ -401,24 +423,16 @@ class Atrex(QMainWindow):
         self.myLogWidget.addEvent ("Opening image file %s"%filename)
         self.base = self.myproj.getImageBase (self.imageFile)
         basename = fi.baseName()
+        self.imageFilePref = self.base
         endn = find_last_index_of (self.imageFile, basename)
         wdir = self.imageFile[0:endn]
         #wdir = self.imageFile.left(self.imageFile.lastIndexOf(basename))
         self.ui.imDirLE.setText(wdir)
-        # z = QDir.separator()
-        # wdir = self.imageFile.left(self.imageFile.lastIndexOf(z))
-        # self.ui.imDirLE.setText(wdir)
-        # image file prefix will be used to build new images to display
-
-        #prefind = self.imageFile.lastIndexOf(".tif")
-        #self.imageFilePref = self.imageFile.left(prefind - 3)
-        #print 'pref is ', self.imageFilePref
+        
         print 'filename is ', self.imageFile
         self.imfileLE.setText(self.imageFile)
         self.displayImage(self.imageFile)
-        # self.myim.readTiff (self.imageFile)
-        #self.ui.imageWidget.writeQImage (self.myim.imArray)
-        #mnmx = getImageRange(wdir, self.imageFile)
+        
         mnmx = [self.myproj.minImageNum, self.myproj.maxImageNum, self.myproj.filenum]
         self.ui.minRangeLabel.setText(str(mnmx[0]))
         self.ui.maxRangeLabel.setText(str(mnmx[1]))
@@ -445,6 +459,7 @@ class Atrex(QMainWindow):
         str0 = "%d"%self.myproj.numImages
         self.ui.scan_numImagesLE.setText(str0)
 
+        # calibration file block
         calfile = self.base+'.cal'
         fi = QFileInfo (calfile)
         if (fi.exists()):
@@ -656,14 +671,14 @@ class Atrex(QMainWindow):
         if self.imtypeFlag == 0 :
             tthval = self.detector.calculate_tth_from_pixels(pixvals, self.detector.gonio)
             outstr0 = 'X: %f   Y: %f   Val:  %f      2-Theta : %f'%(vals[0],vals[1],vals[2],tthval)
-            self.ui.statusBox.setText (outstr)
+            self.ui.statusBox.setText (outstr0)
         if self.imtypeFlag ==1 :
             print 'hello'
             azim = -180. + 360. * (vals[1]/ 768.)
             tth = vals[0]/768. * self.myim.cakeParams[1]
             intens = self.myim.cakeArr [vals[1], vals[0]]
             outstr0 = '2-Theta: %f  Azim: %f  Val: %f'%(tth,azim,intens)
-            self.ui.statusBox.setText (outstr)
+            self.ui.statusBox.setText (outstr0)
 
     def displayCakeImage (self) :
         self.imtypeFlag = 1
@@ -1075,7 +1090,6 @@ class Atrex(QMainWindow):
 
             if (f1a[0].size > 0) :
                 gonio=np.zeros((6),dtype=np.float32)
-                gonio [axis] = om
                 for f in f1a[0]:
                     newpeak = myPeakTable.myPeak ()
                     newpeak.setDetxy((ixarr[f], iyarr[f]))
@@ -1098,7 +1112,7 @@ class Atrex(QMainWindow):
         # need to evaluate the quality of fit here.
         #
         if self.myim.fitFlag :
-            self.myLogWidget ("Starting of peak fitting")
+            self.myLogWidget.addEvent ("Starting of peak fitting")
             #self.myim.fitPeaks (self.peaks, 16)
             self.myim.fitAllPeaks (self.peaks, 16)
 
@@ -1220,7 +1234,8 @@ class Atrex(QMainWindow):
                     return
                 percentDone = float(i-self.minRange) / nimages * 100.
                 self.ui.mergeProgressBar.setValue (percentDone)
-                newimage = QString("%1%2.tif").arg(self.imageFilePref).arg(i, 3, 10, z)
+                newimage = '%s%03d.tif'%(self.imageFilePref,i)
+                #newimage = QString("%1%2.tif").arg(self.imageFilePref).arg(i, 3, 10, z)
                 tempimg.readTiff(newimage)
                 if i == self.minRange:
                     self.mergeArr = tempimg.imArray.copy().astype(np.float32)
@@ -1230,14 +1245,17 @@ class Atrex(QMainWindow):
             maxval = np.max(self.mergeArr)
             if (maxval > 65535):
                 scaleval = 65534. / maxval
-                str0 = QString("Merge exceeds 65535, scaled by %1").arg(scaleval)
+                str0 = 'Merge exceeds 65535, scaled by %f'%scaleval
+                print str0
+                #str0 = QString("Merge exceeds 65535, scaled by %1").arg(scaleval)
                 # qinfo = QMessageBox.warning(None, "Information", str)
                 self.mergeArr *= scaleval
         else:
             for i in range(self.minRange, self.maxRange + 1):
                 percentDone = float(i-self.minRange) / nimages * 100.
                 self.ui.mergeProgressBar.setValue (percentDone)
-                newimage = QString("%1%2.tif").arg(self.imageFilePref).arg(i, 3, 10, z)
+                #newimage = QString("%1%2.tif").arg(self.imageFilePref).arg(i, 3, 10, z)
+                newimage = '%s%03d.tif'%(self.imageFilePref,i)
                 tempimg.readTiff(newimage)
                 if i == self.minRange:
                     self.mergeArr = tempimg.imArray.copy().astype(np.float32) / nimages
@@ -1252,7 +1270,8 @@ class Atrex(QMainWindow):
         # now write to tif file
         #im = Image.fromarray (mergeArr.astype(np.float32))
         #im.save (outname.toLatin1().data())
-        imsave(outname.toLatin1().data(), self.mergeArr)
+        outname = outname[0]
+        imsave(outname, self.mergeArr)
         #self.openImageFile (outname)
         self.mergeDisplayFlag = True
         self.firstDisplay = True
